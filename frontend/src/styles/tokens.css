@@ -1,0 +1,104 @@
+/* ============================================================================
+   Signage — design tokens.
+
+   The one place a raw colour value is allowed to appear. Everything else
+   refers to these names, so a palette change is one edit and a rogue hex in a
+   component is immediately visible in review.
+
+   The language is van lettering and job-site placards: flat surfaces, one
+   high-vis accent, nothing glossy. The audience reads this outdoors, on a
+   phone, in sunlight, often with dirty hands — which is why the contrast
+   targets below are higher than the WCAG minimum rather than equal to it.
+   ============================================================================ */
+
+:root {
+  /* --- Colour ----------------------------------------------------------- */
+  --paper: #FAF7F2;        /* page background */
+  --card: #FFFFFF;         /* surfaces */
+  --ink: #1C1917;          /* text, dark sections, footer */
+  --muted: #5D574E;        /* secondary text — 6.69:1 on paper */
+  --line: #E5E0D3;         /* hairline borders */
+  --line-strong: #C9C2B2;  /* borders that need to read as deliberate */
+  --putty: #F1EDE4;        /* quiet fill, one step off paper */
+
+  /* The accent. Amber is a surface colour, not a text colour: #F5A800 on
+     paper is 1.87:1, so it may sit behind ink but never carry text itself. */
+  --amber: #F5A800;
+  --amber-hover: #DD9600;
+  --amber-tint: #FFFBF0;       /* amber as a wash behind content */
+  --amber-tint-line: #F0D9A0;
+
+  /* Amber as text, on paper or card. The design files still carry #B87400
+     from an earlier pass — it measures 3.55:1 and fails AA. The brief marks
+     that value as a regression not to repeat, so this is the accessible
+     one: 4.59:1 on paper, 4.91:1 on card. */
+  --amber-text: #9E6400;
+
+  /* Green means "live" and nothing else. Never decoration, never a second
+     accent — the moment it appears elsewhere, "live" stops meaning live. */
+  --live: #1F6B3B;
+  --live-tint: #E7F1E9;
+  --live-tint-line: #BFDCC6;
+
+  /* Coming-soon: cream ground, dashed edge, caution-stripe tag. Deliberately
+     unlike the live treatment so the two are never confused at a glance. */
+  --soon-bg: #FFFDF6;
+  --soon-line: #D9A93F;
+  --soon-text: #7A5200;        /* 6.48:1 on paper */
+  --soon-stripe-a: #FFEDC2;
+  --soon-stripe-b: #FFE1A3;
+
+  --ink-hover: #3B362F;
+  --whatsapp: #25D366;         /* the Arabic site's primary conversion */
+
+  /* --- Type ------------------------------------------------------------- */
+  --font-head: 'Barlow Semi Condensed', 'Barlow', system-ui, sans-serif;
+  --font-body: 'Barlow', system-ui, -apple-system, sans-serif;
+
+  /* Fluid sizes. Body never drops below 16px — this is read on a phone at
+     arm's length, and 15px is where that audience starts squinting. */
+  --fs-body: 17px;
+  --fs-small: 15px;
+  --fs-label: 13px;
+  --fs-lead: clamp(18px, 1.2vw + 14px, 20px);
+  --fs-h1: clamp(40px, 5.2vw + 12px, 80px);
+  --fs-h2: clamp(30px, 2.6vw + 18px, 46px);
+  --fs-h3: clamp(20px, 0.8vw + 17px, 24px);
+  --fs-band: clamp(32px, 3.4vw + 16px, 60px);
+  --lh-body: 1.65;
+  --lh-head: 1.04;
+
+  /* --- Space — 4px base ------------------------------------------------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-22: 88px;
+
+  --section-y: clamp(48px, 6vw, 88px);
+  --gutter: clamp(16px, 4vw, 32px);
+  --shell: 1160px;
+  --measure: 760px;        /* prose column: ~75 characters */
+  --measure-narrow: 640px; /* article body */
+
+  /* --- Shape ------------------------------------------------------------ */
+  --r-tag: 6px;
+  --r-btn: 10px;
+  --r-btn-lg: 12px;
+  --r-card: 14px;
+  --r-card-lg: 16px;
+  --r-pill: 999px;
+
+  /* Elevation is almost absent by design: a hairline border is the default
+     separator. One soft shadow exists, reserved for hero artefacts and
+     sticky elements, so that when something does lift it means something. */
+  --shadow-lift: 0 12px 32px rgba(28, 25, 23, .08);
+
+  /* Interactive targets never below this. Hard rule — it has failed an
+     audit once already. */
+  --tap: 44px;
+}

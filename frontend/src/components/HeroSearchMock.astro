@@ -1,0 +1,190 @@
+---
+/**
+ * The search-result mock — the strongest asset on the site, and the LCP
+ * element. Inline HTML, no image, no webfont dependency for first paint:
+ * it renders as soon as the CSS does.
+ *
+ * It shows Mike's own customers' search, not ours. That distinction matters
+ * enough that the SAMPLE label and the caption both say so — this is a
+ * demonstration of the product, not a keyword we rank for.
+ */
+---
+
+<div class="mock">
+  <span class="tag tag--sample mock__sample">SAMPLE</span>
+
+  <div class="mock__query" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+      <circle cx="11" cy="11" r="7"></circle>
+      <path d="m20 20-3.5-3.5"></path>
+    </svg>
+    <span>water heater repair mesa az</span>
+  </div>
+
+  <div class="mock__hit">
+    <span class="tag mock__you">THAT'S YOU</span>
+    <div class="mock__site">
+      <span class="mock__favicon" aria-hidden="true">R</span>
+      <span class="mock__url">reyesplumbing.com › water-heater-repair-mesa</span>
+    </div>
+    <p class="mock__title">Reyes Plumbing — Water Heater Repair, Mesa AZ</p>
+    <p class="mock__desc">
+      Same-day water heater repair and replacement across Mesa. Licensed and insured local pros…
+    </p>
+  </div>
+
+  <div class="mock__row">
+    <span class="mock__url">angi.com › plumbers</span>
+    <p class="mock__title mock__title--dim">Angi — Find Top Plumbers Near You</p>
+    <p class="mock__desc">Compare quotes from local pros…</p>
+  </div>
+
+  <div class="mock__row">
+    <span class="mock__url">thumbtack.com › water-heater</span>
+    <p class="mock__title mock__title--dim">Thumbtack — Water Heater Pros</p>
+  </div>
+
+  <div class="mock__call">
+    <span class="mock__dot" aria-hidden="true"></span>
+    <span>
+      <strong>Incoming call · (480) 555-0114</strong>
+      <span class="mock__job">Water heater replacement — Mesa</span>
+    </span>
+  </div>
+</div>
+
+<style>
+  .mock {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card-lg);
+    box-shadow: var(--shadow-lift);
+    /* Extra room at the end so the call pill overlaps the card's edge
+       rather than the last result. */
+    padding: var(--s-6) var(--s-6) var(--s-16);
+    margin-block-end: 34px;
+  }
+
+  .mock__sample {
+    position: absolute;
+    inset-block-start: -10px;
+    inset-inline-end: var(--s-4);
+  }
+
+  .mock__query {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-3) var(--s-4);
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    color: var(--muted);
+    font-size: var(--fs-small);
+  }
+
+  .mock__hit {
+    position: relative;
+    margin-block-start: var(--s-4);
+    padding: var(--s-4);
+    border: 2px solid var(--amber);
+    border-radius: var(--r-card);
+    background: var(--amber-tint);
+  }
+
+  .mock__you {
+    position: absolute;
+    inset-block-start: -11px;
+    inset-inline-start: var(--s-4);
+    background: var(--amber);
+    color: var(--ink);
+  }
+
+  .mock__site {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .mock__favicon {
+    inline-size: 18px;
+    block-size: 18px;
+    border-radius: var(--r-tag);
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+
+  .mock__url {
+    font-size: 13px;
+    color: var(--muted);
+    word-break: break-word;
+  }
+
+  .mock__title {
+    margin-block-start: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1A4FA0;
+  }
+
+  .mock__title--dim {
+    color: #6E7C93;
+  }
+
+  .mock__desc {
+    margin-block-start: 4px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .mock__row {
+    margin-block-start: var(--s-4);
+    padding-inline-start: var(--s-2);
+    opacity: .55;
+  }
+
+  /* Sits over the card's lower edge — the call arriving out of the result. */
+  .mock__call {
+    position: absolute;
+    inset-block-end: -26px;
+    inset-inline-start: var(--s-6);
+    inset-inline-end: var(--s-6);
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--r-pill);
+    box-shadow: var(--shadow-lift);
+    font-size: 14px;
+  }
+
+  .mock__dot {
+    inline-size: 10px;
+    block-size: 10px;
+    border-radius: 50%;
+    background: #4ADE80;
+    flex: none;
+    animation: pulse 2s infinite;
+  }
+
+  .mock__job {
+    display: block;
+    opacity: .7;
+    font-size: 13px;
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, .45); }
+    70% { box-shadow: 0 0 0 9px rgba(74, 222, 128, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+  }
+</style>

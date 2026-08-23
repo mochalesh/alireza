@@ -1,0 +1,74 @@
+---
+/**
+ * The amber closing band that ends every page.
+ *
+ * Ink on amber measures 8.73:1, which is why the accent can carry a full
+ * headline here while it may never carry text on paper.
+ */
+import { PRICE, PRIMARY_CTA } from '../data/site.js';
+
+interface Props {
+  title: string;
+  lead?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+const {
+  title,
+  lead,
+  ctaLabel = PRIMARY_CTA.label,
+  ctaHref = PRIMARY_CTA.href,
+} = Astro.props;
+
+const price = PRICE.en;
+---
+
+<section class="band">
+  <div class="band__in">
+    <h2 class="band__title">{title}</h2>
+    {lead && <p class="band__lead">{lead}</p>}
+    <a class="btn btn--ink band__cta" href={ctaHref}>{ctaLabel}</a>
+    <p class="band__fine">
+      From {price.display}{price.period} · No contract · You own everything
+    </p>
+  </div>
+</section>
+
+<style>
+  .band {
+    background: var(--amber);
+    color: var(--ink);
+  }
+
+  .band__in {
+    max-inline-size: 880px;
+    margin-inline: auto;
+    padding: clamp(48px, 6vw, 88px) var(--gutter);
+    text-align: center;
+  }
+
+  .band__title {
+    font-size: var(--fs-band);
+  }
+
+  .band__lead {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-lead);
+    max-inline-size: 620px;
+    margin-inline: auto;
+  }
+
+  .band__cta {
+    margin-block-start: var(--s-8);
+    font-size: 18px;
+    padding-inline: var(--s-8);
+  }
+
+  .band__fine {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    opacity: .75;
+  }
+</style>

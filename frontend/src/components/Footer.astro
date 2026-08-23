@@ -1,0 +1,198 @@
+---
+/**
+ * Footer — the site's structural workhorse.
+ *
+ * Comparison pages and, later, the Arabic city pages live here rather than in
+ * the header, so it has to be complete on every page: it is how crawlers and
+ * visitors reach the long tail. Links are built from the same data the rest
+ * of the site uses, so a page that does not exist cannot be linked from here
+ * by accident, and a capability that is not live carries its SOON label here
+ * too — the brief names the footer link explicitly.
+ */
+import { TRADES, CAPABILITIES, COMPARISONS } from '../data/site.js';
+
+interface Props {
+  lang?: 'en' | 'ar';
+}
+
+const { lang = 'en' } = Astro.props;
+
+const year = 2026;
+
+const resources = [
+  { label: 'Marketing guides', href: '/guides/plumbing-marketing' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Business name generator', href: '/tools/business-name-generator' },
+  { label: 'Website grader', href: '/tools/website-grader' },
+];
+
+const company = [
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Terms', href: '/terms' },
+];
+---
+
+<footer class="ftr">
+  <div class="ftr__in">
+    <div class="ftr__cols">
+      <nav class="ftr__col" aria-label="For your trade">
+        <span class="ftr__head">For your trade</span>
+        {TRADES.map((t) => <a href={`/for/${t.slug}`}>{t.name}</a>)}
+      </nav>
+
+      <nav class="ftr__col" aria-label="What you get">
+        <span class="ftr__head">What you get</span>
+        {
+          CAPABILITIES.map((c) => (
+            <a href={`/features/${c.slug}`}>
+              {c.name}
+              {c.status !== 'live' && <span class="soon"> SOON</span>}
+            </a>
+          ))
+        }
+      </nav>
+
+      <nav class="ftr__col" aria-label="Compare">
+        <span class="ftr__head">Compare</span>
+        {COMPARISONS.map((c) => <a href={`/vs/${c.slug}`}>Widgeta vs {c.name}</a>)}
+      </nav>
+
+      <nav class="ftr__col" aria-label="Resources">
+        <span class="ftr__head">Resources</span>
+        {resources.map((r) => <a href={r.href}>{r.label}</a>)}
+      </nav>
+
+      <nav class="ftr__col" aria-label="Company">
+        <span class="ftr__head">Company</span>
+        {company.map((c) => <a href={c.href}>{c.label}</a>)}
+      </nav>
+    </div>
+
+    <div class="ftr__bar">
+      <span class="brand">
+        <span class="brand__mark" aria-hidden="true">W</span>
+        <span class="brand__word">widgeta</span>
+      </span>
+      <span class="ftr__legal">© {year} Widgeta · widgeta.app</span>
+      <a class="langchip" href={lang === 'ar' ? '/' : '/ar'}>EN · العربية</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .ftr__in {
+    max-inline-size: var(--shell);
+    margin-inline: auto;
+    padding: clamp(40px, 6vw, 64px) var(--gutter);
+  }
+
+  .ftr__cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+    gap: var(--s-8);
+  }
+
+  .ftr__col {
+    display: grid;
+    gap: 2px;
+    align-content: start;
+  }
+
+  .ftr__head {
+    font-family: var(--font-body);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-block-end: var(--s-2);
+  }
+
+  .ftr__col a {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    color: var(--paper);
+    font-size: var(--fs-small);
+    opacity: .85;
+  }
+
+  .ftr__col a:hover {
+    opacity: 1;
+    color: var(--amber);
+  }
+
+  .soon {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--amber);
+    margin-inline-start: 6px;
+  }
+
+  .ftr__bar {
+    border-block-start: 1px solid rgba(250, 247, 242, .15);
+    margin-block-start: var(--s-12);
+    padding-block-start: var(--s-6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-4);
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .brand__mark {
+    inline-size: 22px;
+    block-size: 22px;
+    border-radius: var(--r-tag);
+    background: var(--amber);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .brand__word {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 17px;
+  }
+
+  .ftr__legal {
+    font-size: 14px;
+    opacity: .7;
+  }
+
+  .langchip {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    padding-inline: var(--s-3);
+    border: 1px solid rgba(250, 247, 242, .3);
+    border-radius: var(--r-pill);
+    color: var(--paper);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .langchip:hover {
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+</style>

@@ -1,0 +1,128 @@
+---
+/**
+ * The page shell: head tags, fonts, chrome.
+ *
+ * Every page goes through here, so the head-tag rules from the SEO spec are
+ * enforced in one place rather than remembered per page. Anything a page can
+ * get wrong by forgetting it — canonical, hreflang, OG — is computed here
+ * from the path.
+ */
+import '@fontsource/barlow/latin-400.css';
+import '@fontsource/barlow/latin-500.css';
+import '@fontsource/barlow/latin-600.css';
+import '@fontsource/barlow/latin-700.css';
+import '@fontsource/barlow/latin-500-italic.css';
+import '@fontsource/barlow-semi-condensed/latin-700.css';
+import '@fontsource/barlow-semi-condensed/latin-800.css';
+
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_URL } from '../data/site.js';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path without host, no trailing slash. '/' for home. */
+  path: string;
+  lang?: 'en' | 'ar';
+  /**
+   * The equivalent page in the other language. Left undefined when there is
+   * no true equivalent — hreflang pairs equivalents or nothing at all, and a
+   * wrong pair is worse than a missing one.
+   */
+  altPath?: string;
+  /** JSON-LD objects. Serialised here so no page hand-writes a script tag. */
+  schema?: object[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  path,
+  lang = 'en',
+  altPath,
+  schema = [],
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(path === '/' ? '' : path, SITE_URL).href;
+const dir = lang === 'ar' ? 'rtl' : 'ltr';
+---
+
+<!doctype html>
+<html lang={lang} dir={dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex,follow" />}
+
+    {
+      /* hreflang only where a true equivalent exists. Pages without a
+         counterpart — city pages, the Arabic multi-trade hub, US-only
+         comparisons — are self-referencing, which is what x-default alone
+         says. */
+      altPath && (
+        <>
+          <link rel="alternate" hreflang="en-US" href={new URL(lang === 'en' ? path : altPath, SITE_URL).href} />
+          <link rel="alternate" hreflang="ar-SA" href={new URL(lang === 'ar' ? path : altPath, SITE_URL).href} />
+          <link rel="alternate" hreflang="ar-AE" href={new URL(lang === 'ar' ? path : altPath, SITE_URL).href} />
+        </>
+      )
+    }
+    <link rel="alternate" hreflang="x-default" href={lang === 'en' ? canonical : new URL(altPath ?? path, SITE_URL).href} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Widgeta" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'ar' ? 'ar_SA' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <meta name="theme-color" content="#FAF7F2" />
+
+    {
+      schema.map((entry) => (
+        <script type="application/ld+json" set:html={JSON.stringify(entry)} />
+      ))
+    }
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Header lang={lang} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+
+    <style>
+      .skip {
+        position: absolute;
+        inset-block-start: -100px;
+        inset-inline-start: var(--s-4);
+        z-index: 100;
+        padding: var(--s-3) var(--s-6);
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: 0 0 var(--r-btn) var(--r-btn);
+        font-weight: 700;
+      }
+
+      .skip:focus {
+        inset-block-start: 0;
+        color: var(--paper);
+      }
+    </style>
+  </body>
+</html>

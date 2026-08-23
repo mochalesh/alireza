@@ -1,0 +1,96 @@
+---
+/**
+ * FAQ accordions.
+ *
+ * Native <details>, so it opens without JavaScript, is findable by the
+ * browser's own in-page search, and costs nothing on INP. The same array
+ * that renders here is what a page passes to FAQPage schema, so the markup
+ * and the structured data can never drift apart.
+ */
+interface Props {
+  items: { q: string; a: string }[];
+  /** Static cards instead of accordions — the home page shows only three. */
+  variant?: 'accordion' | 'cards';
+}
+
+const { items, variant = 'accordion' } = Astro.props;
+---
+
+<div class="faq">
+  {
+    items.map((item, i) =>
+      variant === 'cards' ? (
+        <div class="faq__card">
+          <h3 class="faq__q">{item.q}</h3>
+          <p class="faq__a">{item.a}</p>
+        </div>
+      ) : (
+        <details class="faq__card" open={i === 0}>
+          <summary class="faq__q">
+            <span>{item.q}</span>
+            <span class="faq__sign" aria-hidden="true">+</span>
+          </summary>
+          <p class="faq__a">{item.a}</p>
+        </details>
+      )
+    )
+  }
+</div>
+
+<style>
+  .faq {
+    display: grid;
+    gap: var(--s-3);
+    max-inline-size: var(--measure);
+    margin-inline: auto;
+  }
+
+  .faq__card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    padding: var(--s-4) var(--s-6);
+  }
+
+  .faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    min-block-size: var(--tap);
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  /* Hide the default disclosure triangle; the amber sign replaces it. */
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__sign {
+    color: var(--amber-text);
+    font-size: 22px;
+    font-weight: 700;
+    flex: none;
+    transition: transform .15s ease;
+  }
+
+  details[open] .faq__sign {
+    transform: rotate(45deg);
+  }
+
+  .faq__a {
+    margin-block-start: var(--s-3);
+    color: var(--muted);
+    font-size: 16px;
+  }
+
+  h3.faq__q {
+    cursor: auto;
+  }
+</style>

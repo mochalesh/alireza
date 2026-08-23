@@ -1,0 +1,104 @@
+---
+/**
+ * Notify-me for a capability that is not live yet.
+ *
+ * Three states — idle, open, done — driven by a tiny inline script rather
+ * than a framework: this is the only interactive element on the page and it
+ * is not worth a runtime. It progressively enhances a plain form, so with
+ * JavaScript off the visitor still gets a real mailto fallback instead of a
+ * dead button.
+ *
+ * There is deliberately no purchase path here. The capability is coming
+ * soon, and coming soon means you can be told when it lands — nothing more.
+ */
+interface Props {
+  id: string;
+  label?: string;
+  done?: string;
+}
+
+const {
+  id,
+  label = 'Notify me when it launches',
+  done = "You're on the list — we'll email you at launch.",
+} = Astro.props;
+---
+
+<div class="notify" data-notify id={id}>
+  <button class="btn btn--outline notify__open" type="button" data-notify-open>
+    {label}
+  </button>
+
+  <form class="notify__form" hidden data-notify-form action="/contact" method="get">
+    <label class="sr-only" for={`${id}-email`}>Email address</label>
+    <input
+      class="notify__input"
+      id={`${id}-email`}
+      name="email"
+      type="email"
+      required
+      autocomplete="email"
+      placeholder="you@yourbusiness.com"
+    />
+    <button class="btn btn--ink notify__send" type="submit">Notify me</button>
+  </form>
+
+  <p class="notify__done" hidden data-notify-done>
+    <span aria-hidden="true">✓</span> {done}
+  </p>
+</div>
+
+<script>
+  // One listener for every instance on the page.
+  document.querySelectorAll('[data-notify]').forEach((root) => {
+    const openBtn = root.querySelector('[data-notify-open]');
+    const form = root.querySelector('[data-notify-form]');
+    const doneMsg = root.querySelector('[data-notify-done]');
+    if (!(openBtn instanceof HTMLElement) || !(form instanceof HTMLFormElement)) return;
+
+    openBtn.addEventListener('click', () => {
+      openBtn.hidden = true;
+      form.hidden = false;
+      form.querySelector('input')?.focus();
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      // TODO: post to the real capture endpoint once it exists. Until then
+      // the address is not sent anywhere — better a held promise than a
+      // silent drop.
+      form.hidden = true;
+      if (doneMsg instanceof HTMLElement) doneMsg.hidden = false;
+    });
+  });
+</script>
+
+<style>
+  .notify {
+    margin-block-start: var(--s-4);
+  }
+
+  .notify__form {
+    display: flex;
+    gap: var(--s-2);
+    flex-wrap: wrap;
+  }
+
+  .notify__input {
+    flex: 1 1 200px;
+    min-block-size: var(--tap);
+    padding-inline: var(--s-3);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-btn);
+    background: var(--card);
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  .notify__done {
+    color: var(--live);
+    font-size: var(--fs-small);
+    font-weight: 600;
+  }
+</style>

@@ -1,0 +1,296 @@
+/* ============================================================================
+   Base — reset, typography, and the shared primitives.
+
+   Logical properties only. No margin-left, no padding-right, no `left:`/
+   `right:`, and no four-value shorthands that would not mirror. The Arabic
+   site is the same stylesheet with dir="rtl" on <html>, and every physical
+   property is a bug waiting for that page to be built.
+   ============================================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Anchors must clear the sticky header when jumped to. */
+  scroll-padding-block-start: 88px;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-head);
+  font-weight: 800;
+  line-height: var(--lh-head);
+  letter-spacing: -0.015em;
+  margin-block: 0;
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+
+p {
+  margin-block: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--amber-text);
+}
+
+img,
+svg {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+/* A class that sets `display` outranks the user-agent rule for [hidden], so
+   an element toggled by that attribute would stay visible. This keeps the
+   attribute meaning what it says wherever it is used. */
+[hidden] {
+  display: none !important;
+}
+
+::selection {
+  background: var(--amber);
+  color: var(--ink);
+}
+
+/* Focus must be visible on every interactive element — non-negotiable §9. */
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: var(--r-tag);
+}
+
+/* Every animation on this site is decoration; none of it carries meaning, so
+   all of it goes away when the visitor has asked for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- Layout primitives ---------------------------------------------------- */
+
+.shell {
+  max-inline-size: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.measure {
+  max-inline-size: var(--measure);
+}
+
+.stack > * + * {
+  margin-block-start: var(--flow, var(--s-4));
+}
+
+/* --- Buttons -------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-block-size: var(--tap);
+  padding: var(--s-3) var(--s-6);
+  border: 0;
+  border-radius: var(--r-btn-lg);
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.btn--amber {
+  background: var(--amber);
+  color: var(--ink);
+}
+
+.btn--amber:hover {
+  background: var(--amber-hover);
+  color: var(--ink);
+}
+
+.btn--ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn--ink:hover {
+  background: var(--ink-hover);
+  color: var(--paper);
+}
+
+/* Secondary inverts on hover rather than tinting: on paper, in sunlight, a
+   subtle tint is not a state change anyone can see. */
+.btn--outline {
+  background: transparent;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+.btn--outline:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* --- Tags, chips, labels -------------------------------------------------- */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.eyebrow::before {
+  content: '';
+  inline-size: 8px;
+  block-size: 8px;
+  background: var(--amber);
+  flex: none;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px var(--s-2);
+  border-radius: var(--r-tag);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.tag--live {
+  background: var(--live-tint);
+  color: var(--live);
+  border: 1px solid var(--live-tint-line);
+}
+
+/* Caution stripes: the visual grammar of "not yet", borrowed from the tape
+   on a job site. Paired with the dashed card edge, never on its own. */
+.tag--soon {
+  background: repeating-linear-gradient(135deg,
+    var(--soon-stripe-a) 0 6px,
+    var(--soon-stripe-b) 6px 12px);
+  color: var(--soon-text);
+  border: 1px solid var(--soon-line);
+}
+
+/* SAMPLE is a legal disclosure, not decoration. It stays legible: solid
+   ground, full-strength text, never a low-contrast wash. */
+.tag--sample {
+  background: var(--ink);
+  color: var(--paper);
+  letter-spacing: .1em;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--card);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* --- Cards ---------------------------------------------------------------- */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card-lg);
+  padding: var(--s-6);
+}
+
+/* --- Dark sections -------------------------------------------------------- */
+
+.on-ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.on-ink h2,
+.on-ink h3 {
+  color: var(--paper);
+}
+
+.on-ink a {
+  color: var(--paper);
+}
+
+.on-ink a:hover {
+  color: var(--amber);
+}
+
+.on-ink :where(.muted, p) {
+  color: #CFC9BF;
+}
+
+/* --- Utilities ------------------------------------------------------------ */
+
+.muted { color: var(--muted); }
+
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Wide content scrolls inside its own box; the page itself never does. */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.grid-auto {
+  display: grid;
+  gap: var(--s-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+}

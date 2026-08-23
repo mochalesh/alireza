@@ -1,0 +1,673 @@
+---
+/**
+ * Home — the flagship. Every core component appears here first.
+ *
+ * Heading strategy, straight from the SEO spec: the H1 stays outcome-first
+ * because that is what Mike reads, and the commercial keyword lives in the
+ * title tag and one H2 ("A contractor website builder that keeps working
+ * after launch"), because that is what search engines read.
+ */
+import Base from '../layouts/Base.astro';
+import HeroSearchMock from '../components/HeroSearchMock.astro';
+import FaqList from '../components/FaqList.astro';
+import NotifyMe from '../components/NotifyMe.astro';
+import ClosingBand from '../components/ClosingBand.astro';
+
+import { SITE_URL, APP_URL, PRICE, PRIMARY_CTA } from '../data/site.js';
+import {
+  STEPS, TRADE_CARDS, CAPABILITY_CARDS, ROADMAP, EXAMPLES,
+  RENTING, OWNING, PROOF, FAQ,
+} from '../data/home.js';
+
+/*
+ * The SEO spec's suggested title runs to 61 characters, one over its own
+ * ≤60 rule. Singular "Website" lands on 60 and matches the three capability
+ * names exactly as the product sells them.
+ */
+const title = 'Website, SEO & Content for Home Service Businesses | Widgeta';
+const description =
+  'Widgeta builds and runs the website for plumbers, HVAC, roofers and electricians — a page for every service in every town you serve, updated every month.';
+
+const price = PRICE.en;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Widgeta',
+    url: SITE_URL,
+    description:
+      'Websites, local SEO and monthly content for home-service businesses.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Widgeta',
+    url: SITE_URL,
+    inLanguage: 'en-US',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Widgeta',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    url: SITE_URL,
+    offers: {
+      '@type': 'Offer',
+      price: price.amount,
+      priceCurrency: price.currency,
+    },
+    // No aggregateRating: there are no real reviews yet, and inventing one
+    // is a manual-action risk.
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+];
+---
+
+<Base title={title} description={description} path="/" altPath="/ar" schema={schema}>
+  <!-- Hero ------------------------------------------------------------- -->
+  <section class="hero">
+    <div class="shell hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow">Plumbing · HVAC · Roofing · Electrical</p>
+        <h1 class="hero__h1">
+          Your neighbors are searching for you <span class="mark">right now.</span>
+        </h1>
+        <p class="hero__sub">
+          Widgeta puts a real website in front of them — built from a few questions,
+          live in about a minute, working while you work. No software to learn.
+          Nothing to maintain.
+        </p>
+        <div class="hero__cta">
+          <a class="btn btn--amber" href={PRIMARY_CTA.href}>Get your business online</a>
+          <a class="btn btn--outline" href="/examples">See real examples</a>
+        </div>
+        <p class="hero__fine muted">
+          About 2 minutes of questions · Live the same day · No contract, cancel anytime
+        </p>
+      </div>
+
+      <div class="hero__art">
+        <HeroSearchMock />
+      </div>
+    </div>
+  </section>
+
+  <!-- Credibility strip ------------------------------------------------- -->
+  <section class="strip on-ink">
+    <div class="shell strip__in">
+      <span>✓ Built only for the trades</span>
+      <span>✓ You own the site and the customers</span>
+      <span>✓ Nothing to learn, ever</span>
+      <span>✓ English &amp; Arabic, one subscription</span>
+    </div>
+  </section>
+
+  <!-- How it works ------------------------------------------------------ -->
+  <section class="section">
+    <div class="shell">
+      <p class="eyebrow">How it works</p>
+      <h2 class="sec__h2">Three steps. Only one is yours.</h2>
+
+      <div class="grid-auto steps">
+        {
+          STEPS.map((step) => (
+            <div class="card step">
+              <span class="step__n">{step.n}</span>
+              {step.tag && <span class="tag step__tag">{step.tag}</span>}
+              <h3 class="step__title">{step.title}</h3>
+              <p class="muted">{step.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Keeps working: the commercial-keyword H2 and the internal-link hub -->
+  <section class="section keeps">
+    <div class="shell">
+      <div class="measure">
+        <h2>A contractor website builder that keeps working after launch.</h2>
+        <p class="keeps__p muted">
+          Most website builders hand you an empty template and wish you luck. The site
+          goes up, nothing changes, and six months later it has never once made the
+          phone ring.
+        </p>
+        <p class="keeps__p muted">
+          Widgeta works the other way around. Launch is the start: every month it reads
+          what your neighbors search for, adds the pages that answer them, and keeps up
+          with what Google expects — without a single task landing on you.
+        </p>
+      </div>
+
+      <h3 class="keeps__h3">Every trade we build for</h3>
+      <div class="grid-auto">
+        {
+          TRADE_CARDS.map((t) => (
+            <a class="card tradecard" href={`/for/${t.slug}`}>
+              <span class="tradecard__name">
+                {t.name} <span aria-hidden="true">→</span>
+              </span>
+              <span class="muted">{t.line}</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities ------------------------------------------------------ -->
+  <section class="section" id="capabilities">
+    <div class="shell">
+      <p class="eyebrow">What you get</p>
+      <h2 class="sec__h2">Buy what you need. Add more when you're ready.</h2>
+
+      <div class="caps">
+        {
+          CAPABILITY_CARDS.map((c) => (
+            <div class:list={['card', 'cap', { 'cap--soon': c.status !== 'live' }]}>
+              <div class="cap__top">
+                <span class="cap__label">{c.label}</span>
+                {c.status === 'live' ? (
+                  <span class="tag tag--live">Live</span>
+                ) : (
+                  <span class="tag tag--soon">Coming soon</span>
+                )}
+              </div>
+              <h3 class="cap__title">{c.title}</h3>
+              <p class="muted">{c.body}</p>
+              {c.status !== 'live' && <NotifyMe id="notify-home" />}
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="roadmap">
+        <span class="muted">And it keeps growing —</span>
+        {ROADMAP.map((r) => <span class="chip">{r}</span>)}
+        <span class="muted">— added over time, only if you want them.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Examples ---------------------------------------------------------- -->
+  <section class="section" id="examples">
+    <div class="shell">
+      <p class="eyebrow">Examples</p>
+      <h2 class="sec__h2">Real sites, generated from answers.</h2>
+
+      <div class="grid-auto">
+        {
+          EXAMPLES.map((ex) => (
+            <article class="card ex">
+              <div class="ex__chrome">
+                <span class="ex__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="ex__domain">{ex.domain}</span>
+                <span class="tag tag--sample">Sample</span>
+              </div>
+
+              <div class="ex__hero">
+                <strong class="ex__biz">{ex.business}</strong>
+                <span class="ex__areas">{ex.areas}</span>
+                <span class="ex__phone">Call {ex.phone}</span>
+              </div>
+
+              <ul class="ex__pages">
+                {ex.pages.map((p) => <li>{p}</li>)}
+              </ul>
+
+              <p class="ex__cap muted">{ex.caption}</p>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="ex__note muted">
+        Every example business and phone number on this page is invented for
+        illustration.
+      </p>
+      <a class="ex__more" href="/examples">Browse examples by trade →</a>
+    </div>
+  </section>
+
+  <!-- The difference ---------------------------------------------------- -->
+  <section class="section on-ink">
+    <div class="shell">
+      <p class="eyebrow diff__eyebrow">The difference</p>
+      <h2 class="sec__h2">Stop renting your own customers.</h2>
+
+      <div class="diff">
+        <div class="diff__col">
+          <h3>Renting leads</h3>
+          <ul class="diff__list">
+            {RENTING.map((r) => <li><span class="diff__x" aria-hidden="true">✕</span>{r}</li>)}
+          </ul>
+        </div>
+
+        <div class="diff__col diff__col--own">
+          <h3>Owning your presence</h3>
+          <ul class="diff__list">
+            {OWNING.map((o) => <li><span class="diff__tick" aria-hidden="true">✓</span>{o}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proof -------------------------------------------------------------- -->
+  <section class="section">
+    <div class="shell">
+      <p class="eyebrow">From the trades</p>
+      <h2 class="sec__h2">Their phones ring. That's the review.</h2>
+
+      <div class="grid-auto">
+        {
+          PROOF.map((p) => (
+            <figure class="card proof">
+              <blockquote class="proof__quote">“{p.quote}”</blockquote>
+              <figcaption class="proof__who">
+                <span class="proof__face" aria-hidden="true"></span>
+                <span>
+                  <strong>{p.name}</strong>
+                  <span class="muted proof__biz">{p.business}</span>
+                </span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+
+      <p class="ex__note muted">
+        These are illustrative examples, not statements from named customers. They
+        stay labelled until real customers give written permission.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ ---------------------------------------------------------------- -->
+  <section class="section faqsec">
+    <div class="shell">
+      <h2 class="sec__h2 sec__h2--center">Three questions everyone asks</h2>
+      <FaqList items={FAQ} variant="cards" />
+    </div>
+  </section>
+
+  <ClosingBand
+    title="Put your business where your neighbors are looking."
+    lead="Answer a few questions today. Your site is live before your next job."
+    ctaLabel="Get your business online"
+    ctaHref={`${APP_URL}/signup`}
+  />
+</Base>
+
+<style>
+  /* --- Hero --------------------------------------------------------- */
+  .hero {
+    padding-block: clamp(40px, 5vw, 72px) clamp(56px, 6vw, 88px);
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    gap: clamp(32px, 4vw, 64px);
+    align-items: center;
+  }
+
+  .hero__h1 {
+    margin-block-start: var(--s-4);
+  }
+
+  /* The highlighter behind the last two words: a marker stroke, the way a
+     job sheet gets marked up. */
+  .mark {
+    background: linear-gradient(transparent 62%, var(--amber) 62%);
+  }
+
+  .hero__sub {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-lead);
+    max-inline-size: 46ch;
+  }
+
+  .hero__cta {
+    display: flex;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+    margin-block-start: var(--s-8);
+  }
+
+  .hero__fine {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-small);
+  }
+
+  /* --- Strip -------------------------------------------------------- */
+  .strip {
+    padding-block: var(--s-4);
+  }
+
+  .strip__in {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4) var(--s-8);
+    font-size: var(--fs-small);
+    font-weight: 600;
+  }
+
+  /* --- Section heads ------------------------------------------------ */
+  .sec__h2 {
+    margin-block-start: var(--s-3);
+    margin-block-end: var(--s-8);
+    max-inline-size: 20ch;
+  }
+
+  .sec__h2--center {
+    margin-inline: auto;
+    text-align: center;
+    max-inline-size: none;
+  }
+
+  /* --- Steps -------------------------------------------------------- */
+  .step {
+    display: grid;
+    align-content: start;
+    gap: var(--s-2);
+  }
+
+  .step__n {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 32px;
+    color: var(--amber-text);
+    line-height: 1;
+  }
+
+  .step__tag {
+    justify-self: start;
+    background: var(--amber);
+    color: var(--ink);
+  }
+
+  .step__title {
+    margin-block-start: var(--s-1);
+  }
+
+  /* --- Keeps working ------------------------------------------------ */
+  .keeps__p {
+    margin-block-start: var(--s-4);
+  }
+
+  .keeps__h3 {
+    margin-block: var(--s-12) var(--s-6);
+  }
+
+  .tradecard {
+    display: grid;
+    gap: var(--s-2);
+    align-content: start;
+    transition: border-color .15s ease;
+  }
+
+  .tradecard:hover {
+    border-color: var(--amber);
+    color: var(--ink);
+  }
+
+  .tradecard__name {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 22px;
+  }
+
+  /* --- Capabilities ------------------------------------------------- */
+  /* Narrower minimum than the default grid so all four sit on one row on a
+     wide screen — the three live pieces and the one that is not, read
+     together, is the whole point of the section. */
+  .caps {
+    display: grid;
+    gap: var(--s-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(255px, 100%), 1fr));
+    align-items: start;
+  }
+
+  .cap {
+    display: grid;
+    align-content: start;
+    gap: var(--s-3);
+  }
+
+  .cap--soon {
+    background: var(--soon-bg);
+    border: 2px dashed var(--soon-line);
+  }
+
+  .cap__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+  }
+
+  .cap__label {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .cap__title {
+    font-size: 21px;
+  }
+
+  .roadmap {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    flex-wrap: wrap;
+    margin-block-start: var(--s-8);
+    font-size: var(--fs-small);
+  }
+
+  /* --- Examples ------------------------------------------------------ */
+  .ex {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .ex__chrome {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-3) var(--s-4);
+    border-block-end: 1px solid var(--line);
+    background: var(--putty);
+  }
+
+  .ex__dots {
+    display: inline-flex;
+    gap: 4px;
+  }
+
+  .ex__dots i {
+    inline-size: 8px;
+    block-size: 8px;
+    border-radius: 50%;
+    background: var(--line-strong);
+  }
+
+  .ex__domain {
+    font-size: 12px;
+    color: var(--muted);
+    margin-inline-end: auto;
+    word-break: break-all;
+  }
+
+  .ex__hero {
+    display: grid;
+    gap: 4px;
+    padding: var(--s-6) var(--s-4);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .ex__biz {
+    font-family: var(--font-head);
+    font-size: 22px;
+  }
+
+  .ex__areas {
+    font-size: 13px;
+    opacity: .75;
+  }
+
+  .ex__phone {
+    justify-self: start;
+    margin-block-start: var(--s-2);
+    padding: 6px var(--s-3);
+    border-radius: var(--r-pill);
+    background: var(--amber);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .ex__pages {
+    margin: 0;
+    padding: var(--s-4);
+    list-style: none;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .ex__pages li {
+    padding: var(--s-2) var(--s-3);
+    border: 1px solid var(--line);
+    border-radius: var(--r-tag);
+    font-size: 14px;
+  }
+
+  .ex__cap {
+    padding: 0 var(--s-4) var(--s-4);
+    font-size: 13px;
+  }
+
+  .ex__note {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-small);
+  }
+
+  /* Its own target rather than a link inside the disclosure sentence: an
+     inline link in body copy cannot meet the 44px minimum without wrecking
+     the line height around it. */
+  .ex__more {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    margin-block-start: var(--s-2);
+    color: var(--amber-text);
+    font-weight: 700;
+  }
+
+  .ex__more:hover {
+    color: var(--ink);
+  }
+
+  /* --- Difference ---------------------------------------------------- */
+  .diff__eyebrow {
+    color: #CFC9BF;
+  }
+
+  .diff {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: var(--s-6);
+  }
+
+  .diff__col--own {
+    border: 2px solid var(--amber);
+    border-radius: var(--r-card-lg);
+    background: rgba(245, 168, 0, .06);
+    padding: var(--s-6);
+  }
+
+  .diff__col--own h3 {
+    color: var(--amber);
+  }
+
+  .diff__list {
+    margin-block-start: var(--s-4);
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .diff__list li {
+    display: flex;
+    gap: var(--s-3);
+    font-size: 16px;
+  }
+
+  .diff__x,
+  .diff__tick {
+    flex: none;
+    font-weight: 700;
+  }
+
+  .diff__tick {
+    color: var(--amber);
+  }
+
+  /* --- Proof ---------------------------------------------------------- */
+  .proof {
+    display: grid;
+    align-content: start;
+    gap: var(--s-6);
+  }
+
+  .proof__quote {
+    margin: 0;
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.55;
+  }
+
+  .proof__who {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    font-size: var(--fs-small);
+  }
+
+  /* Empty circle until a real photograph exists — the SEO spec asks for
+     faces, and a stock face would be a lie about a named person. */
+  .proof__face {
+    inline-size: 48px;
+    block-size: 48px;
+    border-radius: 50%;
+    background: var(--putty);
+    border: 1px dashed var(--line-strong);
+    flex: none;
+  }
+
+  .proof__biz {
+    display: block;
+  }
+
+  /* --- FAQ ------------------------------------------------------------ */
+  .faqsec {
+    background: var(--putty);
+  }
+</style>

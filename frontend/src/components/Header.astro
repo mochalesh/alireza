@@ -1,0 +1,174 @@
+---
+/**
+ * Sticky header: five nav items plus one persistent action, per the IA.
+ *
+ * Below 920px the nav becomes its own full-width row that scrolls sideways
+ * rather than wrapping into a tall stack — on a phone the header has to stay
+ * a header, not eat a third of the first screen.
+ */
+import { NAV, PRIMARY_CTA } from '../data/site.js';
+
+interface Props {
+  lang?: 'en' | 'ar';
+  /** Path prefix of the current section, so the right item gets the rule. */
+  active?: string;
+}
+
+const { lang = 'en', active } = Astro.props;
+const home = lang === 'ar' ? '/ar' : '/';
+---
+
+<header class="hdr">
+  <div class="hdr__in">
+    <a class="brand" href={home} aria-label="Widgeta — home">
+      <span class="brand__mark" aria-hidden="true">W</span>
+      <span class="brand__word">widgeta</span>
+    </a>
+
+    <nav class="hnav" aria-label="Primary">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            class:list={['hnav__link', { 'is-active': active && item.href.startsWith(active) }]}
+          >
+            {item.label}
+            {item.caret && <span aria-hidden="true"> ▾</span>}
+          </a>
+        ))
+      }
+    </nav>
+
+    <a class="langchip" href={lang === 'ar' ? '/' : '/ar'} lang={lang === 'ar' ? 'en' : 'ar'}>
+      EN · العربية
+    </a>
+
+    <a class="btn btn--amber hdr__cta" href={PRIMARY_CTA.href}>{PRIMARY_CTA.label}</a>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
+    background: var(--paper);
+    border-block-end: 1px solid var(--line);
+  }
+
+  .hdr__in {
+    max-inline-size: var(--shell);
+    margin-inline: auto;
+    padding: var(--s-3) var(--gutter);
+    display: flex;
+    align-items: center;
+    gap: var(--s-4) var(--s-6);
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-block-size: var(--tap);
+  }
+
+  .brand__mark {
+    inline-size: 28px;
+    block-size: 28px;
+    border-radius: 7px;
+    background: var(--amber);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--ink);
+    flex: none;
+  }
+
+  .brand__word {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+
+  .hnav {
+    display: flex;
+    align-items: center;
+    gap: var(--s-6);
+    flex-wrap: wrap;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .hnav__link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    white-space: nowrap;
+  }
+
+  .hnav__link.is-active {
+    border-block-end: 3px solid var(--amber);
+  }
+
+  .hdr__cta {
+    margin-inline-start: auto;
+    white-space: nowrap;
+    font-size: 16px;
+    padding-inline: var(--s-4);
+  }
+
+  .langchip {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    padding-inline: var(--s-3);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .langchip:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  /* The nav drops to its own scrolling row rather than wrapping tall. Brand,
+     language and action stay on one line above it — three stacked rows would
+     eat a third of the first screen on the phone this is mostly read on. */
+  @media (max-width: 920px) {
+    .hdr__in {
+      gap: var(--s-2) var(--s-3);
+    }
+
+    .hnav {
+      order: 9;
+      flex: 1 1 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      gap: var(--s-4);
+    }
+
+    .hnav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .langchip {
+      margin-inline-start: auto;
+      font-size: 13px;
+      padding-inline: var(--s-2);
+    }
+
+    .hdr__cta {
+      margin-inline-start: 0;
+      padding-inline: var(--s-3);
+    }
+  }
+</style>
