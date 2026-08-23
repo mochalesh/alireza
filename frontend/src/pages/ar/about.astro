@@ -1,0 +1,135 @@
+---
+/**
+ * Arabic About.
+ *
+ * The English About page carries three named people with photographs
+ * pending. This one does not repeat them: the same three names in Arabic
+ * would read as a local team in Riyadh, which is a stronger claim than the
+ * English page makes and one nothing supports.
+ *
+ * So it says what the company is for and what it commits to — both of which
+ * are true and checkable against the rest of the site — and the placeholder
+ * notice says plainly that the team page is not written yet.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
+
+import { SITE_URL, PRIMARY_CTA } from '../../data/site.js';
+import { AR, AR_PRIMARY_CTA } from '../../data/ar/site.js';
+import { AR_ABOUT, AR_PLACEHOLDER } from '../../data/ar/company.js';
+
+const path = `${AR}/about`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: `${SITE_URL}${AR}` },
+      { '@type': 'ListItem', position: 2, name: 'من نحن', item: `${SITE_URL}${path}` },
+    ],
+  },
+];
+---
+
+<Base
+  title="من نحن — ويدجيتا"
+  description="ويدجيتا يبني ويشغّل مواقع شركات الصيانة والخدمات المنزلية في الخليج، بسعر شهري ثابت وبلا عقد. ما نلتزم به، وما لا نعد به."
+  path={path}
+  lang="ar"
+  altPath="/about"
+  schema={schema}
+>
+  <div class="shell">
+    <Breadcrumb items={[{ label: 'الرئيسية', href: AR }, { label: 'من نحن' }]} />
+  </div>
+
+  <article class="col">
+    <h1>{AR_ABOUT.h1}</h1>
+    {AR_ABOUT.p.map((para) => <p class="para muted">{para}</p>)}
+
+    <section class="promises">
+      <h2>{AR_ABOUT.promisesTitle}</h2>
+      <ul class="promises__list">
+        {AR_ABOUT.promises.map((line) => (
+          <li><span class="promises__tick" aria-hidden="true">✓</span>{line}</li>
+        ))}
+      </ul>
+    </section>
+
+    {
+      AR_PLACEHOLDER && (
+        <p class="note">
+          <strong>صفحة الفريق لم تُكتب بعد.</strong> حين يكون هناك أشخاص
+          حقيقيون بأسمائهم وصورهم ومسؤولياتهم، ستظهر هنا. صفحة «من نحن» بأسماء
+          مخترعة أسوأ من صفحة بلا أسماء.
+        </p>
+      )
+    }
+  </article>
+
+  <ClosingBand
+    title="اجعل شركتك على الإنترنت اليوم."
+    ctaLabel={AR_PRIMARY_CTA.label}
+    ctaHref={PRIMARY_CTA.href}
+    fine="بدون عقد · كل شيء ملكك"
+  />
+</Base>
+
+<style>
+  .col {
+    max-inline-size: var(--measure-narrow);
+    margin-inline: auto;
+    padding: var(--s-4) var(--gutter) var(--section-y);
+  }
+
+  .para {
+    margin-block-start: var(--s-6);
+    font-size: 19px;
+    line-height: 1.8;
+  }
+
+  .promises {
+    margin-block-start: var(--s-16);
+    padding-block-start: var(--s-8);
+    border-block-start: 1px solid var(--line);
+  }
+
+  .promises h2 {
+    font-size: var(--fs-h3);
+  }
+
+  .promises__list {
+    margin: var(--s-6) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  .promises__list li {
+    display: flex;
+    gap: var(--s-3);
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .promises__tick {
+    flex: none;
+    color: var(--live);
+    font-weight: 700;
+  }
+
+  .note {
+    margin-block-start: var(--s-12);
+    padding: var(--s-4);
+    border: 2px dashed var(--soon-line);
+    border-radius: var(--r-card);
+    background: var(--soon-bg);
+    color: var(--soon-text);
+    font-size: var(--fs-small);
+    line-height: 1.7;
+  }
+</style>

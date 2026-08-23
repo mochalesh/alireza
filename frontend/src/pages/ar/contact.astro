@@ -1,0 +1,203 @@
+---
+/**
+ * Arabic Contact.
+ *
+ * WhatsApp first, because that is how this market starts a conversation —
+ * and the placeholder notice sits directly under it, because the one number
+ * on this whole site that must never be fake is the one on the contact page.
+ *
+ * No address and no phone number. Inventing either would be the single
+ * easiest thing to write here and the worst thing to have written: an
+ * address nobody sits at is a lie a customer can drive to.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import FaqList from '../../components/FaqList.astro';
+
+import { SITE_URL } from '../../data/site.js';
+import { AR, AR_WHATSAPP, AR_EXAMPLES_PAGE, AR_PRICING_PAGE, waHref } from '../../data/ar/site.js';
+import { AR_CONTACT, AR_CONTACT_PAGE, AR_PLACEHOLDER } from '../../data/ar/company.js';
+
+const path = `${AR}/contact`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: `${SITE_URL}${AR}` },
+      { '@type': 'ListItem', position: 2, name: 'اتصل بنا', item: `${SITE_URL}${path}` },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: 'ar',
+    mainEntity: AR_CONTACT_PAGE.faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
+---
+
+<Base
+  title="اتصل بنا — ويدجيتا"
+  description="راسل ويدجيتا على واتساب أو بالبريد، ويرد عليك شخص خلال يوم عمل واحد. وأسئلة يجيب عنها الموقع قبل أن تسأل."
+  path={path}
+  lang="ar"
+  altPath="/contact"
+  schema={schema}
+>
+  <div class="shell">
+    <Breadcrumb items={[{ label: 'الرئيسية', href: AR }, { label: 'اتصل بنا' }]} />
+  </div>
+
+  <section class="head">
+    <div class="shell measure">
+      <h1>{AR_CONTACT_PAGE.h1}</h1>
+      <p class="head__sub">{AR_CONTACT_PAGE.sub}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell ways">
+      <div class="card way">
+        <span class="way__label">الأسرع</span>
+        <h2 class="way__h">واتساب</h2>
+        <p class="muted">
+          راسلنا مباشرة، وتصلك الإجابة في نفس المكان الذي تتابعه بين موقع وآخر.
+        </p>
+        <a
+          class="btn btn--wa"
+          href={waHref('السلام عليكم، لدي سؤال عن ويدجيتا.')}
+          rel="noopener"
+        >
+          افتح محادثة واتساب
+        </a>
+        {
+          AR_WHATSAPP.placeholder && (
+            <p class="way__note">
+              <strong>الرقم المعروض ({AR_WHATSAPP.display}) رقم تجريبي.</strong>
+              لم يُفعَّل الرقم الرسمي بعد، ولذلك لن يصل إليه شيء اليوم — نكتب
+              هذا هنا بدل أن نعرض رقماً لا يرد عليه أحد.
+            </p>
+          )
+        }
+      </div>
+
+      <div class="card way">
+        <span class="way__label">للأسئلة الأطول</span>
+        <h2 class="way__h">البريد الإلكتروني</h2>
+        <p class="muted">
+          يصل إلى الشخص نفسه، ويرد خلال {AR_CONTACT.responseWindow}.
+        </p>
+        <a class="way__mail" href={`mailto:${AR_CONTACT.email}`}>{AR_CONTACT.email}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faqsec">
+    <div class="shell">
+      <h2 class="faqsec__h">{AR_CONTACT_PAGE.faqTitle}</h2>
+      <FaqList items={AR_CONTACT_PAGE.faqs} variant="cards" />
+
+      <div class="jump">
+        {AR_EXAMPLES_PAGE.built && <a class="chip jump__chip" href={AR_EXAMPLES_PAGE.href}>صفحة الأمثلة</a>}
+        {AR_PRICING_PAGE.built && <a class="chip jump__chip" href={AR_PRICING_PAGE.href}>صفحة الأسعار</a>}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head {
+    padding: var(--s-8) 0 0;
+  }
+
+  .head__sub {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  .ways {
+    display: grid;
+    gap: var(--s-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    align-items: start;
+  }
+
+  .way {
+    display: grid;
+    gap: var(--s-3);
+    justify-items: start;
+    align-content: start;
+  }
+
+  .way__label {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .way__h {
+    font-size: var(--fs-h3);
+  }
+
+  /* WhatsApp green carries the button; the label stays ink, because white on
+     this green measures 1.9:1 and is unreadable in daylight. */
+  .btn--wa {
+    background: var(--whatsapp);
+    color: #05310F;
+  }
+
+  .btn--wa:hover {
+    background: #1FBA59;
+    color: #05310F;
+  }
+
+  .way__note {
+    padding: var(--s-3) var(--s-4);
+    border-inline-start: 3px solid var(--soon-line);
+    background: var(--soon-bg);
+    color: var(--soon-text);
+    font-size: var(--fs-small);
+    line-height: 1.7;
+  }
+
+  .way__mail {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--amber-text);
+  }
+
+  .way__mail:hover {
+    color: var(--ink);
+  }
+
+  .faqsec {
+    background: var(--putty);
+  }
+
+  .faqsec__h {
+    text-align: center;
+    margin-block-end: var(--s-8);
+  }
+
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s-2);
+    margin-block-start: var(--s-8);
+  }
+
+  .jump__chip {
+    min-block-size: var(--tap);
+  }
+</style>

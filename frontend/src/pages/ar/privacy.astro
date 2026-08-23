@@ -1,0 +1,98 @@
+---
+/**
+ * Arabic privacy.
+ *
+ * This is a draft and it says so at the top of the page, not only here.
+ *
+ * The Arabic site had no privacy link at all until now, which was honest but
+ * not good enough for launch. What this page can state truthfully is what
+ * this marketing site does today — verifiable, because it is this codebase —
+ * plus the sections that still need real text, marked visibly as unwritten.
+ *
+ * It is not a translation of the English draft. Saudi's PDPL and the UAE's
+ * data protection law are the ones that apply to these readers, and they are
+ * named here rather than GDPR and CCPA.
+ */
+import Base from '../../layouts/Base.astro';
+import '../../styles/doc.css';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { AR } from '../../data/ar/site.js';
+import { AR_CONTACT } from '../../data/ar/company.js';
+
+const updated = 'لم تُنشر بعد';
+---
+
+<Base
+  title="الخصوصية | ويدجيتا"
+  description="كيف يتعامل موقع ويدجيتا مع المعلومات التي يعطيها الناس له، وماذا يجمع الموقع اليوم."
+  path={`${AR}/privacy`}
+  lang="ar"
+  noindex={true}
+>
+  <div class="docpage">
+    <div class="shell">
+      <Breadcrumb items={[{ label: 'الرئيسية', href: AR }, { label: 'الخصوصية' }]} />
+    </div>
+
+    <article class="doc">
+      <p class="draft">
+        <strong>مسودة — غير سارية بعد.</strong> السياسة النهائية يجب أن تُكتب
+        وتُعتمد من ويدجيتا ومستشارها القانوني قبل الإطلاق. ما يلي يصف الموقع
+        التعريفي كما هو مبني اليوم، ويشير بوضوح إلى ما لم يُكتب بعد.
+      </p>
+
+      <h1>الخصوصية</h1>
+      <p class="doc__meta muted">آخر تحديث: {updated}</p>
+
+      <h2>ماذا يجمع هذا الموقع اليوم</h2>
+      <p>
+        صفحات widgeta.app صفحات ثابتة. لا تضع ملفات تعريف ارتباط، ولا تشغّل
+        أدوات تحليل، ولا تحمّل خطوطاً أو نصوصاً برمجية أو صوراً من خوادم شركة
+        أخرى — الخطوط تُقدَّم من هذا الموقع نفسه. إن اكتفيت بقراءة هذه الصفحات
+        فلا يُسجَّل عنك شيء هنا.
+      </p>
+      <p>
+        هناك موضعان فقط يطلبان منك شيئاً: صناديق «أبلغوني» على الصفحة الرئيسية
+        وصفحة الأسعار وصفحة الرد على المكالمات، وهي تطلب بريداً إلكترونياً
+        لإبلاغك يوم الإطلاق. ولا شيء آخر في هذا الموقع يطلب منك بيانات.
+      </p>
+      <p>
+        وحين تضغط زر الواتساب فأنت تنتقل إلى تطبيق واتساب، وما يحدث بعد ذلك
+        تحكمه سياسة واتساب لا هذه الصفحة.
+      </p>
+      <p class="todo">
+        يجب أن يُكتب: أين تُحفظ عناوين البريد التي تصل من صناديق «أبلغوني»، ومن
+        يستطيع الاطلاع عليها، وكم تبقى، وكيف تُحذف عند الطلب. لا يمكن أن يكون
+        هذا النص دقيقاً قبل وجود نقطة الاستقبال الفعلية.
+      </p>
+
+      <h2>التطبيق</h2>
+      <p class="todo">
+        يجب أن يُكتب: app.widgeta.app خدمة منفصلة تجمع بيانات المنشأة والصور
+        ومعلومات الدفع. طريقة تعاملها مع هذه البيانات — بما فيها معالجو
+        البيانات ومدة الحفظ ونقل البيانات خارج الدولة — تحتاج قسماً مكتوباً
+        بحسب طريقة عمل المنتج فعلاً.
+      </p>
+
+      <h2>المواقع التي يبنيها ويدجيتا لعملائه</h2>
+      <p class="todo">
+        يجب أن يُكتب: الموقع الذي يبنيه ويدجيتا يحمل بيانات منشأة العميل ويستقبل
+        رسائل من الجمهور. من يتحكم في هذه البيانات، وماذا يحدث لها عند إلغاء
+        الاشتراك، مكانه هنا.
+      </p>
+
+      <h2>حقوقك</h2>
+      <p class="todo">
+        يجب أن يُكتب: الحقوق المقررة في نظام حماية البيانات الشخصية السعودي
+        وقانون حماية البيانات الإماراتي، وكيفية استخدام كل حق منها — مكتوبة
+        بحسب الأسواق التي يبيع فيها ويدجيتا فعلاً.
+      </p>
+
+      <h2>التواصل بشأن الخصوصية</h2>
+      <p>
+        راسلنا على <a href={`mailto:${AR_CONTACT.email}`}>{AR_CONTACT.email}</a>
+        ويرد عليك شخص خلال {AR_CONTACT.responseWindow}.
+      </p>
+    </article>
+  </div>
+</Base>

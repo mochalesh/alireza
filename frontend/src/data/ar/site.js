@@ -65,11 +65,36 @@ export const AR_COMPARISONS = [
   { slug: 'khamsat', name: 'خمسات', built: true },
 ];
 
+/*
+ * The legal pages point inside the Arabic tree, not at the English drafts.
+ * The brief allows exactly one crossing point between the two languages —
+ * the header's language switch — and a footer link to an English privacy
+ * page would be a second one, on the page where a reader is least able to
+ * afford a language they do not read.
+ */
 export const AR_COMPANY = [
-  { label: 'من نحن', href: `${AR}/about`, built: false },
-  { label: 'اتصل بنا', href: `${AR}/contact`, built: false },
-  { label: 'الخصوصية', href: '/privacy', built: false },
-  { label: 'الشروط', href: '/terms', built: false },
+  { label: 'من نحن', href: `${AR}/about`, built: true },
+  { label: 'اتصل بنا', href: `${AR}/contact`, built: true },
+  { label: 'الخصوصية', href: `${AR}/privacy`, built: true },
+  { label: 'الشروط', href: `${AR}/terms`, built: true },
+];
+
+/**
+ * The three pillar guides. Same registry rule: a guide exists as a page only
+ * when it has been written, and the footer links only what exists.
+ */
+export const AR_GUIDES_INDEX = [
+  { slug: 'maintenance-marketing', label: 'دليل تسويق شركات الصيانة', built: true },
+  { slug: 'ac-marketing', label: 'دليل تسويق شركات التكييف', built: true },
+  { slug: 'local-seo', label: 'دليل الظهور المحلي في البحث', built: true },
+];
+
+export const AR_BLOG_PAGE = { href: `${AR}/blog`, built: true };
+
+/** Guides and the blog, as the footer's "resources" column shows them. */
+export const AR_RESOURCES = [
+  { label: 'الأدلة', href: `${AR}/guides/maintenance-marketing`, built: true },
+  { label: 'المدونة', href: `${AR}/blog`, built: true },
 ];
 
 export const AR_PRICING_PAGE = { href: `${AR}/pricing`, built: true };
@@ -85,6 +110,7 @@ export const AR_NAV = [
   { label: 'الأسعار', href: `${AR}/pricing`, fallback: null, built: true },
   { label: 'المدن', href: `${AR}/locations/riyadh`, fallback: null, built: true, caret: true },
   { label: 'أمثلة', href: `${AR}/examples`, fallback: `${AR}#examples`, built: true },
+  { label: 'أدلة', href: `${AR}/guides/maintenance-marketing`, fallback: null, built: true, caret: true },
 ];
 
 export const AR_PRIMARY_CTA = {

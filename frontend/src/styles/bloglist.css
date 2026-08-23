@@ -1,0 +1,64 @@
+/* ============================================================================
+   The blog index, both languages. Namespaced under `.blogindex`.
+   ============================================================================ */
+.blogindex .head { padding-block: var(--s-4) 0; }
+
+.blogindex .head__sub {
+  margin-block-start: var(--s-6);
+  font-size: var(--fs-lead);
+  color: var(--muted);
+}
+
+.blogindex .post {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+}
+
+.blogindex .post:hover {
+  border-color: var(--amber);
+  color: var(--ink);
+}
+
+.blogindex .post__tags {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--amber-text);
+}
+
+.blogindex .post__sample {
+  padding: 3px var(--s-2);
+  border: 1px dashed var(--soon-line);
+  border-radius: var(--r-tag);
+  background: var(--soon-bg);
+  color: var(--soon-text);
+  letter-spacing: .06em;
+}
+
+.blogindex .post__title {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 1.12;
+}
+
+.blogindex .post__stand { font-size: var(--fs-small); }
+
+.blogindex .post__meta { font-size: 13px; }
+
+.blogindex .guides {
+  margin-block-start: var(--s-16);
+  padding-block-start: var(--s-8);
+  border-block-start: 1px solid var(--line);
+}
+
+.blogindex .guides__h {
+  font-size: var(--fs-h3);
+  margin-block-end: var(--s-6);
+}

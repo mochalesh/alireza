@@ -1,0 +1,112 @@
+---
+/**
+ * Arabic blog post.
+ *
+ * Unlike the English blog — whose only post is a labelled, noindexed sample
+ * of what Widgeta publishes for a customer — every post here is written for
+ * contractors, which is our own audience and our own keyword galaxy. So they
+ * index normally and carry Article schema.
+ *
+ * The spec's rule holds: link back to the pillar, and at most one commercial
+ * link. The pillar link is not the commercial one — that one is editorial.
+ */
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/post.css';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import Prose from '../../../components/Prose.astro';
+
+import { SITE_URL } from '../../../data/site.js';
+import { AR, AR_TRADES, AR_GUIDES_INDEX } from '../../../data/ar/site.js';
+import { AR_POSTS } from '../../../data/ar/posts.js';
+import { AR_GUIDES } from '../../../data/ar/guides.js';
+
+export function getStaticPaths() {
+  return Object.keys(AR_POSTS).map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const post = AR_POSTS[slug];
+const path = `${AR}/blog/${slug}`;
+
+const pillarBuilt = AR_GUIDES_INDEX.some((g) => g.slug === post.pillar && g.built);
+const pillar = pillarBuilt && AR_GUIDES[post.pillar]
+  ? { slug: post.pillar, ...AR_GUIDES[post.pillar] }
+  : null;
+const tradeEntry = AR_TRADES.find((t) => t.slug === post.trade && t.built);
+
+const schema = post.sample ? [] : [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.h1,
+    description: post.metaDesc,
+    author: { '@type': 'Organization', name: post.author },
+    publisher: { '@type': 'Organization', name: 'ويدجيتا', url: `${SITE_URL}${AR}` },
+    datePublished: post.updated,
+    dateModified: post.updated,
+    mainEntityOfPage: `${SITE_URL}${path}`,
+    inLanguage: 'ar',
+  },
+];
+---
+
+<Base
+  title={post.title}
+  description={post.metaDesc}
+  path={path}
+  lang="ar"
+  schema={schema}
+  noindex={post.sample}
+>
+  <div class="postpage">
+    <div class="shell">
+      <Breadcrumb
+        items={[
+          { label: 'الرئيسية', href: AR },
+          { label: 'المدونة', href: `${AR}/blog` },
+          { label: post.tags[post.tags.length - 1] },
+        ]}
+      />
+    </div>
+
+    <article class="col">
+      <header class="head">
+        <p class="tags">{post.tags.join(' · ')}</p>
+        <h1>{post.h1}</h1>
+        <p class="head__stand">{post.standfirst}</p>
+        <p class="byline muted">
+          <strong>{post.author}</strong> · حُدِّث في {post.updatedLabel} · {post.readingTime}
+        </p>
+      </header>
+
+      <Prose blocks={post.blocks} lang="ar" />
+
+      {
+        pillar && (
+          <aside class="pillar">
+            <span class="pillar__label">من الدليل الكامل</span>
+            <p class="pillar__text">{post.pillarNote}</p>
+            <a class="pillar__link" href={`${AR}/guides/${pillar.slug}`}>
+              اقرأ {pillar.h1}<span aria-hidden="true"> ←</span>
+            </a>
+          </aside>
+        )
+      }
+
+      {
+        tradeEntry && (
+          <aside class="promo">
+            <span class="promo__label">لـ{tradeEntry.name} الذين يقرأون هذا</span>
+            <p class="promo__text">
+              الصفحات التي تجيب على أسئلة كهذه — في مدنك، وبرقم واتسابك عليها —
+              هي ما ينشره ويدجيتا لك كل شهر.
+            </p>
+            <a class="promo__link" href={`${AR}/for/${tradeEntry.slug}`}>
+              شاهد ويدجيتا لـ{tradeEntry.name}<span aria-hidden="true"> ←</span>
+            </a>
+          </aside>
+        )
+      }
+    </article>
+  </div>
+</Base>

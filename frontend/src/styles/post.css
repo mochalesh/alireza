@@ -1,0 +1,96 @@
+/* ============================================================================
+   The blog post, both languages. Namespaced under `.postpage`.
+   ============================================================================ */
+.postpage .col {
+  max-inline-size: var(--measure-narrow);
+  margin-inline: auto;
+  padding: var(--s-4) var(--gutter) var(--section-y);
+}
+
+.postpage .samplenote {
+  padding: var(--s-4);
+  border: 2px dashed var(--soon-line);
+  border-radius: var(--r-card);
+  background: var(--soon-bg);
+  color: var(--soon-text);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+}
+
+.postpage .head {
+  margin-block-start: var(--s-8);
+}
+
+.postpage .tags {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--amber-text);
+}
+
+.postpage .head h1 {
+  margin-block-start: var(--s-3);
+}
+
+.postpage .head__stand {
+  margin-block-start: var(--s-4);
+  font-size: var(--fs-lead);
+  color: var(--muted);
+}
+
+.postpage .byline {
+  margin-block-start: var(--s-4);
+  font-size: var(--fs-small);
+}
+
+.postpage .byline strong { color: var(--ink); }
+
+.postpage .pillar,
+.postpage .promo {
+  margin-block-start: var(--s-12);
+  padding: var(--s-6);
+  border-radius: var(--r-card);
+}
+
+.postpage .pillar {
+  background: var(--putty);
+}
+
+.postpage .promo {
+  border: 2px solid var(--amber);
+  background: var(--amber-tint);
+}
+
+.postpage .pillar__label,
+.postpage .promo__label {
+  display: block;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--amber-text);
+}
+
+.postpage .pillar__text,
+.postpage .promo__text {
+  margin-block-start: var(--s-3);
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.postpage .pillar__link,
+.postpage .promo__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tap);
+  margin-block-start: var(--s-2);
+  font-weight: 700;
+  color: var(--amber-text);
+}
+
+.postpage .pillar__link:hover,
+.postpage .promo__link:hover {
+  color: var(--ink);
+}

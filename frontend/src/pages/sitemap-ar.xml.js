@@ -16,9 +16,10 @@
  */
 import { SITE_URL } from '../data/site.js';
 import {
-  AR, AR_TRADES, AR_CITIES, AR_CAPABILITIES, AR_COMPARISONS,
-  AR_PRICING_PAGE, AR_EXAMPLES_PAGE,
+  AR, AR_TRADES, AR_CITIES, AR_CAPABILITIES, AR_COMPARISONS, AR_GUIDES_INDEX,
+  AR_COMPANY, AR_PRICING_PAGE, AR_EXAMPLES_PAGE, AR_BLOG_PAGE,
 } from '../data/ar/site.js';
+import { AR_POSTS } from '../data/ar/posts.js';
 
 const built = (list) => list.filter((i) => i.built);
 
@@ -31,6 +32,14 @@ export function GET() {
     ...built(AR_CITIES).map((c) => `${AR}/locations/${c.slug}`),
     ...built(AR_CAPABILITIES).map((c) => `${AR}/features/${c.slug}`),
     ...built(AR_COMPARISONS).map((c) => `${AR}/vs/${c.slug}`),
+    ...built(AR_GUIDES_INDEX).map((g) => `${AR}/guides/${g.slug}`),
+    ...(AR_BLOG_PAGE.built ? [AR_BLOG_PAGE.href] : []),
+    /* Sample posts carry noindex, so they stay out — same rule as the
+       English sitemap, derived from the same flag rather than a list. */
+    ...Object.entries(AR_POSTS).filter(([, p]) => !p.sample).map(([slug]) => `${AR}/blog/${slug}`),
+    /* The two legal drafts are noindexed while they are drafts, so the
+       sitemap must not ask for them. About and contact are real pages. */
+    ...AR_COMPANY.filter((c) => c.built && !/\/(privacy|terms)$/.test(c.href)).map((c) => c.href),
   ];
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>

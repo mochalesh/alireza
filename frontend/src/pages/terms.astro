@@ -9,6 +9,7 @@
  * contradict them.
  */
 import Base from '../layouts/Base.astro';
+import '../styles/doc.css';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { CONTACT } from '../data/company.js';
 import { PRICE } from '../data/site.js';
@@ -22,6 +23,7 @@ const price = PRICE.en;
   path="/terms"
   noindex={true}
 >
+  <div class="docpage">
   <div class="shell">
     <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Terms' }]} />
   </div>
@@ -65,63 +67,5 @@ const price = PRICE.en;
       person answers within {CONTACT.responseWindow}.
     </p>
   </article>
+  </div>
 </Base>
-
-<style>
-  .doc {
-    max-inline-size: var(--measure-narrow);
-    margin-inline: auto;
-    padding: var(--s-4) var(--gutter) var(--section-y);
-  }
-
-  .draft {
-    padding: var(--s-4);
-    border: 2px dashed var(--soon-line);
-    border-radius: var(--r-card);
-    background: var(--soon-bg);
-    color: var(--soon-text);
-    font-size: var(--fs-small);
-  }
-
-  .doc h1 { margin-block-start: var(--s-8); }
-
-  .doc h2 {
-    margin-block-start: var(--s-12);
-    font-size: var(--fs-h3);
-  }
-
-  .doc p {
-    margin-block-start: var(--s-4);
-    font-size: 19px;
-    line-height: 1.7;
-    color: var(--muted);
-  }
-
-  .promises {
-    margin-block-start: var(--s-4);
-    padding-inline-start: var(--s-6);
-    display: grid;
-    gap: var(--s-3);
-    font-size: 19px;
-    line-height: 1.7;
-    color: var(--muted);
-  }
-
-  /* An email address inside a sentence still gets tapped, so it gets a real
-     target: padding rather than a taller line, so the paragraph keeps its
-     rhythm. */
-  .doc a {
-    display: inline-block;
-    padding-block: 11px;
-    color: var(--amber-text);
-    font-weight: 600;
-  }
-
-  .todo {
-    padding: var(--s-3) var(--s-4);
-    border-inline-start: 3px solid var(--soon-line);
-    background: var(--soon-bg);
-    color: var(--soon-text) !important;
-    font-size: 16px !important;
-  }
-</style>

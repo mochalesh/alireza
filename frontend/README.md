@@ -60,7 +60,9 @@ Each is a single edit, and the file is named so nobody has to hunt.
 | Email capture endpoint | `src/components/NotifyMe.astro`, `src/pages/pricing.astro` | The notify-me forms show a success message without sending the address anywhere. |
 | Real price | `src/data/site.js` → `PRICE` | $99 and 399 SAR are the brief's placeholders. Changing them here changes every page, including copy that quotes the figure mid-sentence. |
 | Contact details | `src/data/company.js` → `CONTACT` | Placeholder email, phone and WhatsApp. |
-| Arabic WhatsApp number | `src/data/ar/site.js` → `AR_WHATSAPP` | The Arabic site's primary conversion. It is a 555-style placeholder and the pricing page says so; set the real number and drop `placeholder: true`, which removes that notice. |
+| Arabic WhatsApp number | `src/data/ar/site.js` → `AR_WHATSAPP` | The Arabic site's primary conversion. It is a 555-style placeholder, and the pricing and contact pages both say so on the page; set the real number and drop `placeholder: true`, which removes both notices. |
+| Arabic team page | `src/data/ar/company.js` → `AR_PLACEHOLDER` | About (AR) says the team page is not written yet rather than repeating the English names, which in Arabic would read as a local Gulf team. |
+| Arabic Privacy and Terms | `src/pages/ar/privacy.astro`, `src/pages/ar/terms.astro` | Drafts, marked as drafts, citing PDPL and UAE data protection law. They need real text. |
 | Real team | `src/data/company.js` → `TEAM`, then `PLACEHOLDER = false` | Turns off the "placeholder team" notices on About and Contact together. |
 | Privacy and Terms | `src/pages/privacy.astro`, `src/pages/terms.astro` | Both are drafts and say so. They need real text from Widgeta's counsel. |
 | Photographs | testimonial and team cards | Dashed placeholders today. The SEO spec wants real faces; a stock photo of a stranger presented as a named customer is not one. |
@@ -92,10 +94,17 @@ of the RTL work.
 
 **Two registries, one machine.** `src/data/ar/site.js` is the Arabic mirror
 of `src/data/site.js`, with the same `built` flags and the same rule: the
-header, the footer, the hub links and `getStaticPaths` all read it, so a
-link and its page cannot disagree. It is why the Arabic footer has two
-columns today rather than five — the other pages are not written yet, and
-the footer says so by not offering them.
+header, the footer, the hub links, both sitemaps and every `getStaticPaths`
+read it, so a link and its page cannot disagree. Flipping one flag adds the
+page, the navigation link and the sitemap line together.
+
+**One template, two languages.** Nine stylesheets in `src/styles/` are shared
+between the English and Arabic versions of the same page type — home,
+`ar-page` (hubs and cities), pricing, capability, vs, examples, guide,
+bloglist, post, doc. They came out of the page files rather than being
+written twice, because two copies of three hundred lines of CSS drift apart
+the first time either is touched. Each is namespaced under a wrapper class,
+so the generic names inside cannot leak.
 
 **A tool that cannot be honest is not shipped.** The website grader in the
 resources list stays `built: false`: grading a stranger's site means fetching
@@ -132,19 +141,31 @@ Not a translation. The differences are structural, and each is in the brief:
   debt in a market where those names read as real. That block ships when there
   are real customers.
 
-Six Arabic pages are written and live: home, the multi-trade hub, the AC hub,
-Riyadh, and pricing. The rest of the tree — three more trades, five more
-cities, features, comparisons, guides, about, contact and the Arabic legal
-pages — is in the registry at `built: false`, which is why nothing links to
-it. **The Arabic site has no privacy or terms link today**: those pages do
-not exist in Arabic, and the brief forbids inline links between the two
-language trees, so the footer offers neither rather than pointing at an
-English draft.
+The Arabic tree is complete: home, five trade hubs, six city pages, four
+capability pages, three comparisons, the examples showcase, pricing, three
+pillar guides, a blog with three posts, about, contact, and its own privacy
+and terms drafts. Thirty Arabic URLs in `sitemap-ar.xml`.
+
+Two things about it are worth knowing before you read the pages:
+
+**The Arabic blog is the one that is properly seeded.** Its three posts are
+written for contractors — WhatsApp discipline, replying to a bad review, the
+pre-season checklist — which is our own audience and our own keyword galaxy,
+so they index normally. The English blog still has only the labelled,
+noindexed sample; it is the side that needs posts written.
+
+**The Arabic legal pages are drafts and say so**, in the same visible banner
+the English ones use, with each unwritten section marked. They cite Saudi's
+PDPL and the UAE's data protection law rather than GDPR and CCPA, because
+those are the laws that apply to these readers. They carry noindex, they are
+excluded from `sitemap-ar.xml`, and they are disallowed in robots.txt. They
+exist because a site with no privacy link at all is worse than a site with an
+honest draft — but they still need real text from counsel before launch.
 
 ## Measured, not assumed
 
 Taken from the built output in a real browser, at 1440px and 390px, across
-all 27 pages, English and Arabic.
+all 54 pages, English and Arabic.
 
 - One `<h1>` per page, no heading-level skips.
 - Schema on every page: Organization + WebSite + SoftwareApplication +
@@ -166,8 +187,8 @@ all 27 pages, English and Arabic.
 - No dead internal links.
 - No console errors.
 - On a throttled phone (1.5 Mbps, 150ms RTT, 4× CPU slowdown): English LCP
-  644–910ms, Arabic 748–892ms; CLS 0.002–0.055 across both; 108–182KB per
-  English page and 163–179KB per Arabic one, and **zero third-party
+  644–910ms, Arabic 688–892ms; CLS 0.002–0.055 across both; 108–182KB per
+  English page and 157–179KB per Arabic one, and **zero third-party
   requests** — no analytics, no CDN, no font host. The name generator's
   script is small enough that Astro inlines it, so the tool page still
   fetches nothing beyond the document, one stylesheet and the fonts.

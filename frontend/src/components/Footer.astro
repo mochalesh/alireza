@@ -11,7 +11,8 @@
  */
 import { TRADES, CAPABILITIES, COMPARISONS, RESOURCES, COMPANY, AR_SITE } from '../data/site.js';
 import {
-  AR, AR_TRADES, AR_CITIES, AR_CAPABILITIES, AR_COMPARISONS, AR_COMPANY, ar,
+  AR, AR_TRADES, AR_CITIES, AR_CAPABILITIES, AR_COMPARISONS, AR_COMPANY,
+  AR_RESOURCES, ar,
 } from '../data/ar/site.js';
 
 interface Props {
@@ -58,6 +59,7 @@ const arabic = [
     })),
   },
   { label: 'المقارنات', items: built(AR_COMPARISONS).map((c) => ({ label: `ويدجيتا مقابل ${c.name}`, href: `${AR}/vs/${c.slug}` })) },
+  { label: 'مصادر', items: built(AR_RESOURCES) },
   { label: 'الشركة', items: built(AR_COMPANY) },
 ];
 

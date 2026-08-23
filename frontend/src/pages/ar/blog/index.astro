@@ -1,0 +1,81 @@
+---
+/**
+ * Arabic blog index.
+ *
+ * Three posts, all written for contractors rather than their customers — so
+ * unlike the English index this one indexes normally. The `noindex` guard
+ * stays anyway: if a day comes when the only posts here are samples, the
+ * index should say so by not asking to be indexed.
+ */
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/bloglist.css';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+
+import { AR, AR_GUIDES_INDEX } from '../../../data/ar/site.js';
+import { AR_POSTS } from '../../../data/ar/posts.js';
+import { AR_GUIDES } from '../../../data/ar/guides.js';
+
+const posts = Object.entries(AR_POSTS).map(([slug, p]) => ({ slug, ...p }));
+const real = posts.filter((p) => !p.sample);
+const guides = AR_GUIDES_INDEX.filter((g) => g.built && AR_GUIDES[g.slug])
+  .map((g) => ({ slug: g.slug, ...AR_GUIDES[g.slug] }));
+---
+
+<Base
+  title="المدونة — مقالات لأصحاب شركات الصيانة | ويدجيتا"
+  description="مقالات قصيرة لأصحاب شركات الصيانة والخدمات: الواتساب، التقييمات، المواسم، والظهور في البحث — بلغة عملية وبلا مصطلحات."
+  path={`${AR}/blog`}
+  lang="ar"
+  noindex={real.length === 0}
+>
+  <div class="blogindex">
+    <div class="shell">
+      <Breadcrumb items={[{ label: 'الرئيسية', href: AR }, { label: 'المدونة' }]} />
+    </div>
+
+    <section class="head">
+      <div class="shell measure">
+        <h1>المدونة</h1>
+        <p class="head__sub">
+          مقالات قصيرة لأصحاب شركات الصيانة والخدمات — مكتوبة لك أنت لا
+          لعميلك، وبلا مصطلحات لا تعني شيئاً.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="grid-auto">
+          {posts.map((p) => (
+            <a class="card post" href={`${AR}/blog/${p.slug}`}>
+              <span class="post__tags">
+                {p.tags.join(' · ')}
+                {p.sample && <span class="post__sample">صفحة مثال</span>}
+              </span>
+              <span class="post__title">{p.h1}</span>
+              <span class="muted post__stand">{p.standfirst}</span>
+              <span class="muted post__meta">{p.updatedLabel} · {p.readingTime}</span>
+            </a>
+          ))}
+        </div>
+
+        {
+          guides.length > 0 && (
+            <div class="guides">
+              <h2 class="guides__h">أو ابدأ بدليل كامل</h2>
+              <div class="grid-auto">
+                {guides.map((g) => (
+                  <a class="card guide" href={`${AR}/guides/${g.slug}`}>
+                    <span class="guide__label">دليل · {g.tradeLabel}</span>
+                    <span class="guide__title">{g.h1}</span>
+                    <span class="muted guide__stand">{g.standfirst}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </section>
+  </div>
+</Base>

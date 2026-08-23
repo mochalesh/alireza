@@ -70,6 +70,13 @@ html[lang='ar'] .mark {
   );
 }
 
+/* An ordered list numbered 1, 2, 3 inside Arabic text is the same mismatch as
+   ٠١ inside English text. The chapter numbers are already Eastern Arabic, so
+   the counters that sit beside them should be too. */
+html[lang='ar'] ol {
+  list-style-type: arabic-indic;
+}
+
 /* Uppercase and wide tracking are Latin typographic devices. Arabic has no
    case, and tracking breaks the joins, so the label treatment loses both. */
 html[lang='ar'] .eyebrow,

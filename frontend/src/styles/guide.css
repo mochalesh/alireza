@@ -1,0 +1,214 @@
+/* ============================================================================
+   The pillar guide, both languages.
+
+   One in English, three in Arabic, one set of rules — including the sticky
+   chapter chips, which mirror on their own because they are laid out in
+   logical properties. Namespaced under `.guidepage`.
+   ============================================================================ */
+/* --- Chapter chips ------------------------------------------------------ */
+.guidepage .chips {
+  position: sticky;
+  inset-block-start: 69px;
+  z-index: 40;
+  background: var(--paper);
+  border-block-end: 1px solid var(--line);
+}
+
+.guidepage .chips__in {
+  max-inline-size: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  gap: var(--s-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.guidepage .chips__in::-webkit-scrollbar {
+  display: none;
+}
+
+.guidepage .chips__chip {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tap);
+  padding-inline: var(--s-3);
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  border-block-end: 3px solid transparent;
+}
+
+.guidepage .chips__chip:hover {
+  color: var(--ink);
+  border-block-end-color: var(--amber);
+}
+
+  /* --- Column -------------------------------------------------------------- */
+.guidepage .col {
+  max-inline-size: var(--measure-narrow);
+  margin-inline: auto;
+  padding: var(--s-8) var(--gutter) var(--section-y);
+}
+
+.guidepage .head h1 {
+  margin-block-start: var(--s-4);
+}
+
+.guidepage .head__stand {
+  margin-block-start: var(--s-6);
+  font-size: var(--fs-lead);
+  color: var(--muted);
+}
+
+.guidepage .byline {
+  margin-block-start: var(--s-6);
+  font-size: var(--fs-small);
+}
+
+.guidepage .byline strong {
+  color: var(--ink);
+}
+
+.guidepage .byline__sep {
+  margin-inline: 6px;
+  opacity: .5;
+}
+
+  /* --- Table of contents ---------------------------------------------------- */
+.guidepage .toc {
+  margin-block-start: var(--s-8);
+  padding: var(--s-6);
+  background: var(--putty);
+  border-radius: var(--r-card);
+}
+
+.guidepage .toc__label {
+  display: block;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.guidepage .toc__list {
+  margin: var(--s-3) 0 0;
+  padding-inline-start: var(--s-6);
+  display: grid;
+}
+
+.guidepage .toc__list a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tap);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.guidepage .toc__list a:hover {
+  color: var(--amber-text);
+}
+
+  /* --- Chapters -------------------------------------------------------------- */
+.guidepage .chapter {
+  padding-block-start: var(--s-16);
+  scroll-margin-block-start: 128px;
+}
+
+.guidepage .chapter__n {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--amber-text);
+}
+
+.guidepage .chapter__h {
+  margin-block-start: var(--s-3);
+  font-size: clamp(26px, 2vw + 18px, 36px);
+}
+
+  /* --- The one commercial link ------------------------------------------------ */
+.guidepage .cta {
+  margin-block-start: var(--s-8);
+  padding: var(--s-6);
+  border: 2px solid var(--amber);
+  border-radius: var(--r-card);
+  background: var(--amber-tint);
+}
+
+.guidepage .cta__label {
+  display: block;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--amber-text);
+}
+
+.guidepage .cta__text {
+  margin-block-start: var(--s-3);
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.guidepage .cta__link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tap);
+  margin-block-start: var(--s-2);
+  font-weight: 700;
+  color: var(--amber-text);
+}
+
+.guidepage .cta__link:hover {
+  color: var(--ink);
+}
+
+  /* --- Keep reading ------------------------------------------------------------ */
+.guidepage .keep {
+  margin-block-start: var(--s-16);
+  padding-block-start: var(--s-8);
+  border-block-start: 1px solid var(--line);
+}
+
+.guidepage .keep__h {
+  font-size: var(--fs-h3);
+}
+
+.guidepage .keep__grid {
+  display: grid;
+  gap: var(--s-4);
+  margin-block-start: var(--s-6);
+}
+
+.guidepage .keep__card {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.guidepage .keep__card:hover {
+  border-color: var(--amber);
+  color: var(--ink);
+}
+
+.guidepage .keep__tags {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--amber-text);
+}
+
+.guidepage .keep__title {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.guidepage .keep__stand {
+  font-size: var(--fs-small);
+}

@@ -1,0 +1,55 @@
+/* ============================================================================
+   Legal drafts, both languages. Namespaced under `.docpage`.
+
+   The `.draft` banner and the `.todo` blocks are the load-bearing part: an
+   unwritten section has to be visibly unwritten, in either script.
+   ============================================================================ */
+.docpage .doc {
+  max-inline-size: var(--measure-narrow);
+  margin-inline: auto;
+  padding: var(--s-4) var(--gutter) var(--section-y);
+}
+
+.docpage .draft {
+  padding: var(--s-4);
+  border: 2px dashed var(--soon-line);
+  border-radius: var(--r-card);
+  background: var(--soon-bg);
+  color: var(--soon-text);
+  font-size: var(--fs-small);
+}
+
+.docpage .doc h1 { margin-block-start: var(--s-8); }
+
+.docpage .doc__meta { margin-block-start: var(--s-3); font-size: 14px; }
+
+.docpage .doc h2 {
+  margin-block-start: var(--s-12);
+  font-size: var(--fs-h3);
+}
+
+.docpage .doc p {
+  margin-block-start: var(--s-4);
+  font-size: 19px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+  /* An email address inside a sentence still gets tapped, so it gets a real
+     target: padding rather than a taller line, so the paragraph keeps its
+     rhythm. */
+.docpage .doc a {
+  display: inline-block;
+  padding-block: 11px;
+  color: var(--amber-text);
+  font-weight: 600;
+}
+
+  /* An unwritten section is visibly unwritten. */
+.docpage .todo {
+  padding: var(--s-3) var(--s-4);
+  border-inline-start: 3px solid var(--soon-line);
+  background: var(--soon-bg);
+  color: var(--soon-text) !important;
+  font-size: 16px !important;
+}

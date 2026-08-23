@@ -9,6 +9,8 @@ Allow: /
 
 Disallow: /privacy
 Disallow: /terms
+Disallow: /ar/privacy
+Disallow: /ar/terms
 
 # One sitemap per language, so indexation can be read per language rather
 # than as a single mixed number.

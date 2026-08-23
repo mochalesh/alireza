@@ -8,6 +8,7 @@
  * noindex until posts written for our own audience exist.
  */
 import Base from '../../layouts/Base.astro';
+import '../../styles/bloglist.css';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { POSTS } from '../../data/posts.js';
 import { GUIDES } from '../../data/guides.js';
@@ -23,6 +24,7 @@ const guides = Object.entries(GUIDES).map(([slug, g]) => ({ slug, ...g }));
   path="/blog"
   noindex={real.length === 0}
 >
+  <div class="blogindex">
   <div class="shell">
     <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
   </div>
@@ -71,68 +73,5 @@ const guides = Object.entries(GUIDES).map(([slug, g]) => ({ slug, ...g }));
       }
     </div>
   </section>
+  </div>
 </Base>
-
-<style>
-  .head { padding-block: var(--s-4) 0; }
-
-  .head__sub {
-    margin-block-start: var(--s-6);
-    font-size: var(--fs-lead);
-    color: var(--muted);
-  }
-
-  .post {
-    display: grid;
-    gap: var(--s-2);
-    align-content: start;
-  }
-
-  .post:hover {
-    border-color: var(--amber);
-    color: var(--ink);
-  }
-
-  .post__tags {
-    display: flex;
-    align-items: center;
-    gap: var(--s-2);
-    flex-wrap: wrap;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--amber-text);
-  }
-
-  .post__sample {
-    padding: 3px var(--s-2);
-    border: 1px dashed var(--soon-line);
-    border-radius: var(--r-tag);
-    background: var(--soon-bg);
-    color: var(--soon-text);
-    letter-spacing: .06em;
-  }
-
-  .post__title {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: 24px;
-    line-height: 1.12;
-  }
-
-  .post__stand { font-size: var(--fs-small); }
-
-  .post__meta { font-size: 13px; }
-
-  .guides {
-    margin-block-start: var(--s-16);
-    padding-block-start: var(--s-8);
-    border-block-start: 1px solid var(--line);
-  }
-
-  .guides__h {
-    font-size: var(--fs-h3);
-    margin-block-end: var(--s-6);
-  }
-</style>

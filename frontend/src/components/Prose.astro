@@ -10,10 +10,12 @@ import { withPrice } from '../data/site.js';
 
 interface Props {
   blocks: any[];
+  /** Which price to resolve {{PRICE}} to. */
+  lang?: 'en' | 'ar';
 }
 
-const { blocks } = Astro.props;
-const p = (text) => withPrice(text ?? '');
+const { blocks, lang = 'en' } = Astro.props;
+const p = (text) => withPrice(text ?? '', lang);
 ---
 
 <div class="prose">

@@ -1,0 +1,106 @@
+---
+/**
+ * Arabic terms.
+ *
+ * Same posture as the privacy draft: the commercial terms of a subscription
+ * are a legal document, and inventing one would be worse than shipping
+ * nothing at all.
+ *
+ * What this page can state truthfully is the set of promises the Arabic site
+ * already makes in public — no contract, no setup fee, the site stays yours,
+ * the price is provisional — because those are real, they are on other pages
+ * where a visitor can check them, and the final terms must not contradict
+ * them.
+ */
+import Base from '../../layouts/Base.astro';
+import '../../styles/doc.css';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { PRICE } from '../../data/site.js';
+import { AR } from '../../data/ar/site.js';
+import { AR_CONTACT } from '../../data/ar/company.js';
+
+const price = PRICE.ar;
+const updated = 'لم تُنشر بعد';
+---
+
+<Base
+  title="الشروط | ويدجيتا"
+  description="شروط الاشتراك في ويدجيتا، والوعود التي يعلنها الموقع للجمهور اليوم."
+  path={`${AR}/terms`}
+  lang="ar"
+  noindex={true}
+>
+  <div class="docpage">
+    <div class="shell">
+      <Breadcrumb items={[{ label: 'الرئيسية', href: AR }, { label: 'الشروط' }]} />
+    </div>
+
+    <article class="doc">
+      <p class="draft">
+        <strong>مسودة — غير سارية بعد.</strong> الشروط النهائية يجب أن تُكتب
+        وتُعتمد من ويدجيتا ومستشارها القانوني قبل الإطلاق. ما يلي يجمع الوعود
+        التي يعلنها هذا الموقع للجمهور اليوم، ويشير إلى ما لم يُكتب بعد.
+      </p>
+
+      <h1>الشروط</h1>
+      <p class="doc__meta muted">آخر تحديث: {updated}</p>
+
+      <h2>ما يعده هذا الموقع علناً</h2>
+      <p>
+        هذه ليست شروطاً كاملة، لكنها التزامات معلنة على صفحات أخرى من هذا
+        الموقع يستطيع أي زائر التحقق منها — والشروط النهائية يجب ألا تناقضها:
+      </p>
+      <p>
+        لا عقد ولا رسوم تأسيس، والإلغاء متاح في أي وقت. وعند الإلغاء يبقى
+        الموقع والنطاق والصفحات لك وتنتقل معك. والاشتراك سعر شهري واحد يشمل
+        الموقع والاستضافة والعمل على الظهور في البحث والصفحات الشهرية.
+      </p>
+      <p>
+        السعر المعروض اليوم ({price.display}{price.period}) سعر مبدئي للعرض
+        ويُثبَّت عند الإطلاق، وهذا مكتوب على صفحة الأسعار نفسها.
+      </p>
+      <p>
+        وجزء «الرد على المكالمات» غير متاح للشراء اليوم، وسعره يُعلن عند
+        إطلاقه.
+      </p>
+
+      <h2>الاشتراك والدفع</h2>
+      <p class="todo">
+        يجب أن يُكتب: دورة الفوترة، وطرق الدفع المقبولة، والضريبة، وما يحدث عند
+        تعثر الدفع، وسياسة الاسترجاع، وكيفية إشعار العملاء بتغيّر السعر.
+      </p>
+
+      <h2>ما يقدمه ويدجيتا وما لا يضمنه</h2>
+      <p class="todo">
+        يجب أن يُكتب: نطاق الخدمة، ووقت التشغيل، ودعم العملاء. ويجب أن يُذكر
+        صراحة أن ترتيب البحث لا يمكن ضمانه — وهو ما تقوله صفحات هذا الموقع
+        بالفعل، فيجب أن تقوله الشروط أيضاً.
+      </p>
+
+      <h2>المحتوى والملكية</h2>
+      <p class="todo">
+        يجب أن يُكتب: من يملك النصوص والصور التي يرفعها العميل، ومن يملك
+        الصفحات التي يولّدها ويدجيتا، وماذا ينتقل مع العميل عند الإلغاء
+        بالتفصيل لا بالعموم.
+      </p>
+
+      <h2>الاستخدام المقبول</h2>
+      <p class="todo">
+        يجب أن يُكتب: ما لا يجوز نشره على موقع يبنيه ويدجيتا، ومتى يحق إيقاف
+        الحساب.
+      </p>
+
+      <h2>القانون الواجب التطبيق</h2>
+      <p class="todo">
+        يجب أن يُكتب: الجهة القضائية والقانون الواجب التطبيق، مكتوبين بحسب مكان
+        تسجيل الشركة والأسواق التي تبيع فيها.
+      </p>
+
+      <h2>أسئلة عن الشروط</h2>
+      <p>
+        راسلنا على <a href={`mailto:${AR_CONTACT.email}`}>{AR_CONTACT.email}</a>
+        ويرد عليك شخص خلال {AR_CONTACT.responseWindow}.
+      </p>
+    </article>
+  </div>
+</Base>

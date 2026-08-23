@@ -10,7 +10,7 @@
 import Base from '../layouts/Base.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { CONTACT, PLACEHOLDER } from '../data/company.js';
-import { SITE_URL, APP_URL } from '../data/site.js';
+import { SITE_URL, APP_URL, AR_SITE } from '../data/site.js';
 
 const title = 'Contact Widgeta — Talk to a Person | Widgeta';
 const description =
@@ -34,7 +34,13 @@ const reasons = [
 ];
 ---
 
-<Base title={title} description={description} path="/contact" schema={schema}>
+<Base
+  title={title}
+  description={description}
+  path="/contact"
+  altPath={AR_SITE.built ? '/ar/contact' : undefined}
+  schema={schema}
+>
   <div class="shell">
     <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Contact' }]} />
   </div>
