@@ -18,8 +18,10 @@ import FaqList from '../../components/FaqList.astro';
 import ClosingBand from '../../components/ClosingBand.astro';
 
 import { TRADE_CONTENT } from '../../data/trades.js';
+import { GUIDES } from '../../data/guides.js';
 import {
   SITE_URL, APP_URL, PRICE, TRADES, COMPARISONS, withPrice, PRIMARY_CTA,
+  guideForTrade,
 } from '../../data/site.js';
 
 export function getStaticPaths() {
@@ -28,6 +30,14 @@ export function getStaticPaths() {
 
 const { trade } = Astro.params;
 const t = TRADE_CONTENT[trade];
+
+/*
+ * The brief requires each hub to link to its pillar guide. `guideForTrade`
+ * returns null until that guide is written, so this block appears trade by
+ * trade as the guides land rather than all at once or never.
+ */
+const guidePath = guideForTrade(trade);
+const guide = guidePath ? GUIDES[guidePath.replace('/guides/', '')] : null;
 const price = PRICE.en;
 
 /** Copy carries a price token rather than a figure; resolve it here. */
@@ -330,8 +340,37 @@ const schema = [
     </div>
   </section>
 
+  <!-- The pillar guide ------------------------------------------------------- -->
+  {
+    guide && (
+      <section class="section guidesec">
+        <div class="shell">
+          <div class="card guideteaser">
+            <div class="guideteaser__copy">
+              <p class="eyebrow">Free guide · no signup</p>
+              <h2 class="guideteaser__h">{guide.h1}</h2>
+              <p class="muted guideteaser__stand">{guide.standfirst}</p>
+              <a class="guideteaser__cta" href={guidePath}>
+                Read the guide <span aria-hidden="true">→</span>
+              </a>
+            </div>
+
+            <ul class="guideteaser__chapters">
+              {guide.chapters.map((c) => (
+                <li>
+                  <span class="guideteaser__n">{c.n}</span>
+                  {c.chip}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   <ClosingBand
-    title={`Be the ${t.tradeLower.replace(/s$/, '')} your neighbors find first.`}
+    title={`Be the ${t.tradeSingular} your neighbors find first.`}
     lead="Answer a few questions today. Your site is live before your next job."
     ctaLabel={t.cta}
     ctaHref={`${APP_URL}/signup`}
@@ -339,6 +378,85 @@ const schema = [
 </Base>
 
 <style>
+  /* --- Pillar guide teaser --------------------------------------------- */
+  .guidesec {
+    padding-block-start: 0;
+  }
+
+  .guideteaser {
+    display: grid;
+    gap: var(--s-8);
+    align-items: start;
+  }
+
+  @media (min-width: 860px) {
+    .guideteaser {
+      grid-template-columns: 1.25fr 1fr;
+      gap: var(--s-12);
+    }
+  }
+
+  .guideteaser__copy {
+    display: grid;
+    gap: var(--s-3);
+    justify-items: start;
+  }
+
+  .guideteaser__h {
+    font-size: clamp(24px, 1.8vw + 18px, 34px);
+  }
+
+  .guideteaser__stand {
+    font-size: 17px;
+    line-height: 1.7;
+    max-inline-size: 52ch;
+  }
+
+  .guideteaser__cta {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    font-weight: 700;
+    color: var(--amber-text);
+  }
+
+  .guideteaser__cta:hover {
+    color: var(--ink);
+  }
+
+  /* The chapter list is the argument for reading it: seven specific things
+     beats one sentence promising depth. */
+  .guideteaser__chapters {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 2px;
+    align-self: center;
+  }
+
+  .guideteaser__chapters li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-3);
+    padding-block: 7px;
+    border-block-end: 1px solid var(--line);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .guideteaser__chapters li:last-child {
+    border-block-end: 0;
+  }
+
+  .guideteaser__n {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--amber-text);
+    flex: none;
+  }
+
   .hero {
     padding-block: var(--s-4) var(--section-y);
   }

@@ -62,14 +62,44 @@ export const CAPABILITIES = [
   { slug: 'call-answering', name: 'AI call answering', status: 'coming-soon', built: true },
 ];
 
-/** Comparison pages. Never link to one that has not been built. */
+/**
+ * Comparison pages. Never link to one that has not been built.
+ *
+ * Five, and deliberately five different kinds of alternative rather than
+ * five competitors of the same shape: two lead marketplaces, an AI site
+ * builder, a DIY platform, and a full-service agency. A contractor weighing
+ * Widgeta is weighing one of those five categories, not a list of brands.
+ */
 export const COMPARISONS = [
   { slug: 'angi', name: 'Angi', built: true },
   { slug: 'thumbtack', name: 'Thumbtack', built: true },
-  { slug: 'durable', name: 'Durable', built: false },
-  { slug: 'wix', name: 'Wix', built: false },
-  { slug: 'scorpion', name: 'Scorpion', built: false },
+  { slug: 'durable', name: 'Durable', built: true },
+  { slug: 'wix', name: 'Wix', built: true },
+  { slug: 'scorpion', name: 'Scorpion', built: true },
 ];
+
+/**
+ * The pillar guides, in the order the index shows them.
+ *
+ * Plumbing leads because it is the largest of the four markets, then the
+ * order follows the trade list. Same `built` rule as everything else: the
+ * index, the footer, the Learn menu and every trade hub read this, so a
+ * guide that has not been written cannot be linked from anywhere.
+ */
+export const GUIDES_INDEX = [
+  { slug: 'plumbing-marketing', trade: 'plumbers', built: true },
+  { slug: 'hvac-marketing', trade: 'hvac', built: true },
+  { slug: 'roofing-marketing', trade: 'roofers', built: true },
+  { slug: 'electrician-marketing', trade: 'electricians', built: true },
+];
+
+export const GUIDES_PAGE = { href: '/guides', built: true };
+
+/** The guide written for a trade, or null when it has not been written. */
+export function guideForTrade(slug) {
+  const g = GUIDES_INDEX.find((x) => x.trade === slug && x.built);
+  return g ? `/guides/${g.slug}` : null;
+}
 
 /**
  * The website grader stays off. It has to fetch a stranger's URL and analyse
@@ -78,7 +108,7 @@ export const COMPARISONS = [
  * When there is a backend to do it honestly, the flag flips.
  */
 export const RESOURCES = [
-  { label: 'Marketing guides', href: '/guides/plumbing-marketing', built: true },
+  { label: 'Marketing guides', href: '/guides', built: true },
   { label: 'Blog', href: '/blog', built: true },
   { label: 'Business name generator', href: '/tools/business-name-generator', built: true },
   { label: 'Website grader', href: '/tools/website-grader', built: false },
@@ -114,7 +144,7 @@ export const NAV = [
   { label: 'What you get', href: '/features/website', fallback: '/#capabilities', built: true, caret: true },
   { label: 'Pricing', href: '/pricing', fallback: null, built: true },
   { label: 'Examples', href: '/examples', fallback: '/#examples', built: true },
-  { label: 'Learn', href: '/guides/plumbing-marketing', fallback: null, built: true, caret: true },
+  { label: 'Learn', href: '/guides', fallback: null, built: true, caret: true },
 ];
 
 /** The destination a nav item should actually point at right now. */

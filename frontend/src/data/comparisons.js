@@ -4,17 +4,204 @@
  * Highest purchase intent on the site, and the one place where conceding a
  * point is the strategy: a page that says the competitor never wins reads as
  * marketing, and marketing is what this audience has been burned by. Every
- * row here states something about the company actually named in that column,
- * and every numeric claim carries its source note.
+ * row states something about the company actually named in that column, and
+ * every numeric claim carries its source note.
  *
- * Angi is the approved page, written in full. Thumbtack follows the same
- * shape with its own facts — the two are genuinely different businesses and
- * the rows say so. The remaining three in site.js stay unbuilt until their
- * copy exists; a comparison page invented from a template would be exactly
- * the thing this page format is supposed to be an antidote to.
+ * Five pages, and deliberately five different *kinds* of alternative rather
+ * than five brands of the same kind — because a contractor is choosing
+ * between categories, not logos:
+ *
+ *   angi, thumbtack  — lead marketplaces. You rent demand.
+ *   durable          — an AI site builder. Fast, cheap, and finished.
+ *   wix              — a DIY platform. You get tools and you do the work.
+ *   scorpion         — a full-service agency. People, strategy, a retainer.
+ *
+ * Two rules hold on every one of them. `theirWin: true` marks the row where
+ * the alternative is genuinely better and the template says so out loud. And
+ * where a company does not publish its prices, this file says that rather
+ * than inventing a figure — the source note under each table is part of the
+ * page, not a disclaimer bolted on.
  */
 
 export const COMPARISON_CONTENT = {
+  /* ================================================================== */
+  durable: {
+    name: 'Durable',
+    kind: 'AI website builder',
+    h1: 'Widgeta vs Durable: an honest comparison.',
+    intro1:
+      'Durable generates a website in about half a minute. That is not marketing — it genuinely does it, and for a contractor who has been putting off getting online for three years, half a minute is a real answer to a real problem.',
+    intro2:
+      'The difference is what happens on day two. Durable builds you a site and hands it over; Widgeta builds one and then keeps working on it — the page-per-service-per-town grid, and new pages every month as the searches near you move. Here is the whole picture, including where Durable is the better buy.',
+    rows: [
+      { k: "What you're buying", w: 'A site that keeps being worked on', a: 'A site generated for you, then yours to run' },
+      { k: 'Time to a first page', w: 'About a minute', a: 'About thirty seconds', theirWin: true },
+      { k: 'Site structure', w: 'A page for every service in every town you cover', a: 'A handful of pages: home, services, about, contact' },
+      { k: 'Written for local search', w: 'Yes — that is the whole product', a: 'Generic copy you edit; local targeting is on you' },
+      { k: 'New pages after launch', w: 'Every month, matched to local searches', a: 'When you write them' },
+      { k: "What's bundled", w: 'Site, hosting, domain, monthly SEO and content', a: 'Site and hosting, plus a set of small business tools' },
+      { k: 'Built for one trade or for everyone', w: 'Only home-service trades', a: 'Any small business — barbers to consultants' },
+      { k: 'When you stop paying', w: 'The site and domain stay yours', a: 'Check the plan before you rely on it' },
+    ],
+    sourceNote:
+      'Durable publishes plans and changes them; nothing above quotes a price for that reason. The comparison is about how the two products work, which is stable, and it is worth checking their current plans yourself.',
+    theirsTitle: 'Durable makes sense when…',
+    theirs: [
+      'You have no website at all and want that fixed tonight, cheaply, before you think about anything else',
+      'You want a straightforward brochure site and you are happy to write and update it yourself',
+      'You are not really competing on local search — most of your work comes from referrals and repeat customers',
+    ],
+    oursTitle: 'Widgeta makes sense when…',
+    ours: [
+      'You want the phone to ring from people who do not know your name yet',
+      'You work several services across several towns, and you want a page that answers each of those searches',
+      'You know you will not log in and add pages every month, and you would rather that happened without you',
+    ],
+    calloutLead: 'The difference in one sentence:',
+    callout:
+      'Durable answers "I need a website"; Widgeta answers "I need the phone to ring". Those are different problems and the first one is genuinely cheaper to solve. If a site is all you need, say so and buy the cheaper thing.',
+    faqs: [
+      {
+        q: 'Is an AI-generated website bad for SEO?',
+        a: 'No — how a page was written is not something a search engine can or does penalise. What decides rankings is whether the page answers a specific search: "water heater repair in Mesa" beats "Our Services" whoever typed it. The gap is structural rather than moral: a handful of generic pages has nothing to rank with, no matter how it was produced.',
+      },
+      {
+        q: 'Can I add service-area pages to a Durable site myself?',
+        a: 'Yes, and if you will, that closes most of the gap. Be honest about whether you will: twelve pages is twelve evenings, and then it is another one every time you add a town or a service. Most contractors who plan to do this stop around the fourth page — not from laziness, but because the real work is in the field.',
+      },
+      {
+        q: 'Durable is cheaper. Why pay more?',
+        a: 'Because the two prices are buying different amounts of work. Durable is buying you hosting and a generator; the writing, the structure and the monthly upkeep stay with you. Compare what you end up with after a year rather than the monthly line, and compare the difference against your own hourly rate.',
+      },
+      {
+        q: 'Can I move from Durable to Widgeta later?',
+        a: 'The domain moves without trouble, and that is the part that matters. The pages get rebuilt because the structure is different — a service-by-town grid instead of a services page. If any existing page is bringing you work, tell us and we will keep its address.',
+      },
+    ],
+    title: 'Widgeta vs Durable: An Honest Comparison for Contractors',
+    description:
+      'Durable generates a site in seconds and hands it over; Widgeta builds one and keeps working on it. The full comparison, including where Durable wins.',
+  },
+
+  /* ================================================================== */
+  wix: {
+    name: 'Wix',
+    kind: 'DIY website platform',
+    h1: 'Widgeta vs Wix: an honest comparison.',
+    intro1:
+      'Wix is a genuinely good product and this is not going to pretend otherwise. It gives you a blank canvas and some of the best building tools on the market, and if you enjoy that kind of work you can make something better-looking than anything Widgeta will produce.',
+    intro2:
+      'It gives you tools. Widgeta gives you the finished thing and keeps maintaining it. Which is right depends almost entirely on one question — whether you have the evenings — so here is the comparison with that question in the middle of it.',
+    rows: [
+      { k: "What you're buying", w: 'A site that gets built and kept running for you', a: 'A platform and tools to build it yourself' },
+      { k: 'Who writes the copy', w: 'Written for your services and towns', a: 'You do, or you hire someone' },
+      { k: 'Design freedom', w: 'One structure, built for the trades', a: 'Near-total — you design what you can imagine', theirWin: true },
+      { k: 'Service-area pages', w: 'The full grid, generated', a: 'Possible — you build each one by hand' },
+      { k: 'Ongoing SEO work', w: 'Runs monthly without you', a: 'Good tools available; the work is yours' },
+      { k: 'New pages after launch', w: 'Every month, automatically', a: 'When you log in and make them' },
+      { k: 'Extra functionality', w: 'None — this does one job', a: 'A large app market: booking, stores, forms', theirWin: true },
+      { k: 'Time cost to you', w: 'About two minutes, once', a: 'A weekend to launch, then evenings to maintain' },
+    ],
+    sourceNote:
+      'Wix publishes several plan tiers and revises them; nothing above quotes a price. The comparison is about how the two products divide the work, which does not change with the pricing page.',
+    theirsTitle: 'Wix makes sense when…',
+    theirs: [
+      'You want full control of how it looks, and you have the taste or the designer to use it',
+      'You genuinely have time each month to write pages and keep the site current',
+      'You need something beyond a marketing site — online booking, a store, custom forms',
+    ],
+    oursTitle: 'Widgeta makes sense when…',
+    ours: [
+      'Your evenings are for your family and your quoting, not for a page builder',
+      'Most of your work is local: a service in a town, searched by someone nearby',
+      'You want the site to keep growing without you remembering to grow it',
+    ],
+    calloutLead: 'The honest test:',
+    callout:
+      'Look at the last three months. Did you update anything you own online — a profile, a listing, a site? If yes, Wix will reward that habit and give you more control than we will. If no, a platform that needs you is a platform that will sit still.',
+    faqs: [
+      {
+        q: 'Can Wix rank in local search?',
+        a: 'Yes. The platform is not the obstacle it was ten years ago and its SEO tooling is decent. What decides local rankings is content and structure — a page per service per town, updated over time — and those are things you build on Wix, not things Wix builds for you.',
+      },
+      {
+        q: 'Could I just build the service-area grid on Wix myself?',
+        a: 'Yes, and if you do it properly you will get a similar result. Twelve pages, each genuinely different, each with something true only about that town — then another one whenever you add a service or an area. The tooling is not the hard part; the sustained writing is.',
+      },
+      {
+        q: 'Wix is cheaper per month. What am I paying extra for?',
+        a: 'The writing, the structure and the monthly work — which on Wix you either do yourself or buy separately. Compare the whole cost including your hours, not the subscription line. If your hours are cheap this month, Wix wins on price honestly.',
+      },
+      {
+        q: 'I already have a Wix site that gets no calls. What now?',
+        a: 'Search your main service plus your town in a private window. If your site is not on the first page, the problem is almost certainly structure rather than platform — one Services page carrying ten services cannot rank for any of them. That is fixable on Wix by building the grid, or by moving to something that builds it for you.',
+      },
+    ],
+    title: 'Widgeta vs Wix: An Honest Comparison for Contractors',
+    description:
+      'Wix gives you the tools and the evenings are yours; Widgeta builds and runs it for you. The full comparison, including where Wix is the better buy.',
+  },
+
+  /* ================================================================== */
+  scorpion: {
+    name: 'Scorpion',
+    kind: 'full-service marketing agency',
+    h1: 'Widgeta vs Scorpion: an honest comparison.',
+    intro1:
+      'Scorpion is a marketing agency built for home services, and this comparison is the least even-handed of the five — not because one is better, but because the two are not the same size of thing. Scorpion sells strategy, ad management, a website, lead handling and a team of people. Widgeta sells one automated product.',
+    intro2:
+      'A four-truck plumbing company and a forty-truck multi-location company should read this page and reach opposite conclusions. Here is the picture, including a plain statement of who Scorpion is genuinely better for.',
+    rows: [
+      { k: "What you're buying", w: 'One product that builds and runs your site', a: 'A team, a strategy and managed marketing' },
+      { k: 'Scope', w: 'Website, local SEO, monthly content', a: 'That plus paid ads, creative, lead management, reporting' },
+      { k: 'A person to call', w: 'No account manager — the product runs itself', a: 'A named team who know your business', theirWin: true },
+      { k: 'Pricing', w: 'One published monthly price, no setup fee', a: 'Quoted per engagement; not published' },
+      { k: 'Typical commitment', w: 'Month to month, cancel anytime', a: 'Term agreements are common — read it before signing' },
+      { k: 'Time to live', w: 'About a minute', a: 'Weeks: discovery, design, build, approvals' },
+      { k: 'Your time each month', w: 'None', a: 'Calls, approvals, reviewing reports' },
+      { k: 'Who owns the site if you leave', w: 'You — site and domain go with you', a: 'Depends on the agreement. Ask, and get it in writing' },
+      { k: 'Right size of company', w: 'One to a handful of trucks', a: 'Established, multi-location, real ad budget', theirWin: true },
+    ],
+    sourceNote:
+      'Scorpion does not publish pricing — engagements are quoted individually and reported figures vary enormously by scope and market. Nothing above states a number for that reason. Ask any agency for the full first-year cost in writing, setup included.',
+    theirsTitle: 'Scorpion makes sense when…',
+    theirs: [
+      'You are established, several locations or several trucks, and marketing is now a budget line rather than an afterthought',
+      'You want paid advertising managed properly by people who do it full-time — that is a real skill and we do not do it at all',
+      'You want a strategist who knows your market, will pick up the phone, and can be held to a number',
+    ],
+    oursTitle: 'Widgeta makes sense when…',
+    ours: [
+      'You want a predictable monthly cost you can budget without a sales call',
+      'You want the fundamentals — site, local search, monthly pages — running without meetings',
+      'You are not ready to commit to a term agreement, and you want to own everything if you walk away',
+    ],
+    calloutLead: 'The thing worth knowing about agencies generally:',
+    callout:
+      'the good ones earn the retainer several times over and the bad ones bill it for a monthly report. The difference is visible before you sign, in two answers: what specifically is delivered each month, and who owns the website and the domain if you leave. Get both in writing. That applies to every agency, and it is the advice we would give a friend.',
+    faqs: [
+      {
+        q: 'Is an agency worth it for a small contractor?',
+        a: 'Usually not yet, and we would rather say so. Agency retainers are priced for companies with the volume to absorb them, and a one-truck operation paying agency rates is usually buying capability it cannot use. The fundamentals — profile, reviews, a properly structured site — are most of the result at a fraction of the cost until you are bigger.',
+      },
+      {
+        q: 'Can I use both?',
+        a: 'It would be unusual and mostly wasteful: both would build you a website, and you only need one. If you are already with a full-service agency and it is working, stay. This page is for the decision before that one.',
+      },
+      {
+        q: 'What about the ads Scorpion runs — can Widgeta do that?',
+        a: 'No, and we are not going to pretend otherwise. Widgeta does not touch paid advertising. If managed ads are what you need, an agency or a specialist is the right answer and this is the wrong product.',
+      },
+      {
+        q: 'What should I ask any agency before signing?',
+        a: 'Four things, in writing: what specifically is delivered every month, what the whole first-year cost is including setup, whether you own the website and the domain if you leave, and what happens at the end of the term. Vagueness on the third one is the answer to the third one.',
+      },
+    ],
+    title: 'Widgeta vs Scorpion: An Honest Comparison for Contractors',
+    description:
+      'Scorpion sells a team, managed ads and a strategy; Widgeta sells one product at a published price. Including who Scorpion suits better.',
+  },
+
   angi: {
     name: 'Angi',
     kind: 'lead marketplace',

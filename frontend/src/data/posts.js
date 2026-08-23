@@ -276,6 +276,9 @@ export const POSTS = {
     updated: '2026-08-01',
     updatedLabel: 'August 2026',
     readingTime: '6-minute read',
+    pillar: 'hvac-marketing',
+    pillarNote:
+      'Chapter 1 of the HVAC guide lays out the same year in more detail, and chapter 2 says what to publish against it.',
 
     blocks: [
       { type: 'p', text: 'No trade follows a calendar like HVAC, and no trade wastes more marketing effort by acting on the calendar two weeks late. The pattern is simple once you see it: searching happens before calling, and both happen before you notice the weather turned.' },
@@ -332,6 +335,9 @@ export const POSTS = {
     updated: '2026-08-01',
     updatedLabel: 'August 2026',
     readingTime: '6-minute read',
+    pillar: 'roofing-marketing',
+    pillarNote:
+      'Chapter 3 of the roofing guide covers the storm week, and chapter 4 covers the insurance conversation that decides most of these jobs.',
 
     blocks: [
       { type: 'p', text: 'A hailstorm passes and within a day two things arrive: a surge of homeowners searching for a roofer, and a wave of out-of-town crews who will be gone by the time the work needs standing behind. Both shape what you should have said before the storm, and what you say in the week after it.' },
@@ -381,6 +387,9 @@ export const POSTS = {
     updated: '2026-08-01',
     updatedLabel: 'August 2026',
     readingTime: '6-minute read',
+    pillar: 'electrician-marketing',
+    pillarNote:
+      'Chapter 4 of the electrical guide is about publishing into searches before they get crowded. This is the worked example.',
 
     blocks: [
       { type: 'p', text: 'Most of an electrician’s search volume is outages, panels and rewires — mature, contested, and slow to move on. EV charger installation is the opposite: smaller, growing, and in most markets served by pages that barely exist. That combination is unusual and it does not last.' },

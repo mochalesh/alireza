@@ -112,6 +112,24 @@ score invented client-side would be a made-up number about someone's
 business. The name generator is buildable honestly — combining a word bank is
 arithmetic — and it says plainly that it cannot check availability.
 
+**Four guides, four arguments.** The pillar guides are the one place where
+writing the same page four times would be easiest and most damaging — the
+spec names near-duplicate pages as the doorway-page risk. So each one is
+built around what is actually different about that trade: plumbing is the
+emergency trade, HVAC is a calendar problem, roofing carries a reputation
+problem it did not create, and electrical is two businesses under one
+license. Where two guides would repeat each other — ask for reviews, claim
+the profile — the later one says it in a line and points at the blog post.
+The same rule shapes the five comparisons: they are five different *kinds*
+of alternative (two marketplaces, an AI builder, a DIY platform, an agency)
+rather than five brands of the same kind.
+
+**Where a company does not publish its prices, the page says so.** The
+Scorpion comparison states that engagements are quoted individually and
+prints no figure, and the Durable and Wix pages avoid quoting plan prices
+that change. A comparison table with an invented number in it is worse than
+one with a gap.
+
 **The two blogs answer to one rule.** Every post is written for the person
 who runs the company, because those are the keywords worth having. The one
 exception is the water-heater post that came with the design: it targets a
@@ -174,7 +192,7 @@ honest draft — but they still need real text from counsel before launch.
 ## Measured, not assumed
 
 Taken from the built output in a real browser, at 1440px and 390px, across
-all 61 pages, English and Arabic.
+all 68 pages, English and Arabic.
 
 - One `<h1>` per page, no heading-level skips.
 - Schema on every page: Organization + WebSite + SoftwareApplication +
@@ -198,7 +216,7 @@ all 61 pages, English and Arabic.
 - No dead internal links.
 - No console errors.
 - On a throttled phone (1.5 Mbps, 150ms RTT, 4× CPU slowdown): English LCP
-  644–910ms, Arabic 688–892ms; CLS 0.002–0.055 across both; 108–182KB per
+  644–984ms, Arabic 688–892ms; CLS 0.002–0.055 across both; 108–182KB per
   English page and 157–179KB per Arabic one, and **zero third-party
   requests** — no analytics, no CDN, no font host. The name generator's
   script is small enough that Astro inlines it, so the tool page still

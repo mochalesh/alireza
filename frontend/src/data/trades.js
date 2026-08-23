@@ -10,12 +10,18 @@
  * {{PRICE}} marks the one figure that must never be typed into copy. It is
  * replaced at render time from the single price variable in site.js.
  */
+/*
+ * `tradeSingular` exists because no string rule produces it. Stripping a
+ * trailing "s" turns "plumbers" into "plumber" and "HVAC companies" into
+ * "HVAC companie", which is exactly what the closing band was printing.
+ */
 export const TRADE_CONTENT = {
   "plumbers": {
     "metaDesc": "A plumbing website built for the searches that happen in your area — a page for every service in every town you serve, updated every month.",
     "tradeName": "Plumbers",
     "tradeCaps": "PLUMBERS",
     "tradeLower": "plumbers",
+    "tradeSingular": "plumber",
     "h1": "Be the plumber your neighborhood finds first.",
     "sub": "When a water heater dies or a pipe lets go, your neighbors grab a phone and search. Widgeta gives you a plumbing website built and optimised for the searches that actually happen in your area — live today, working while you're on the job.",
     "cta": "Get your plumbing business online",
@@ -170,6 +176,7 @@ export const TRADE_CONTENT = {
     "tradeName": "HVAC",
     "tradeCaps": "HVAC COMPANIES",
     "tradeLower": "HVAC companies",
+    "tradeSingular": "HVAC company",
     "h1": "When the AC quits at 104°, be the company they call.",
     "sub": "Heat waves and cold snaps send your neighbors straight to search. Widgeta gives you an HVAC website designed and optimised for the searches that actually happen in your service area — live today, working while you work.",
     "cta": "Get your HVAC business online",
@@ -324,6 +331,7 @@ export const TRADE_CONTENT = {
     "tradeName": "Roofers",
     "tradeCaps": "ROOFERS",
     "tradeLower": "roofers",
+    "tradeSingular": "roofer",
     "h1": "After the storm, be the roofer they find.",
     "sub": "Hail, wind, a stain spreading on the ceiling — that's when your neighbors search. Widgeta gives you a roofing website built and optimised for the searches that follow every storm in your area — live today, ranking while you're on a roof.",
     "cta": "Get your roofing business online",
@@ -478,6 +486,7 @@ export const TRADE_CONTENT = {
     "tradeName": "Electricians",
     "tradeCaps": "ELECTRICIANS",
     "tradeLower": "electricians",
+    "tradeSingular": "electrician",
     "h1": "Be the electrician your neighborhood finds first.",
     "sub": "Panel upgrades, EV chargers, a breaker that won't stop tripping — your neighbors are searching for exactly what you do. Widgeta gives you an electrician website built and optimised for the searches happening on your streets right now.",
     "cta": "Get your electrical business online",

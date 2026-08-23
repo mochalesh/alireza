@@ -1,0 +1,241 @@
+---
+/**
+ * Guides index.
+ *
+ * It exists because there are four guides now. With one, the Learn menu
+ * could point straight at it; with four, a menu that picks one for you is
+ * hiding three.
+ *
+ * Order comes from the registry rather than from object key order, so the
+ * page shows plumbing first regardless of what order the data file happens
+ * to be in. Each card names the argument its guide actually makes — the four
+ * are four different arguments, and a list of four identical "everything
+ * about marketing for X" cards would hide that.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
+
+import { GUIDES } from '../../data/guides.js';
+import { POSTS } from '../../data/posts.js';
+import { SITE_URL, APP_URL, GUIDES_INDEX, TRADES, PRIMARY_CTA } from '../../data/site.js';
+
+const guides = GUIDES_INDEX.filter((g) => g.built && GUIDES[g.slug]).map((g) => {
+  const trade = TRADES.find((t) => t.slug === g.trade && t.built);
+  return {
+    slug: g.slug,
+    ...GUIDES[g.slug],
+    hub: trade ? { href: `/for/${trade.slug}`, name: trade.name } : null,
+    /* How many posts actually point at this guide. Shown as a count rather
+       than a promise: "3 supporting articles" is checkable, "in-depth
+       coverage" is not. */
+    posts: Object.values(POSTS).filter((p) => !p.sample && p.pillar === g.slug).length,
+  };
+});
+
+const title = 'Marketing Guides for the Trades | Widgeta';
+const description =
+  'Four long guides — plumbing, HVAC, roofing and electrical — on getting a trade business found and called. No signup, and one commercial link each.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Guides', item: `${SITE_URL}/guides` },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Widgeta marketing guides',
+    itemListElement: guides.map((g, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: g.h1,
+      url: `${SITE_URL}/guides/${g.slug}`,
+    })),
+  },
+];
+---
+
+<Base title={title} description={description} path="/guides" schema={schema}>
+  <div class="shell">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Guides' }]} />
+  </div>
+
+  <section class="head">
+    <div class="shell">
+      <div class="measure">
+        <p class="eyebrow">Guides</p>
+        <h1>Everything that gets a trade business found and called.</h1>
+        <p class="head__sub">
+          One long guide per trade, written to be useful whether or not you
+          ever buy anything. No signup, no gate, and exactly one commercial
+          link in each — which you can skip.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="cards">
+        {
+          guides.map((g) => (
+            <article class="card guide">
+              <div class="guide__top">
+                <span class="guide__trade">{g.tradeLabel}</span>
+                <span class="guide__meta">{g.readingTime}</span>
+              </div>
+
+              <h2 class="guide__h">
+                <a href={`/guides/${g.slug}`}>{g.h1}</a>
+              </h2>
+
+              <p class="muted guide__stand">{g.standfirst}</p>
+
+              <ul class="guide__chapters">
+                {g.chapters.map((c) => <li>{c.chip}</li>)}
+              </ul>
+
+              <p class="guide__foot muted">
+                {g.chapters.length} chapters
+                {g.posts > 0 && <> · {g.posts} supporting {g.posts === 1 ? 'article' : 'articles'}</>}
+              </p>
+
+              {
+                /* Its own row rather than the end of that sentence: at 44px
+                   it wraps anyway, and a trailing separator before a wrapped
+                   link reads as a mistake. */
+                g.hub && (
+                  <a class="guide__hub" href={g.hub.href}>
+                    Widgeta for {g.hub.name} <span aria-hidden="true">→</span>
+                  </a>
+                )
+              }
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <ClosingBand
+    title="Or skip the reading and get online."
+    lead="Answer a few questions today. Your site is live before your next job."
+    ctaLabel="Get your business online"
+    ctaHref={`${APP_URL}/signup`}
+  />
+</Base>
+
+<style>
+  .head {
+    padding-block: var(--s-8) 0;
+  }
+
+  .head h1 {
+    margin-block-start: var(--s-4);
+    font-size: clamp(32px, 3.6vw + 14px, 56px);
+  }
+
+  .head__sub {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  .cards {
+    display: grid;
+    gap: var(--s-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+    align-items: start;
+  }
+
+  .guide {
+    display: grid;
+    gap: var(--s-3);
+    align-content: start;
+  }
+
+  .guide__top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-3);
+  }
+
+  .guide__trade {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+
+  .guide__meta {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .guide__h {
+    font-size: clamp(22px, 1.2vw + 18px, 28px);
+  }
+
+  /* The whole card is not a link, because the footer carries a second one to
+     the trade hub. The title is the target and it gets the full tap area. */
+  .guide__h a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+  }
+
+  .guide__h a:hover {
+    color: var(--amber-text);
+  }
+
+  .guide__stand {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .guide__chapters {
+    margin: var(--s-2) 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .guide__chapters li {
+    padding: 4px var(--s-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-tag);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .guide__foot {
+    margin-block-start: var(--s-3);
+    padding-block-start: var(--s-3);
+    border-block-start: 1px solid var(--line);
+    font-size: var(--fs-small);
+  }
+
+  .guide__hub {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    min-block-size: var(--tap);
+    color: var(--amber-text);
+    font-weight: 600;
+    font-size: var(--fs-small);
+  }
+
+  .guide__hub:hover {
+    color: var(--ink);
+  }
+</style>
