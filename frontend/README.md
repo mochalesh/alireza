@@ -38,6 +38,14 @@ location / {
 }
 ```
 
+**On AWS, see [`deploy/aws/`](deploy/aws/).** AWS is the one host family that
+does neither of those things for you: CloudFront will not resolve `/pricing`
+to `pricing.html`, and `_headers` and `_redirects` are ignored entirely. That
+folder holds the replacements — a CloudFront Function, a response-headers
+policy, and an upload script that writes the per-file `Cache-Control` that
+`_headers` was carrying — plus the step-by-step for both S3 + CloudFront and
+Amplify Hosting.
+
 ### After the first deploy
 
 1. Point `widgeta.app` at the host. Keep `app.widgeta.app` separate.

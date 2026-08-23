@@ -1,0 +1,33 @@
+{
+  "Name": "widgeta-marketing-site",
+  "Comment": "Security headers for widgeta.app. Cache-Control is set per object at upload time, not here.",
+  "SecurityHeadersConfig": {
+    "ContentTypeOptions": {
+      "Override": true
+    },
+    "FrameOptions": {
+      "Override": true,
+      "FrameOption": "DENY"
+    },
+    "ReferrerPolicy": {
+      "Override": true,
+      "ReferrerPolicy": "strict-origin-when-cross-origin"
+    },
+    "StrictTransportSecurity": {
+      "Override": true,
+      "AccessControlMaxAgeSec": 63072000,
+      "IncludeSubdomains": false,
+      "Preload": false
+    }
+  },
+  "CustomHeadersConfig": {
+    "Quantity": 1,
+    "Items": [
+      {
+        "Header": "Permissions-Policy",
+        "Value": "geolocation=(), microphone=(), camera=(), interest-cohort=()",
+        "Override": true
+      }
+    ]
+  }
+}
