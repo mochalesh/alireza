@@ -2,27 +2,64 @@
 /**
  * Blog index.
  *
- * One post today, and it is a labelled sample rather than an article aimed
- * at contractors — so the index says what the blog is for and what is
- * missing, instead of dressing a single demo up as a publication. It carries
- * noindex until posts written for our own audience exist.
+ * Two lists, and the split is the point. The first is what the blog is for —
+ * posts written for contractors, which is the audience that can buy. The
+ * second is the one sample post: an example of the kind of page Widgeta
+ * publishes for a customer, kept separate and labelled so a reader is never
+ * unsure which of the two they are looking at.
+ *
+ * `noindex` is still derived rather than hard-coded. If the day ever comes
+ * when the only posts here are samples, the index goes back to not asking to
+ * be indexed, without anyone having to remember.
  */
 import Base from '../../layouts/Base.astro';
 import '../../styles/bloglist.css';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { POSTS } from '../../data/posts.js';
 import { GUIDES } from '../../data/guides.js';
+import { SITE_URL } from '../../data/site.js';
 
 const posts = Object.entries(POSTS).map(([slug, p]) => ({ slug, ...p }));
 const real = posts.filter((p) => !p.sample);
+const samples = posts.filter((p) => p.sample);
 const guides = Object.entries(GUIDES).map(([slug, g]) => ({ slug, ...g }));
+
+/* Only the real posts are listed in the Blog schema. A sample post is
+   noindexed, so naming it here would ask for the same page twice in two
+   contradictory ways. */
+const schema = real.length === 0 ? [] : [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'The Widgeta blog',
+    url: `${SITE_URL}/blog`,
+    inLanguage: 'en-US',
+    publisher: { '@type': 'Organization', name: 'Widgeta', url: SITE_URL },
+    blogPost: real.map((p) => ({
+      '@type': 'BlogPosting',
+      headline: p.h1,
+      url: `${SITE_URL}/blog/${p.slug}`,
+      datePublished: p.updated,
+      author: { '@type': 'Person', name: p.author },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
+    ],
+  },
+];
 ---
 
 <Base
   title="Blog | Widgeta"
-  description="Notes on getting a trade business found and called, and examples of the pages Widgeta publishes for its customers."
+  description="Practical notes for contractors on getting found and called: Business Profiles, reviews, service-area pages, what a website costs, and the seasons."
   path="/blog"
   noindex={real.length === 0}
+  schema={schema}
 >
   <div class="blogindex">
   <div class="shell">
@@ -30,24 +67,23 @@ const guides = Object.entries(GUIDES).map(([slug, g]) => ({ slug, ...g }));
   </div>
 
   <section class="head">
-    <div class="shell measure">
-      <h1>Blog</h1>
-      <p class="head__sub">
-        Notes on getting a trade business found and called — and examples of
-        the pages Widgeta publishes for the businesses it builds for.
-      </p>
+    <div class="shell">
+      <div class="measure">
+        <h1>Blog</h1>
+        <p class="head__sub">
+          Practical notes on getting a trade business found and called. Written
+          for the person running the company, not for their customers.
+        </p>
+      </div>
     </div>
   </section>
 
   <section class="section">
     <div class="shell">
       <div class="grid-auto">
-        {posts.map((p) => (
+        {real.map((p) => (
           <a class="card post" href={`/blog/${p.slug}`}>
-            <span class="post__tags">
-              {p.tags.join(' · ')}
-              {p.sample && <span class="post__sample">Example page</span>}
-            </span>
+            <span class="post__tags">{p.tags.join(' · ')}</span>
             <span class="post__title">{p.h1}</span>
             <span class="muted post__stand">{p.standfirst}</span>
             <span class="muted post__meta">{p.updatedLabel} · {p.readingTime}</span>
@@ -56,9 +92,36 @@ const guides = Object.entries(GUIDES).map(([slug, g]) => ({ slug, ...g }));
       </div>
 
       {
+        samples.length > 0 && (
+          <div class="samples">
+            <h2 class="samples__h">And one example of the other kind</h2>
+            <p class="samples__note muted">
+              This one is not written for you — it is the sort of page Widgeta
+              writes and publishes <em>for</em> a plumbing customer: their
+              town, their number, their name on it. It is here to show the
+              work, which is why it is not listed in search.
+            </p>
+            <div class="grid-auto">
+              {samples.map((p) => (
+                <a class="card post" href={`/blog/${p.slug}`}>
+                  <span class="post__tags">
+                    {p.tags.join(' · ')}
+                    <span class="post__sample">Example page</span>
+                  </span>
+                  <span class="post__title">{p.h1}</span>
+                  <span class="muted post__stand">{p.standfirst}</span>
+                  <span class="muted post__meta">{p.updatedLabel} · {p.readingTime}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      {
         guides.length > 0 && (
           <div class="guides">
-            <h2 class="guides__h">Start with a guide instead</h2>
+            <h2 class="guides__h">Or start with the full guide</h2>
             <div class="grid-auto">
               {guides.map((g) => (
                 <a class="card post" href={`/guides/${g.slug}`}>

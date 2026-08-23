@@ -46,37 +46,39 @@ const reasons = [
   </div>
 
   <section class="head">
-    <div class="shell measure">
-      <h1>Talk to a person.</h1>
-      <p class="para muted">
-        Write or call and someone answers within {CONTACT.responseWindow} — no
-        ticket numbers, no chatbot maze. If you already have a Widgeta site,
-        mention its address and we can look at it while we talk.
-      </p>
+    <div class="shell">
+      <div class="measure">
+        <h1>Talk to a person.</h1>
+        <p class="para muted">
+          Write or call and someone answers within {CONTACT.responseWindow} — no
+          ticket numbers, no chatbot maze. If you already have a Widgeta site,
+          mention its address and we can look at it while we talk.
+        </p>
 
-      <div class="ways">
-        <a class="card way" href={`mailto:${CONTACT.email}`}>
-          <span class="way__label">Email</span>
-          <span class="way__value">{CONTACT.email}</span>
-          <span class="muted way__note">Best for anything with detail.</span>
-        </a>
+        <div class="ways">
+          <a class="card way" href={`mailto:${CONTACT.email}`}>
+            <span class="way__label">Email</span>
+            <span class="way__value">{CONTACT.email}</span>
+            <span class="muted way__note">Best for anything with detail.</span>
+          </a>
 
-        <div class="card way">
-          <span class="way__label">Phone / text</span>
-          <span class="way__value">{CONTACT.phone}</span>
-          <span class="muted way__note">Business hours, US.</span>
+          <div class="card way">
+            <span class="way__label">Phone / text</span>
+            <span class="way__value">{CONTACT.phone}</span>
+            <span class="muted way__note">Business hours, US.</span>
+          </div>
+
+          <div class="card way">
+            <span class="way__label">Gulf (WhatsApp)</span>
+            <span class="way__value">{CONTACT.whatsapp}</span>
+            <span class="muted way__note">The fastest route in Saudi and the UAE.</span>
+          </div>
         </div>
 
-        <div class="card way">
-          <span class="way__label">Gulf (WhatsApp)</span>
-          <span class="way__value">{CONTACT.whatsapp}</span>
-          <span class="muted way__note">The fastest route in Saudi and the UAE.</span>
-        </div>
+        {PLACEHOLDER && (
+          <p class="notice">Contact details are placeholders until launch.</p>
+        )}
       </div>
-
-      {PLACEHOLDER && (
-        <p class="notice">Contact details are placeholders until launch.</p>
-      )}
     </div>
   </section>
 

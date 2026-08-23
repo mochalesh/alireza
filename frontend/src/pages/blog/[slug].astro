@@ -31,6 +31,9 @@ const path = `/blog/${slug}`;
 const pillar = post.pillar && GUIDES[post.pillar] ? { slug: post.pillar, ...GUIDES[post.pillar] } : null;
 const tradeEntry = TRADES.find((t) => t.slug === post.trade && t.built);
 
+/* The spec pairs Article with BreadcrumbList on posts and guides. A sample
+   post carries neither: it is noindexed, and structured data asking to be
+   understood as an article contradicts a tag asking to be ignored. */
 const schema = post.sample ? [] : [
   {
     '@context': 'https://schema.org',
@@ -43,6 +46,15 @@ const schema = post.sample ? [] : [
     dateModified: post.updated,
     mainEntityOfPage: `${SITE_URL}${path}`,
     inLanguage: 'en-US',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
+      { '@type': 'ListItem', position: 3, name: post.h1, item: `${SITE_URL}${path}` },
+    ],
   },
 ];
 ---

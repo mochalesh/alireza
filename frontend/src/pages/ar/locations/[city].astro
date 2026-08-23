@@ -88,15 +88,17 @@ const schema = [
 
     <!-- Hero -------------------------------------------------------------- -->
     <section class="hero">
-      <div class="shell measure">
-        <p class="eyebrow">ويدجيتا في {c.city}</p>
-        <h1 class="hero__h1">{c.h1}</h1>
-        <p class="hero__sub">{c.sub}</p>
-        <div class="hero__cta">
-          <a class="btn btn--amber" href={PRIMARY_CTA.href}>{AR_PRIMARY_CTA.label}</a>
-          <a class="btn btn--outline" href="#examples">أمثلة من {c.city}</a>
+      <div class="shell">
+        <div class="measure">
+          <p class="eyebrow">ويدجيتا في {c.city}</p>
+          <h1 class="hero__h1">{c.h1}</h1>
+          <p class="hero__sub">{c.sub}</p>
+          <div class="hero__cta">
+            <a class="btn btn--amber" href={PRIMARY_CTA.href}>{AR_PRIMARY_CTA.label}</a>
+            <a class="btn btn--outline" href="#examples">أمثلة من {c.city}</a>
+          </div>
+          <p class="hero__fine muted">{c.priceLine} · دقيقتان من الأسئلة · بدون عقد</p>
         </div>
-        <p class="hero__fine muted">{c.priceLine} · دقيقتان من الأسئلة · بدون عقد</p>
       </div>
     </section>
 
@@ -116,10 +118,12 @@ const schema = [
 
     <!-- The market --------------------------------------------------------- -->
     <section class="section">
-      <div class="shell measure">
-        <p class="eyebrow">سوق {c.city}</p>
-        <h2>{c.marketH2}</h2>
-        {c.market.map((para) => <p class="para muted">{para}</p>)}
+      <div class="shell">
+        <div class="measure">
+          <p class="eyebrow">سوق {c.city}</p>
+          <h2>{c.marketH2}</h2>
+          {c.market.map((para) => <p class="para muted">{para}</p>)}
+        </div>
       </div>
     </section>
 

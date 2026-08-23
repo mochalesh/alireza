@@ -97,40 +97,42 @@ const schema = [
   </div>
 
   <section class="hero">
-    <div class="shell measure">
-      <div class="hero__tags">
-        <span class="cap__label">{c.tagCaps}</span>
+    <div class="shell">
+      <div class="measure">
+        <div class="hero__tags">
+          <span class="cap__label">{c.tagCaps}</span>
+          {
+            c.buyable ? (
+              <span class="tag tag--live">Live · always included</span>
+            ) : (
+              <span class="tag tag--soon">Coming soon</span>
+            )
+          }
+        </div>
+
+        <h1>{c.h1}</h1>
+        <p class="hero__sub">{p(c.sub)}</p>
+
         {
           c.buyable ? (
-            <span class="tag tag--live">Live · always included</span>
+            <>
+              <a class="btn btn--amber hero__cta" href={PRIMARY_CTA.href}>
+                Get your business online
+              </a>
+              <p class="hero__fine muted">
+                From {price.display}{price.period}, all three foundation pieces included · No contract
+              </p>
+            </>
           ) : (
-            <span class="tag tag--soon">Coming soon</span>
+            <>
+              <NotifyMe id={`notify-${capability}`} />
+              <p class="hero__fine muted">
+                No purchase yet — pricing announced at launch.
+              </p>
+            </>
           )
         }
       </div>
-
-      <h1>{c.h1}</h1>
-      <p class="hero__sub">{p(c.sub)}</p>
-
-      {
-        c.buyable ? (
-          <>
-            <a class="btn btn--amber hero__cta" href={PRIMARY_CTA.href}>
-              Get your business online
-            </a>
-            <p class="hero__fine muted">
-              From {price.display}{price.period}, all three foundation pieces included · No contract
-            </p>
-          </>
-        ) : (
-          <>
-            <NotifyMe id={`notify-${capability}`} />
-            <p class="hero__fine muted">
-              No purchase yet — pricing announced at launch.
-            </p>
-          </>
-        )
-      }
     </div>
   </section>
 
@@ -152,10 +154,12 @@ const schema = [
 
   <!-- Plain-English explanation ------------------------------------------- -->
   <section class="section explain">
-    <div class="shell measure">
-      <h2>{c.kwH2}</h2>
-      <p class="para muted">{p(c.k1)}</p>
-      <p class="para muted">{p(c.k2)}</p>
+    <div class="shell">
+      <div class="measure">
+        <h2>{c.kwH2}</h2>
+        <p class="para muted">{p(c.k1)}</p>
+        <p class="para muted">{p(c.k2)}</p>
+      </div>
     </div>
   </section>
 

@@ -62,3 +62,22 @@
   font-size: var(--fs-h3);
   margin-block-end: var(--s-6);
 }
+
+/* The sample post is separated rather than mixed in: a reader should never
+   have to work out which of the two kinds of page they are looking at. */
+.blogindex .samples {
+  margin-block-start: var(--s-16);
+  padding-block-start: var(--s-8);
+  border-block-start: 1px solid var(--line);
+}
+
+.blogindex .samples__h {
+  font-size: var(--fs-h3);
+}
+
+.blogindex .samples__note {
+  max-inline-size: var(--measure);
+  margin-block: var(--s-3) var(--s-6);
+  font-size: var(--fs-small);
+  line-height: 1.7;
+}

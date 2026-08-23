@@ -11,6 +11,7 @@ import Base from '../../../layouts/Base.astro';
 import '../../../styles/bloglist.css';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 
+import { SITE_URL } from '../../../data/site.js';
 import { AR, AR_GUIDES_INDEX } from '../../../data/ar/site.js';
 import { AR_POSTS } from '../../../data/ar/posts.js';
 import { AR_GUIDES } from '../../../data/ar/guides.js';
@@ -19,6 +20,32 @@ const posts = Object.entries(AR_POSTS).map(([slug, p]) => ({ slug, ...p }));
 const real = posts.filter((p) => !p.sample);
 const guides = AR_GUIDES_INDEX.filter((g) => g.built && AR_GUIDES[g.slug])
   .map((g) => ({ slug: g.slug, ...AR_GUIDES[g.slug] }));
+
+const schema = real.length === 0 ? [] : [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'مدونة ويدجيتا',
+    url: `${SITE_URL}${AR}/blog`,
+    inLanguage: 'ar',
+    publisher: { '@type': 'Organization', name: 'ويدجيتا', url: `${SITE_URL}${AR}` },
+    blogPost: real.map((p) => ({
+      '@type': 'BlogPosting',
+      headline: p.h1,
+      url: `${SITE_URL}${AR}/blog/${p.slug}`,
+      datePublished: p.updated,
+      author: { '@type': 'Organization', name: p.author },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: `${SITE_URL}${AR}` },
+      { '@type': 'ListItem', position: 2, name: 'المدونة', item: `${SITE_URL}${AR}/blog` },
+    ],
+  },
+];
 ---
 
 <Base
@@ -27,6 +54,7 @@ const guides = AR_GUIDES_INDEX.filter((g) => g.built && AR_GUIDES[g.slug])
   path={`${AR}/blog`}
   lang="ar"
   noindex={real.length === 0}
+  schema={schema}
 >
   <div class="blogindex">
     <div class="shell">
@@ -34,12 +62,14 @@ const guides = AR_GUIDES_INDEX.filter((g) => g.built && AR_GUIDES[g.slug])
     </div>
 
     <section class="head">
-      <div class="shell measure">
-        <h1>المدونة</h1>
-        <p class="head__sub">
-          مقالات قصيرة لأصحاب شركات الصيانة والخدمات — مكتوبة لك أنت لا
-          لعميلك، وبلا مصطلحات لا تعني شيئاً.
-        </p>
+      <div class="shell">
+        <div class="measure">
+          <h1>المدونة</h1>
+          <p class="head__sub">
+            مقالات قصيرة لأصحاب شركات الصيانة والخدمات — مكتوبة لك أنت لا
+            لعميلك، وبلا مصطلحات لا تعني شيئاً.
+          </p>
+        </div>
       </div>
     </section>
 

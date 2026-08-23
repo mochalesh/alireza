@@ -88,15 +88,17 @@ const schema = [
 
   <!-- Hero ---------------------------------------------------------------- -->
   <section class="hero">
-    <div class="shell measure">
-      <p class="eyebrow">ويدجيتا لـ{t.nameFor}</p>
-      <h1 class="hero__h1">{t.h1}</h1>
-      <p class="hero__sub">{t.sub}</p>
-      <div class="hero__cta">
-        <a class="btn btn--amber" href={PRIMARY_CTA.href}>{AR_PRIMARY_CTA.label}</a>
-        <a class="btn btn--outline" href="#examples">شاهد أمثلة</a>
+    <div class="shell">
+      <div class="measure">
+        <p class="eyebrow">ويدجيتا لـ{t.nameFor}</p>
+        <h1 class="hero__h1">{t.h1}</h1>
+        <p class="hero__sub">{t.sub}</p>
+        <div class="hero__cta">
+          <a class="btn btn--amber" href={PRIMARY_CTA.href}>{AR_PRIMARY_CTA.label}</a>
+          <a class="btn btn--outline" href="#examples">شاهد أمثلة</a>
+        </div>
+        <p class="hero__fine muted">دقيقتان من الأسئلة · يعمل في نفس اليوم · بدون عقد</p>
       </div>
-      <p class="hero__fine muted">دقيقتان من الأسئلة · يعمل في نفس اليوم · بدون عقد</p>
     </div>
   </section>
 
@@ -116,10 +118,12 @@ const schema = [
 
   <!-- The keyword H2 -------------------------------------------------------- -->
   <section class="section">
-    <div class="shell measure">
-      <p class="eyebrow">لماذا موقع مبني لتخصصك</p>
-      <h2>{t.kwH2}</h2>
-      {t.kw.map((para) => <p class="para muted">{para}</p>)}
+    <div class="shell">
+      <div class="measure">
+        <p class="eyebrow">لماذا موقع مبني لتخصصك</p>
+        <h2>{t.kwH2}</h2>
+        {t.kw.map((para) => <p class="para muted">{para}</p>)}
+      </div>
     </div>
   </section>
 

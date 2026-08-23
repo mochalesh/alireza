@@ -90,45 +90,47 @@ const EN_EQUIVALENT = {
     </div>
 
     <section class="hero">
-      <div class="shell measure">
-        <div class="hero__tags">
-          <span class="cap__label">{c.label}</span>
+      <div class="shell">
+        <div class="measure">
+          <div class="hero__tags">
+            <span class="cap__label">{c.label}</span>
+            {
+              c.buyable ? (
+                <span class="tag tag--live">يعمل · مشمول دائماً</span>
+              ) : (
+                <span class="tag tag--soon">قريباً</span>
+              )
+            }
+          </div>
+
+          <h1>{c.h1}</h1>
+          <p class="hero__sub">{c.sub}</p>
+
           {
             c.buyable ? (
-              <span class="tag tag--live">يعمل · مشمول دائماً</span>
+              <>
+                <a class="btn btn--amber hero__cta" href={PRIMARY_CTA.href}>
+                  {AR_PRIMARY_CTA.label}
+                </a>
+                <p class="hero__fine muted">
+                  من {price.display}{price.period}، والأجزاء الثلاثة الأساسية مشمولة · بدون عقد
+                </p>
+              </>
             ) : (
-              <span class="tag tag--soon">قريباً</span>
+              <>
+                <NotifyMe
+                  id={`notify-${capability}`}
+                  label="أبلغوني عند الإطلاق"
+                  sendLabel="أبلغوني"
+                  fieldLabel="البريد الإلكتروني"
+                  placeholder="name@company.com"
+                  done="سجّلناك — سنراسلك يوم الإطلاق."
+                />
+                <p class="hero__fine muted">لا شيء يُباع اليوم — السعر يُعلن عند الإطلاق.</p>
+              </>
             )
           }
         </div>
-
-        <h1>{c.h1}</h1>
-        <p class="hero__sub">{c.sub}</p>
-
-        {
-          c.buyable ? (
-            <>
-              <a class="btn btn--amber hero__cta" href={PRIMARY_CTA.href}>
-                {AR_PRIMARY_CTA.label}
-              </a>
-              <p class="hero__fine muted">
-                من {price.display}{price.period}، والأجزاء الثلاثة الأساسية مشمولة · بدون عقد
-              </p>
-            </>
-          ) : (
-            <>
-              <NotifyMe
-                id={`notify-${capability}`}
-                label="أبلغوني عند الإطلاق"
-                sendLabel="أبلغوني"
-                fieldLabel="البريد الإلكتروني"
-                placeholder="name@company.com"
-                done="سجّلناك — سنراسلك يوم الإطلاق."
-              />
-              <p class="hero__fine muted">لا شيء يُباع اليوم — السعر يُعلن عند الإطلاق.</p>
-            </>
-          )
-        }
       </div>
     </section>
 
@@ -150,9 +152,11 @@ const EN_EQUIVALENT = {
 
     <!-- Plain-language explanation ------------------------------------------ -->
     <section class="section explain">
-      <div class="shell measure">
-        <h2>{c.kwH2}</h2>
-        {c.k.map((para) => <p class="para muted">{para}</p>)}
+      <div class="shell">
+        <div class="measure">
+          <h2>{c.kwH2}</h2>
+          {c.k.map((para) => <p class="para muted">{para}</p>)}
+        </div>
       </div>
     </section>
 

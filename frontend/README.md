@@ -66,7 +66,6 @@ Each is a single edit, and the file is named so nobody has to hunt.
 | Real team | `src/data/company.js` → `TEAM`, then `PLACEHOLDER = false` | Turns off the "placeholder team" notices on About and Contact together. |
 | Privacy and Terms | `src/pages/privacy.astro`, `src/pages/terms.astro` | Both are drafts and say so. They need real text from Widgeta's counsel. |
 | Photographs | testimonial and team cards | Dashed placeholders today. The SEO spec wants real faces; a stock photo of a stranger presented as a named customer is not one. |
-| Blog posts for contractors | `src/data/posts.js` | The only post today is a deliberately noindexed sample of what Widgeta publishes *for* a customer. The blog needs posts aimed at contractors before it should be indexed — see the file header. |
 
 ## How the site is put together
 
@@ -113,6 +112,15 @@ score invented client-side would be a made-up number about someone's
 business. The name generator is buildable honestly — combining a word bank is
 arithmetic — and it says plainly that it cannot check availability.
 
+**The two blogs answer to one rule.** Every post is written for the person
+who runs the company, because those are the keywords worth having. The one
+exception is the water-heater post that came with the design: it targets a
+homeowner's search, so it ships labelled as an example of what Widgeta
+publishes *for* a customer, carries noindex, gets no schema, and is filtered
+out of the sitemap — all four from the single `sample: true` flag in
+`src/data/posts.js`. The blog index separates it under its own heading so a
+reader is never unsure which kind of page they are looking at.
+
 **Disclosures are load-bearing.** SAMPLE labels, the testimonial disclosure,
 the coming-soon treatment on call answering, and the source note under every
 competitor claim are legal and trust requirements, not decoration. The brief
@@ -148,11 +156,12 @@ and terms drafts. Thirty Arabic URLs in `sitemap-ar.xml`.
 
 Two things about it are worth knowing before you read the pages:
 
-**The Arabic blog is the one that is properly seeded.** Its three posts are
-written for contractors — WhatsApp discipline, replying to a bad review, the
-pre-season checklist — which is our own audience and our own keyword galaxy,
-so they index normally. The English blog still has only the labelled,
-noindexed sample; it is the side that needs posts written.
+**Both blogs are seeded now.** The Arabic side has three posts — WhatsApp
+discipline, replying to a bad review, the pre-season checklist. The English
+side has seven: the Business Profile setup, the review ask, what a contractor
+website should cost, service-area page structure, and one seasonality piece
+each for HVAC, roofing and electrical. All ten are written for contractors,
+which is the audience that can buy, so all ten index normally.
 
 **The Arabic legal pages are drafts and say so**, in the same visible banner
 the English ones use, with each unwritten section marked. They cite Saudi's
@@ -165,16 +174,18 @@ honest draft — but they still need real text from counsel before launch.
 ## Measured, not assumed
 
 Taken from the built output in a real browser, at 1440px and 390px, across
-all 54 pages, English and Arabic.
+all 61 pages, English and Arabic.
 
 - One `<h1>` per page, no heading-level skips.
 - Schema on every page: Organization + WebSite + SoftwareApplication +
   FAQPage on home; Service + BreadcrumbList + FAQPage on the trade hubs;
   SoftwareApplication with offers + FAQPage on pricing; BreadcrumbList +
   FAQPage on comparisons; Service + BreadcrumbList on capabilities;
-  Article + BreadcrumbList on the guide; WebApplication + BreadcrumbList +
-  FAQPage on the name generator. No Article schema on a sample post — it
-  carries noindex, and the two signals have to agree.
+  Article + BreadcrumbList on guides and posts; Blog + BreadcrumbList on the
+  blog indexes; WebApplication + BreadcrumbList + FAQPage on the name
+  generator. No schema at all on a sample post — it carries noindex, and
+  structured data asking to be understood as an article would contradict a
+  tag asking to be ignored.
 - No `aggregateRating` anywhere — there are no real reviews yet.
 - Titles 42–60 characters, descriptions 130–153.
 - Canonical on every page. `hreflang` only where a true equivalent exists and
