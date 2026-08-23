@@ -4,6 +4,9 @@ import sitemap from '@astrojs/sitemap';
 
 import { SITE_URL } from './src/data/site.js';
 
+/** Pages that carry a noindex tag, and so must not appear in the sitemap. */
+const NOINDEX = ['/privacy', '/terms', '/404'];
+
 /**
  * Static output on purpose.
  *
@@ -23,13 +26,15 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // Two sitemaps under one index, one per language folder, so each gets
-      // its own Search Console property (SEO spec §1).
-      filter: (page) => !page.includes('/design-system'),
-      i18n: {
-        defaultLocale: 'en',
-        locales: { en: 'en-US', ar: 'ar-SA' },
-      },
+      /*
+       * A sitemap is a request to index. Anything carrying noindex must stay
+       * out of it, or the two signals contradict each other and Search
+       * Console reports the page as an error rather than a choice.
+       *
+       * The i18n option is deliberately absent until the Arabic site exists:
+       * it would write hreflang entries pointing at pages that are not there.
+       */
+      filter: (page) => !NOINDEX.some((path) => page.endsWith(path)),
     }),
   ],
   prefetch: false,

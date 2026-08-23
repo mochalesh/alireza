@@ -13,7 +13,7 @@ import FaqList from '../components/FaqList.astro';
 import NotifyMe from '../components/NotifyMe.astro';
 import ClosingBand from '../components/ClosingBand.astro';
 
-import { SITE_URL, APP_URL, PRICE, PRIMARY_CTA, EXAMPLES_PAGE } from '../data/site.js';
+import { SITE_URL, APP_URL, PRICE, PRIMARY_CTA, EXAMPLES_PAGE, AR_SITE } from '../data/site.js';
 import {
   STEPS, TRADE_CARDS, CAPABILITY_CARDS, ROADMAP, EXAMPLES,
   RENTING, OWNING, PROOF, FAQ,
@@ -73,7 +73,15 @@ const schema = [
 ];
 ---
 
-<Base title={title} description={description} path="/" altPath="/ar" schema={schema}>
+{/* hreflang pairs equivalents or nothing: advertising /ar before it exists
+    points search engines at a 404. It turns on with the Arabic site. */}
+<Base
+  title={title}
+  description={description}
+  path="/"
+  altPath={AR_SITE.built ? AR_SITE.href : undefined}
+  schema={schema}
+>
   <!-- Hero ------------------------------------------------------------- -->
   <section class="hero">
     <div class="shell hero__grid">

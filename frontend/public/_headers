@@ -1,0 +1,22 @@
+# Cloudflare Pages / Netlify header rules.
+#
+# Two classes of file. Hashed build assets never change under the same name,
+# so they can be cached for a year and never revalidated. HTML changes on
+# every deploy under the same URL, so it is revalidated every time — a stale
+# page here would show an old price.
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/og-default.png
+  Cache-Control: public, max-age=86400
+
+/favicon.svg
+  Cache-Control: public, max-age=86400
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()

@@ -1,0 +1,13 @@
+# widgeta.app
+#
+# Everything here is meant to be found — that is the product. The only
+# exclusions are the application, which is a private tool rather than
+# content, and the two legal drafts, which also carry a noindex tag.
+
+User-agent: *
+Allow: /
+
+Disallow: /privacy
+Disallow: /terms
+
+Sitemap: https://widgeta.app/sitemap-index.xml

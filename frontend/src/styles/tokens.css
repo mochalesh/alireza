@@ -52,7 +52,7 @@
   --whatsapp: #25D366;         /* the Arabic site's primary conversion */
 
   /* --- Type ------------------------------------------------------------- */
-  --font-head: 'Barlow Semi Condensed', 'Barlow', system-ui, sans-serif;
+  --font-head: 'Barlow Semi Condensed', system-ui, sans-serif;
   --font-body: 'Barlow', system-ui, -apple-system, sans-serif;
 
   /* Fluid sizes. Body never drops below 16px — this is read on a phone at

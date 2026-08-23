@@ -1,0 +1,85 @@
+/* ============================================================================
+   Typefaces, served from this site under stable names.
+
+   Fontsource was doing this through the bundler, which hashes the filenames
+   at build. That made the two faces above the fold impossible to preload:
+   nothing can name a file whose name is decided later. The browser had to
+   parse the HTML, fetch the stylesheet, parse that, and only then discover
+   the font — by which time the headline had already painted in a fallback
+   and was about to reflow. Measured on a throttled phone, that reflow was
+   the site's entire CLS.
+
+   Stable names let the two critical faces be preloaded in the head, so they
+   arrive alongside the stylesheet and the first paint is already correct.
+   The rest load normally.
+
+   `swap` stays: if a font is slow, text that can be read beats no text.
+   ============================================================================ */
+
+/* --- Barlow Semi Condensed — headlines only ------------------------------
+   `optional` rather than `swap`, paired with the preload in the head.
+   Headlines are the largest text on the page, so a late swap moves every
+   block beneath them — on a throttled phone that reflow was the whole of
+   this site's layout shift. With `optional` the browser uses the face only
+   if the preload has landed in time, and otherwise renders the fallback and
+   leaves it alone: the headline never jumps. In practice the preload almost
+   always wins, and a repeat visit always does.                             */
+
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  src: url('/fonts/barlow-semi-condensed-latin-800-normal.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  src: url('/fonts/barlow-semi-condensed-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: optional;
+}
+
+/* --- Barlow — everything else -------------------------------------------- */
+
+@font-face {
+  font-family: 'Barlow';
+  src: url('/fonts/barlow-latin-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Barlow';
+  src: url('/fonts/barlow-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Barlow';
+  src: url('/fonts/barlow-latin-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Barlow';
+  src: url('/fonts/barlow-latin-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Italic is used once, in the home page's testimonial quotes. */
+@font-face {
+  font-family: 'Barlow';
+  src: url('/fonts/barlow-latin-500-italic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
