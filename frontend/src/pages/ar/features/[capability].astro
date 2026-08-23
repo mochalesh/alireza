@@ -1,0 +1,241 @@
+---
+/**
+ * Arabic capability page — one template, four capabilities.
+ *
+ * Same shape and the same stylesheet as the English one; what it links to is
+ * different, because the Arabic tree has five hubs rather than four and its
+ * primary one is the multi-trade maintenance company.
+ *
+ * `buyable` is the only structural difference between the four. A capability
+ * that is not live gets a notify-me and a plain sentence saying nothing is
+ * for sale yet — never a CTA, never a price, never anything that looks like
+ * a checkout. That rule is a brief non-negotiable and it holds in Arabic
+ * exactly as it holds in English.
+ */
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/capability.css';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import NotifyMe from '../../../components/NotifyMe.astro';
+import ClosingBand from '../../../components/ClosingBand.astro';
+
+import { SITE_URL, PRICE, PRIMARY_CTA } from '../../../data/site.js';
+import { AR, AR_TRADES, AR_CAPABILITIES, AR_PRIMARY_CTA } from '../../../data/ar/site.js';
+import { AR_CAPABILITY_CONTENT } from '../../../data/ar/capabilities.js';
+
+export function getStaticPaths() {
+  return AR_CAPABILITIES.filter((c) => c.built && AR_CAPABILITY_CONTENT[c.slug]).map((c) => ({
+    params: { capability: c.slug },
+  }));
+}
+
+const { capability } = Astro.params;
+const c = AR_CAPABILITY_CONTENT[capability];
+const path = `${AR}/features/${capability}`;
+const price = PRICE.ar;
+
+const trades = AR_TRADES.filter((t) => t.built);
+const siblings = AR_CAPABILITIES.filter((o) => o.built && o.slug !== capability);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `${c.name} — ويدجيتا`,
+    serviceType: c.name,
+    provider: { '@type': 'Organization', name: 'ويدجيتا', url: `${SITE_URL}${AR}` },
+    areaServed: ['SA', 'AE'],
+    inLanguage: 'ar',
+    ...(c.buyable
+      ? { offers: { '@type': 'Offer', price: price.amount, priceCurrency: price.currency } }
+      : {}),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: `${SITE_URL}${AR}` },
+      { '@type': 'ListItem', position: 2, name: 'ما تحصل عليه', item: `${SITE_URL}${AR}/features/website` },
+      { '@type': 'ListItem', position: 3, name: c.name, item: `${SITE_URL}${path}` },
+    ],
+  },
+];
+
+/* The English capability pages are true equivalents — same three live
+   pieces, same one that is not. */
+const EN_EQUIVALENT = {
+  website: '/features/website',
+  seo: '/features/seo',
+  content: '/features/content',
+  'call-answering': '/features/call-answering',
+};
+---
+
+<Base
+  title={c.title}
+  description={c.metaDesc}
+  path={path}
+  lang="ar"
+  altPath={EN_EQUIVALENT[capability]}
+  schema={schema}
+>
+  <div class="cappage">
+    <div class="shell">
+      <Breadcrumb
+        items={[
+          { label: 'الرئيسية', href: AR },
+          { label: 'ما تحصل عليه', href: `${AR}/features/website` },
+          { label: c.name },
+        ]}
+      />
+    </div>
+
+    <section class="hero">
+      <div class="shell measure">
+        <div class="hero__tags">
+          <span class="cap__label">{c.label}</span>
+          {
+            c.buyable ? (
+              <span class="tag tag--live">يعمل · مشمول دائماً</span>
+            ) : (
+              <span class="tag tag--soon">قريباً</span>
+            )
+          }
+        </div>
+
+        <h1>{c.h1}</h1>
+        <p class="hero__sub">{c.sub}</p>
+
+        {
+          c.buyable ? (
+            <>
+              <a class="btn btn--amber hero__cta" href={PRIMARY_CTA.href}>
+                {AR_PRIMARY_CTA.label}
+              </a>
+              <p class="hero__fine muted">
+                من {price.display}{price.period}، والأجزاء الثلاثة الأساسية مشمولة · بدون عقد
+              </p>
+            </>
+          ) : (
+            <>
+              <NotifyMe
+                id={`notify-${capability}`}
+                label="أبلغوني عند الإطلاق"
+                sendLabel="أبلغوني"
+                fieldLabel="البريد الإلكتروني"
+                placeholder="name@company.com"
+                done="سجّلناك — سنراسلك يوم الإطلاق."
+              />
+              <p class="hero__fine muted">لا شيء يُباع اليوم — السعر يُعلن عند الإطلاق.</p>
+            </>
+          )
+        }
+      </div>
+    </section>
+
+    <!-- What it gives you -------------------------------------------------- -->
+    <section class="section">
+      <div class="shell">
+        <div class="grid-auto">
+          {
+            c.bullets.map((b) => (
+              <div class="card bullet">
+                <h2 class="bullet__t">{b.t}</h2>
+                <p class="muted">{b.d}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Plain-language explanation ------------------------------------------ -->
+    <section class="section explain">
+      <div class="shell measure">
+        <h2>{c.kwH2}</h2>
+        {c.k.map((para) => <p class="para muted">{para}</p>)}
+      </div>
+    </section>
+
+    <!-- How it works --------------------------------------------------------- -->
+    <section class="section">
+      <div class="shell">
+        <h2 class="how__h">كيف يعمل</h2>
+        <div class="grid-auto">
+          {
+            c.how.map((h) => (
+              <div class="card step">
+                <span class="step__n">{h.n}</span>
+                <h3 class="step__t">{h.t}</h3>
+                <p class="muted">{h.d}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- The link block every capability page owes the site -------------------- -->
+    <section class="section on-ink">
+      <div class="shell">
+        <h2>شاهده حسب نشاطك</h2>
+        <div class="grid-auto trades">
+          {
+            trades.map((t) => (
+              <a class="tradecard" href={`${AR}/for/${t.slug}`}>
+                {t.name} <span aria-hidden="true">←</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Sibling capabilities --------------------------------------------------- -->
+    {
+      siblings.length > 0 && (
+        <section class="section siblings">
+          <div class="shell">
+            <h2 class="siblings__h">بقية ما تحصل عليه</h2>
+            <div class="siblings__row">
+              {siblings.map((o) => (
+                <a class="chip siblings__chip" href={`${AR}/features/${o.slug}`}>
+                  {o.name}
+                  {o.status !== 'live' && <span class="soonmark"> · قريباً</span>}
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {
+      c.buyable ? (
+        <ClosingBand
+          title={c.closeH2}
+          ctaLabel={AR_PRIMARY_CTA.label}
+          ctaHref={PRIMARY_CTA.href}
+          fine="بدون عقد · كل شيء ملكك"
+        />
+      ) : (
+        <section class="soonband">
+          <div class="shell soonband__in">
+            <span class="tag tag--soon">قريباً</span>
+            <h2 class="soonband__h">{c.closeH2}</h2>
+            <NotifyMe
+              id={`notify-${capability}-end`}
+              label="أبلغوني عند الإطلاق"
+              sendLabel="أبلغوني"
+              fieldLabel="البريد الإلكتروني"
+              placeholder="name@company.com"
+              done="سجّلناك — سنراسلك يوم الإطلاق."
+            />
+            <p class="soonband__fine muted">
+              الأجزاء الأساسية تعمل اليوم — وهذا الجزء ينضم إليها قريباً.
+            </p>
+          </div>
+        </section>
+      )
+    }
+  </div>
+</Base>

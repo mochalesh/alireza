@@ -1,0 +1,157 @@
+/* ============================================================================
+   The comparison page, both languages.
+
+   Two comparisons in English, three in Arabic, one set of rules. Namespaced
+   under `.vspage`, which both templates put on their wrapper.
+   ============================================================================ */
+/* Read, not scanned: a single column at a comfortable measure. */
+.vspage .col {
+  max-inline-size: 840px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.vspage .intro {
+  padding-block: var(--s-4) var(--s-8);
+}
+
+.vspage .intro__p {
+  margin-block-start: var(--s-6);
+  font-size: var(--fs-lead);
+  color: var(--muted);
+}
+
+.vspage .section {
+  padding-block: var(--section-y) 0;
+}
+
+  /* --- Table ------------------------------------------------------------- */
+.vspage .table-wrap {
+  border: 1px solid var(--line);
+  border-radius: var(--r-card-lg);
+  background: var(--card);
+}
+
+.vspage .cmp {
+  inline-size: 100%;
+  min-inline-size: 640px;
+  border-collapse: collapse;
+}
+
+.vspage .cmp th,
+.vspage .cmp td {
+  padding: var(--s-4);
+  border-block-end: 1px solid var(--line);
+  text-align: start;
+  vertical-align: top;
+  font-size: var(--fs-small);
+}
+
+.vspage .cmp tbody tr:last-child th,
+.vspage .cmp tbody tr:last-child td {
+  border-block-end: 0;
+}
+
+.vspage .cmp thead th {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 0;
+}
+
+.vspage .cmp tbody th {
+  font-weight: 700;
+  inline-size: 26%;
+  color: var(--muted);
+}
+
+.vspage .cmp__ours {
+  background: var(--amber-tint);
+}
+
+  /* The row the competitor wins is marked, not buried. */
+.vspage .wins {
+  display: inline-block;
+  margin-block-start: var(--s-2);
+  padding: 3px var(--s-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-tag);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--ink);
+  background: var(--putty);
+}
+
+.vspage .src {
+  margin-block-start: var(--s-4);
+  font-size: 14px;
+}
+
+  /* --- Who ---------------------------------------------------------------- */
+.vspage .who {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: var(--s-6);
+  margin-block-start: var(--s-8);
+  align-items: start;
+}
+
+.vspage .who__col--ours {
+  border: 2px solid var(--amber);
+  background: var(--amber-tint);
+}
+
+.vspage .who__list {
+  margin: var(--s-4) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--s-3);
+  font-size: 16px;
+}
+
+.vspage .who__list li {
+  display: flex;
+  gap: var(--s-3);
+  color: var(--muted);
+}
+
+.vspage .callout {
+  margin-block-start: var(--s-8);
+  padding: var(--s-6);
+  background: var(--putty);
+  border-radius: var(--r-card);
+  font-size: 17px;
+}
+
+  /* --- FAQ ----------------------------------------------------------------- */
+.vspage .faq__h {
+  margin-block-end: var(--s-8);
+}
+
+  /* --- Others -------------------------------------------------------------- */
+.vspage .others {
+  padding-block-end: var(--section-y);
+}
+
+.vspage .others__h {
+  font-size: var(--fs-h3);
+  margin-block-end: var(--s-4);
+}
+
+.vspage .others__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.vspage .others__chip {
+  min-block-size: var(--tap);
+  color: var(--ink);
+}
+
+.vspage .others__chip:hover {
+  border-color: var(--amber);
+  color: var(--ink);
+}

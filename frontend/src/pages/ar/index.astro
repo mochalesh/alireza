@@ -26,7 +26,7 @@ import ClosingBand from '../../components/ClosingBand.astro';
 import '../../styles/home.css';
 
 import { SITE_URL, PRICE, PRIMARY_CTA } from '../../data/site.js';
-import { AR, AR_TRADES, AR_CITIES, AR_PRIMARY_CTA } from '../../data/ar/site.js';
+import { AR, AR_TRADES, AR_CITIES, AR_PRIMARY_CTA, AR_EXAMPLES_PAGE } from '../../data/ar/site.js';
 import {
   HERO, MOCK, BADGES, STEPS, CAPABILITY_CARDS, TRADE_CARDS,
   EXAMPLES, EXAMPLES_NOTE, RENTING, OWNING, FAQ, CLOSING,
@@ -99,7 +99,12 @@ const schema = [
           <p class="hero__sub">{HERO.sub}</p>
           <div class="hero__cta">
             <a class="btn btn--amber" href={PRIMARY_CTA.href}>{AR_PRIMARY_CTA.label}</a>
-            <a class="btn btn--outline" href={HERO.ctaSecondary.href}>{HERO.ctaSecondary.label}</a>
+            <a
+              class="btn btn--outline"
+              href={AR_EXAMPLES_PAGE.built ? AR_EXAMPLES_PAGE.href : HERO.ctaSecondary.href}
+            >
+              {HERO.ctaSecondary.label}
+            </a>
           </div>
           <p class="hero__fine muted">{HERO.fine}</p>
         </div>

@@ -1,0 +1,148 @@
+---
+/**
+ * Arabic examples showcase.
+ *
+ * Same shape and stylesheet as the English page, grouped by the five Arabic
+ * trades rather than the four English ones. Filtering is anchors and CSS,
+ * not script: seven cards do not need a runtime, and /ar/examples#ac is a
+ * link a person can send to someone else.
+ *
+ * Every card is a sample and says so. The note under the H1 says it once
+ * more in plain Arabic, because a made-up company on a page about real
+ * results is exactly the thing that has to be labelled.
+ */
+import Base from '../../layouts/Base.astro';
+import '../../styles/examples.css';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
+
+import { SITE_URL, PRIMARY_CTA } from '../../data/site.js';
+import { AR, AR_TRADES, AR_PRIMARY_CTA } from '../../data/ar/site.js';
+import { AR_EXAMPLE_SITES, AR_EXAMPLE_FILTERS, AR_EXAMPLE_HEADINGS } from '../../data/ar/examples.js';
+
+const path = `${AR}/examples`;
+
+/* A group appears only if it has cards. The trade hub it links to appears
+   only if that hub is built — same registry, same rule. */
+const builtTrades = new Set(AR_TRADES.filter((t) => t.built).map((t) => t.slug));
+
+const groups = AR_EXAMPLE_FILTERS.map((f) => ({
+  ...f,
+  heading: AR_EXAMPLE_HEADINGS[f.key],
+  hub: builtTrades.has(f.key) ? `${AR}/for/${f.key}` : null,
+  sites: AR_EXAMPLE_SITES.filter((s) => s.trade === f.key),
+})).filter((g) => g.sites.length > 0);
+
+const title = 'أمثلة مواقع شركات الصيانة والخدمات | ويدجيتا';
+const metaDesc =
+  'أمثلة مواقع لشركات الصيانة والتكييف والسباكة والكهرباء والمكافحة، ومعها سبب عمل كل واحد. جميع المؤسسات المعروضة أمثلة توضيحية.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: `${SITE_URL}${AR}` },
+      { '@type': 'ListItem', position: 2, name: 'أمثلة', item: `${SITE_URL}${path}` },
+    ],
+  },
+];
+---
+
+<Base title={title} description={metaDesc} path={path} lang="ar" altPath="/examples" schema={schema}>
+  <div class="expage">
+    <div class="shell">
+      <Breadcrumb items={[{ label: 'الرئيسية', href: AR }, { label: 'أمثلة' }]} />
+    </div>
+
+    <section class="head">
+      <div class="shell">
+        <h1>{AR_EXAMPLE_HEADINGS.all[0]}</h1>
+        <p class="head__sub">{AR_EXAMPLE_HEADINGS.all[1]}</p>
+        <p class="head__note muted">
+          جميع المؤسسات والأرقام والنطاقات المعروضة أدناه أمثلة توضيحية
+          ومكتوب عليها ذلك — ستُستبدل بعملاء حقيقيين عند الإطلاق.
+        </p>
+
+        <nav class="filters" aria-label="انتقل إلى نشاط">
+          {groups.map((g) => <a class="chip filters__chip" href={`#${g.key}`}>{g.label}</a>)}
+        </nav>
+      </div>
+    </section>
+
+    {
+      groups.map((g) => (
+        <section class="section group" id={g.key}>
+          <div class="shell">
+            <h2>{g.heading[0]}</h2>
+            <p class="group__intro muted">{g.heading[1]}</p>
+
+            <div class="grid-auto">
+              {g.sites.map((ex) => (
+                <article class="card ex">
+                  <div class="ex__chrome">
+                    <span class="ex__domain">{ex.url}</span>
+                    <span class="tag tag--sample">مثال</span>
+                  </div>
+
+                  <div class="ex__hero">
+                    <strong class="ex__biz">{ex.name}</strong>
+                    <span class="ex__areas">{ex.cities}</span>
+                    <span class="ex__phone">{ex.wa}</span>
+                  </div>
+
+                  <ul class="ex__pages">
+                    <li>{ex.p1}</li>
+                    <li>{ex.p2}</li>
+                    <li>{ex.p3}</li>
+                  </ul>
+
+                  <p class="ex__cap muted">
+                    {ex.tradeLabel} · {ex.pages} صفحة · جاهز في دقيقة تقريباً
+                  </p>
+                  <p class="ex__why">{ex.why}</p>
+                </article>
+              ))}
+
+              <div class="card ex ex--yours">
+                <span class="ex__yours-t">موقعك هنا.</span>
+                <span class="muted">أجب على بضعة أسئلة وشاهد موقعك اليوم.</span>
+                <a class="btn btn--amber" href={PRIMARY_CTA.href}>ابدأ الآن</a>
+              </div>
+            </div>
+
+            {g.hub && (
+              <a class="group__hub" href={g.hub}>
+                ويدجيتا لـ{g.label}<span aria-hidden="true"> ←</span>
+              </a>
+            )}
+          </div>
+        </section>
+      ))
+    }
+
+    <ClosingBand
+      title="المثال القادم قد يحمل اسم مؤسستك."
+      ctaLabel={AR_PRIMARY_CTA.label}
+      ctaHref={PRIMARY_CTA.href}
+      fine="بدون عقد · كل شيء ملكك"
+    />
+  </div>
+</Base>
+
+<style>
+  /* The hub link under each group — its own tap target rather than an
+     inline link inside the commentary sentence. */
+  .group__hub {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    margin-block-start: var(--s-6);
+    font-weight: 700;
+    color: var(--amber-text);
+  }
+
+  .group__hub:hover {
+    color: var(--ink);
+  }
+</style>

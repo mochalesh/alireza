@@ -1,0 +1,148 @@
+/* ============================================================================
+   The examples showcase, both languages.
+
+   Namespaced under `.expage`, which both templates put on their wrapper.
+   ============================================================================ */
+.expage .head {
+  padding-block: var(--s-4) 0;
+}
+
+.expage .head__sub {
+  margin-block-start: var(--s-6);
+  max-inline-size: var(--measure);
+  font-size: var(--fs-lead);
+  color: var(--muted);
+}
+
+.expage .head__note {
+  margin-block-start: var(--s-4);
+  max-inline-size: var(--measure);
+  font-size: 14px;
+}
+
+.expage .filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-block-start: var(--s-8);
+}
+
+.expage .filters__chip {
+  min-block-size: var(--tap);
+  color: var(--ink);
+}
+
+.expage .filters__chip:hover {
+  border-color: var(--amber);
+  color: var(--ink);
+}
+
+.expage .group {
+  scroll-margin-block-start: 88px;
+}
+
+.expage .group:nth-of-type(even) {
+  background: var(--putty);
+}
+
+.expage .group__intro {
+  margin-block: var(--s-4) var(--s-8);
+  max-inline-size: var(--measure);
+}
+
+.expage .ex {
+  padding: 0;
+  overflow: hidden;
+}
+
+.expage .ex__chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border-block-end: 1px solid var(--line);
+  background: var(--putty);
+}
+
+.expage .group:nth-of-type(even) .ex__chrome {
+  background: var(--card);
+}
+
+.expage .ex__domain {
+  font-size: 12px;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.expage .ex__hero {
+  display: grid;
+  gap: 4px;
+  padding: var(--s-6) var(--s-4);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.expage .ex__biz {
+  font-family: var(--font-head);
+  font-size: 22px;
+}
+
+.expage .ex__areas {
+  font-size: 13px;
+  opacity: .75;
+}
+
+.expage .ex__phone {
+  justify-self: start;
+  margin-block-start: var(--s-2);
+  padding: 6px var(--s-3);
+  border-radius: var(--r-pill);
+  background: var(--amber);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.expage .ex__pages {
+  margin: 0;
+  padding: var(--s-4);
+  list-style: none;
+  display: grid;
+  gap: var(--s-2);
+}
+
+.expage .ex__pages li {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-tag);
+  font-size: 14px;
+}
+
+.expage .ex__cap {
+  padding-inline: var(--s-4);
+  font-size: 13px;
+}
+
+.expage .ex__why {
+  padding: var(--s-3) var(--s-4) var(--s-4);
+  font-size: 14px;
+  color: var(--amber-text);
+  font-weight: 600;
+}
+
+.expage .ex--yours {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: var(--s-3);
+  padding: var(--s-6);
+  border: 2px dashed var(--line-strong);
+  background: transparent;
+}
+
+.expage .ex__yours-t {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 24px;
+}

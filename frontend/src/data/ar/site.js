@@ -32,9 +32,9 @@ export const AR_TRADES = [
     primary: true,
   },
   { slug: 'ac', name: 'تكييف وتبريد', navName: 'تكييف وتبريد', built: true },
-  { slug: 'plumbing', name: 'سباكة', navName: 'سباكة', built: false },
-  { slug: 'electrical', name: 'كهرباء', navName: 'كهرباء', built: false },
-  { slug: 'pest-control', name: 'مكافحة حشرات', navName: 'مكافحة حشرات', built: false },
+  { slug: 'plumbing', name: 'سباكة', navName: 'سباكة', built: true },
+  { slug: 'electrical', name: 'كهرباء', navName: 'كهرباء', built: true },
+  { slug: 'pest-control', name: 'مكافحة حشرات', navName: 'مكافحة حشرات', built: true },
 ];
 
 /**
@@ -44,25 +44,25 @@ export const AR_TRADES = [
  */
 export const AR_CITIES = [
   { slug: 'riyadh', name: 'الرياض', country: 'SA', built: true },
-  { slug: 'jeddah', name: 'جدة', country: 'SA', built: false },
-  { slug: 'dammam', name: 'الدمام', country: 'SA', built: false },
-  { slug: 'dubai', name: 'دبي', country: 'AE', built: false },
-  { slug: 'abu-dhabi', name: 'أبوظبي', country: 'AE', built: false },
-  { slug: 'sharjah', name: 'الشارقة', country: 'AE', built: false },
+  { slug: 'jeddah', name: 'جدة', country: 'SA', built: true },
+  { slug: 'dammam', name: 'الدمام', country: 'SA', built: true },
+  { slug: 'dubai', name: 'دبي', country: 'AE', built: true },
+  { slug: 'abu-dhabi', name: 'أبوظبي', country: 'AE', built: true },
+  { slug: 'sharjah', name: 'الشارقة', country: 'AE', built: true },
 ];
 
 export const AR_CAPABILITIES = [
-  { slug: 'website', name: 'الموقع', status: 'live', built: false },
-  { slug: 'seo', name: 'الظهور في البحث', status: 'live', built: false },
-  { slug: 'content', name: 'المحتوى', status: 'live', built: false },
-  { slug: 'call-answering', name: 'الرد على المكالمات', status: 'coming-soon', built: false },
+  { slug: 'website', name: 'الموقع', status: 'live', built: true },
+  { slug: 'seo', name: 'الظهور في البحث', status: 'live', built: true },
+  { slug: 'content', name: 'المحتوى', status: 'live', built: true },
+  { slug: 'call-answering', name: 'الرد على المكالمات', status: 'coming-soon', built: true },
 ];
 
 /** Different competitors from the English site — different market. */
 export const AR_COMPARISONS = [
-  { slug: 'wix', name: 'ويكس', built: false },
-  { slug: 'wordpress', name: 'ووردبريس', built: false },
-  { slug: 'khamsat', name: 'خمسات', built: false },
+  { slug: 'wix', name: 'ويكس', built: true },
+  { slug: 'wordpress', name: 'ووردبريس', built: true },
+  { slug: 'khamsat', name: 'خمسات', built: true },
 ];
 
 export const AR_COMPANY = [
@@ -73,6 +73,7 @@ export const AR_COMPANY = [
 ];
 
 export const AR_PRICING_PAGE = { href: `${AR}/pricing`, built: true };
+export const AR_EXAMPLES_PAGE = { href: `${AR}/examples`, built: true };
 
 /**
  * Header. Same five-slots-plus-one-action shape as English, with the trade
@@ -80,10 +81,10 @@ export const AR_PRICING_PAGE = { href: `${AR}/pricing`, built: true };
  */
 export const AR_NAV = [
   { label: 'حسب نشاطك', href: `${AR}/for/maintenance-companies`, fallback: null, built: true, caret: true },
-  { label: 'ما تحصل عليه', href: `${AR}/features/website`, fallback: `${AR}#capabilities`, built: false, caret: true },
+  { label: 'ما تحصل عليه', href: `${AR}/features/website`, fallback: `${AR}#capabilities`, built: true, caret: true },
   { label: 'الأسعار', href: `${AR}/pricing`, fallback: null, built: true },
   { label: 'المدن', href: `${AR}/locations/riyadh`, fallback: null, built: true, caret: true },
-  { label: 'أمثلة', href: `${AR}/examples`, fallback: `${AR}#examples`, built: false },
+  { label: 'أمثلة', href: `${AR}/examples`, fallback: `${AR}#examples`, built: true },
 ];
 
 export const AR_PRIMARY_CTA = {

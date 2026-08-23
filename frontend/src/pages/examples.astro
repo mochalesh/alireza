@@ -11,11 +11,12 @@
  * send to someone else. Without JavaScript every card is still on the page.
  */
 import Base from '../layouts/Base.astro';
+import '../styles/examples.css';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import ClosingBand from '../components/ClosingBand.astro';
 
 import { EXAMPLE_SITES, EXAMPLE_FILTERS, EXAMPLE_HEADINGS } from '../data/examples.js';
-import { SITE_URL, APP_URL, PRIMARY_CTA } from '../data/site.js';
+import { SITE_URL, APP_URL, PRIMARY_CTA, AR_SITE } from '../data/site.js';
 
 const groups = EXAMPLE_FILTERS.filter((f) => f.key !== 'all').map((f) => ({
   ...f,
@@ -39,7 +40,14 @@ const schema = [
 ];
 ---
 
-<Base title={title} description={description} path="/examples" schema={schema}>
+<Base
+  title={title}
+  description={description}
+  path="/examples"
+  altPath={AR_SITE.built ? '/ar/examples' : undefined}
+  schema={schema}
+>
+  <div class="expage">
   <div class="shell">
     <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Examples' }]} />
   </div>
@@ -109,150 +117,5 @@ const schema = [
     ctaLabel="Get your business online"
     ctaHref={`${APP_URL}/signup`}
   />
+  </div>
 </Base>
-
-<style>
-  .head {
-    padding-block: var(--s-4) 0;
-  }
-
-  .head__sub {
-    margin-block-start: var(--s-6);
-    max-inline-size: var(--measure);
-    font-size: var(--fs-lead);
-    color: var(--muted);
-  }
-
-  .head__note {
-    margin-block-start: var(--s-4);
-    max-inline-size: var(--measure);
-    font-size: 14px;
-  }
-
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-2);
-    margin-block-start: var(--s-8);
-  }
-
-  .filters__chip {
-    min-block-size: var(--tap);
-    color: var(--ink);
-  }
-
-  .filters__chip:hover {
-    border-color: var(--amber);
-    color: var(--ink);
-  }
-
-  .group {
-    scroll-margin-block-start: 88px;
-  }
-
-  .group:nth-of-type(even) {
-    background: var(--putty);
-  }
-
-  .group__intro {
-    margin-block: var(--s-4) var(--s-8);
-    max-inline-size: var(--measure);
-  }
-
-  .ex {
-    padding: 0;
-    overflow: hidden;
-  }
-
-  .ex__chrome {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--s-2);
-    padding: var(--s-3) var(--s-4);
-    border-block-end: 1px solid var(--line);
-    background: var(--putty);
-  }
-
-  .group:nth-of-type(even) .ex__chrome {
-    background: var(--card);
-  }
-
-  .ex__domain {
-    font-size: 12px;
-    color: var(--muted);
-    word-break: break-all;
-  }
-
-  .ex__hero {
-    display: grid;
-    gap: 4px;
-    padding: var(--s-6) var(--s-4);
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  .ex__biz {
-    font-family: var(--font-head);
-    font-size: 22px;
-  }
-
-  .ex__areas {
-    font-size: 13px;
-    opacity: .75;
-  }
-
-  .ex__phone {
-    justify-self: start;
-    margin-block-start: var(--s-2);
-    padding: 6px var(--s-3);
-    border-radius: var(--r-pill);
-    background: var(--amber);
-    color: var(--ink);
-    font-size: 13px;
-    font-weight: 700;
-  }
-
-  .ex__pages {
-    margin: 0;
-    padding: var(--s-4);
-    list-style: none;
-    display: grid;
-    gap: var(--s-2);
-  }
-
-  .ex__pages li {
-    padding: var(--s-2) var(--s-3);
-    border: 1px solid var(--line);
-    border-radius: var(--r-tag);
-    font-size: 14px;
-  }
-
-  .ex__cap {
-    padding-inline: var(--s-4);
-    font-size: 13px;
-  }
-
-  .ex__why {
-    padding: var(--s-3) var(--s-4) var(--s-4);
-    font-size: 14px;
-    color: var(--amber-text);
-    font-weight: 600;
-  }
-
-  .ex--yours {
-    display: grid;
-    align-content: center;
-    justify-items: start;
-    gap: var(--s-3);
-    padding: var(--s-6);
-    border: 2px dashed var(--line-strong);
-    background: transparent;
-  }
-
-  .ex__yours-t {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: 24px;
-  }
-</style>

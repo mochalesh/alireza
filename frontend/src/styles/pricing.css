@@ -31,9 +31,9 @@
   align-items: start;
 }
 
-.pricingpage @media (max-width: 920px) {
-  .pricing__grid {
-      grid-template-columns: 1fr;
+@media (max-width: 920px) {
+  .pricingpage .pricing__grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -209,9 +209,9 @@
   box-shadow: var(--shadow-lift);
 }
 
-.pricingpage @media (max-width: 920px) {
-  .ssum {
-      position: static;
+@media (max-width: 920px) {
+  .pricingpage .ssum {
+    position: static;
   }
 }
 

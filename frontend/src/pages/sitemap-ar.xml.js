@@ -15,7 +15,10 @@
  * Both files are listed in robots.txt, and both should be submitted.
  */
 import { SITE_URL } from '../data/site.js';
-import { AR, AR_TRADES, AR_CITIES, AR_CAPABILITIES, AR_COMPARISONS, AR_PRICING_PAGE } from '../data/ar/site.js';
+import {
+  AR, AR_TRADES, AR_CITIES, AR_CAPABILITIES, AR_COMPARISONS,
+  AR_PRICING_PAGE, AR_EXAMPLES_PAGE,
+} from '../data/ar/site.js';
 
 const built = (list) => list.filter((i) => i.built);
 
@@ -23,6 +26,7 @@ export function GET() {
   const paths = [
     AR,
     ...(AR_PRICING_PAGE.built ? [AR_PRICING_PAGE.href] : []),
+    ...(AR_EXAMPLES_PAGE.built ? [AR_EXAMPLES_PAGE.href] : []),
     ...built(AR_TRADES).map((t) => `${AR}/for/${t.slug}`),
     ...built(AR_CITIES).map((c) => `${AR}/locations/${c.slug}`),
     ...built(AR_CAPABILITIES).map((c) => `${AR}/features/${c.slug}`),

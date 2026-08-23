@@ -1,0 +1,156 @@
+/* ============================================================================
+   The capability page, both languages.
+
+   Four pages in English, four in Arabic, one set of rules. Namespaced under
+   `.cappage`, which both templates put on their wrapper.
+   ============================================================================ */
+.cappage .hero {
+  padding-block: var(--s-4) var(--section-y);
+}
+
+.cappage .hero__tags {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  margin-block-end: var(--s-4);
+}
+
+.cappage .cap__label {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cappage .hero__sub {
+  margin-block-start: var(--s-6);
+  font-size: var(--fs-lead);
+  color: var(--muted);
+}
+
+.cappage .hero__cta {
+  margin-block-start: var(--s-8);
+}
+
+.cappage .hero__fine {
+  margin-block-start: var(--s-4);
+  font-size: var(--fs-small);
+}
+
+.cappage .bullet__t {
+  font-size: 20px;
+  margin-block-end: var(--s-2);
+}
+
+.cappage .explain {
+  background: var(--putty);
+}
+
+.cappage .para {
+  margin-block-start: var(--s-4);
+}
+
+.cappage h2 + .para {
+  margin-block-start: var(--s-6);
+}
+
+.cappage .how__h {
+  margin-block-end: var(--s-8);
+}
+
+.cappage .step__n {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 32px;
+  color: var(--amber-text);
+  line-height: 1;
+}
+
+.cappage .step__t {
+  margin-block: var(--s-2);
+  font-size: 20px;
+}
+
+.cappage .trades {
+  margin-block-start: var(--s-8);
+}
+
+.cappage .tradecard {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--tap);
+  padding: var(--s-4);
+  border: 1px solid rgba(250, 247, 242, .25);
+  border-radius: var(--r-card);
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--paper);
+}
+
+.cappage .tradecard:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.cappage .siblings__h {
+  font-size: var(--fs-h3);
+  margin-block-end: var(--s-4);
+}
+
+.cappage .siblings__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.cappage .siblings__chip {
+  min-block-size: var(--tap);
+  color: var(--ink);
+}
+
+.cappage .siblings__chip:hover {
+  border-color: var(--amber);
+  color: var(--ink);
+}
+
+.cappage .soonmark {
+  color: var(--soon-text);
+  font-weight: 700;
+}
+
+  /* A coming-soon page ends in a caution band, not an amber CTA band —
+     the closing moment must not look like a place to buy. */
+.cappage .soonband {
+  background: var(--soon-bg);
+  border-block-start: 2px dashed var(--soon-line);
+}
+
+.cappage .soonband__in {
+  max-inline-size: 720px;
+  margin-inline: auto;
+  padding-block: clamp(48px, 6vw, 88px);
+  text-align: center;
+}
+
+.cappage .soonband__h {
+  margin-block: var(--s-4) 0;
+  font-size: var(--fs-band);
+}
+
+.cappage .soonband__fine {
+  margin-block-start: var(--s-4);
+  font-size: var(--fs-small);
+}
+
+  /* The notify control is centred here, unlike inside a card. */
+.cappage .soonband__in :global(.notify) {
+  display: flex;
+  justify-content: center;
+}
+
+.cappage .soonband__in :global(.notify__form) {
+  justify-content: center;
+}
