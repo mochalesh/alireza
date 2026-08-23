@@ -13,7 +13,7 @@ import FaqList from '../components/FaqList.astro';
 import NotifyMe from '../components/NotifyMe.astro';
 import ClosingBand from '../components/ClosingBand.astro';
 
-import { SITE_URL, APP_URL, PRICE, PRIMARY_CTA } from '../data/site.js';
+import { SITE_URL, APP_URL, PRICE, PRIMARY_CTA, EXAMPLES_PAGE } from '../data/site.js';
 import {
   STEPS, TRADE_CARDS, CAPABILITY_CARDS, ROADMAP, EXAMPLES,
   RENTING, OWNING, PROOF, FAQ,
@@ -89,7 +89,7 @@ const schema = [
         </p>
         <div class="hero__cta">
           <a class="btn btn--amber" href={PRIMARY_CTA.href}>Get your business online</a>
-          <a class="btn btn--outline" href="/examples">See real examples</a>
+          <a class="btn btn--outline" href={EXAMPLES_PAGE.built ? EXAMPLES_PAGE.href : '#examples'}>See real examples</a>
         </div>
         <p class="hero__fine muted">
           About 2 minutes of questions · Live the same day · No contract, cancel anytime
@@ -236,7 +236,11 @@ const schema = [
         Every example business and phone number on this page is invented for
         illustration.
       </p>
-      <a class="ex__more" href="/examples">Browse examples by trade →</a>
+      {
+        EXAMPLES_PAGE.built && (
+          <a class="ex__more" href={EXAMPLES_PAGE.href}>Browse examples by trade →</a>
+        )
+      }
     </div>
   </section>
 

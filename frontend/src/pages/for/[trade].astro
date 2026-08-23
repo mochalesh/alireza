@@ -1,0 +1,674 @@
+---
+/**
+ * Trade hub — one template, four trades. The money pages.
+ *
+ * The block order is the SEO spec's, not an arrangement of my own: intro
+ * carrying the commercial phrase inside the first hundred words, then the
+ * keyword H2, the customers' searches labelled as theirs, the service×city
+ * matrix, the trade-built section, seasonality, the comparison table,
+ * examples, proof, six FAQs, a guide teaser, the closing band.
+ *
+ * Nothing here is padding. Every block is either something only this trade
+ * would care about, or it is cut — near-duplicate trade pages are the
+ * doorway-page risk the spec names.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import FaqList from '../../components/FaqList.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
+
+import { TRADE_CONTENT } from '../../data/trades.js';
+import {
+  SITE_URL, APP_URL, PRICE, TRADES, COMPARISONS, withPrice, PRIMARY_CTA,
+} from '../../data/site.js';
+
+export function getStaticPaths() {
+  return Object.keys(TRADE_CONTENT).map((trade) => ({ params: { trade } }));
+}
+
+const { trade } = Astro.params;
+const t = TRADE_CONTENT[trade];
+const price = PRICE.en;
+
+/** Copy carries a price token rather than a figure; resolve it here. */
+const p = (text) => withPrice(text);
+
+const cities = [t.c1, t.c2, t.c3];
+
+/*
+ * The comparison table links onward only where that page exists. The design
+ * data carries its own hasVsPage flag, but the site's built-page registry is
+ * the authority — one of them can go stale, and it should not be the one
+ * that decides whether a visitor meets a 404.
+ */
+const vsEntry = COMPARISONS.find(
+  (c) => c.name.toLowerCase() === String(t.mkt).toLowerCase() && c.built
+);
+
+const title = `${t.tradeName === 'HVAC' ? 'HVAC' : t.tradeName} Website Builder & Local SEO | Widgeta`;
+const description = t.metaDesc;
+
+const path = `/for/${trade}`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `Websites, SEO and content for ${t.tradeLower}`,
+    serviceType: 'Website design and local SEO',
+    provider: { '@type': 'Organization', name: 'Widgeta', url: SITE_URL },
+    areaServed: 'US',
+    offers: {
+      '@type': 'Offer',
+      price: price.amount,
+      priceCurrency: price.currency,
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'For your trade', item: `${SITE_URL}/for/plumbers` },
+      { '@type': 'ListItem', position: 3, name: t.tradeName, item: `${SITE_URL}${path}` },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: t.faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: p(f.a) },
+    })),
+  },
+];
+---
+
+<Base title={title} description={description} path={path} schema={schema}>
+  <div class="shell">
+    <Breadcrumb
+      items={[
+        { label: 'Home', href: '/' },
+        { label: 'For your trade', href: '/for/plumbers' },
+        { label: t.tradeName },
+      ]}
+    />
+  </div>
+
+  <!-- Hero --------------------------------------------------------------- -->
+  <section class="hero">
+    <div class="shell hero__grid">
+      <div>
+        <p class="eyebrow">{t.tradeCaps}</p>
+        <h1>{t.h1}</h1>
+        <p class="hero__sub">{t.sub}</p>
+        <div class="hero__cta">
+          <a class="btn btn--amber" href={PRIMARY_CTA.href}>{t.cta}</a>
+          <a class="btn btn--outline" href="#examples">{t.exampleCta}</a>
+        </div>
+      </div>
+
+      <div class="card searches">
+        <p class="searches__label">What your customers search, every week</p>
+        <div class="searches__chips">
+          {t.searches.map((s) => <span class="chip">{s}</span>)}
+        </div>
+        <p class="searches__note muted">
+          These are the searches your customers type — not the ones this page
+          is written for. Widgeta builds a page for each of them.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The commercial-keyword H2 ------------------------------------------ -->
+  <section class="section">
+    <div class="shell measure">
+      <h2>{t.kwH2}</h2>
+      <p class="para muted">{t.kw1}</p>
+      <p class="para muted">{t.kw2}</p>
+      <p class="para muted">{t.kw3}</p>
+    </div>
+  </section>
+
+  <!-- Service × city matrix ---------------------------------------------- -->
+  <section class="section matrix-sec">
+    <div class="shell">
+      <h2>A page for every service, in every town you serve</h2>
+      <p class="para muted measure">{t.servicePagesLine}</p>
+
+      <div class="card matrix-card">
+        <div class="scroll-x">
+          <table class="matrix">
+            <caption class="sr-only">
+              Every service in every town gets its own page
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Service</th>
+                {cities.map((c) => <th scope="col">{c}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {
+                t.mxSvc.map((svc) => (
+                  <tr>
+                    <th scope="row">{svc}</th>
+                    {cities.map(() => (
+                      <td>
+                        <span class="cell">✓ its own page</span>
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="matrix__note">{t.matrixNote}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Built for this trade ------------------------------------------------ -->
+  <section class="section on-ink">
+    <div class="shell">
+      <h2>Built for {t.tradeLower}, not “small business.”</h2>
+      <div class="grid-auto builtfor">
+        <div class="bf">
+          <h3>The jobs, named</h3>
+          <p>{t.servicePagesLine}</p>
+        </div>
+        <div class="bf">
+          <h3>The season, anticipated</h3>
+          <p>{t.seasonalLine}</p>
+        </div>
+        <div class="bf">
+          <h3>{t.proof1}</h3>
+          <p>Every page carries your number, and the call is yours alone.</p>
+        </div>
+        <div class="bf">
+          <h3>{t.proof2}</h3>
+          <p>The work you want more of gets the page that wins that search.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seasonality --------------------------------------------------------- -->
+  <section class="section">
+    <div class="shell">
+      <h2>{t.seasonH2}</h2>
+      <p class="para muted measure">{t.seasonIntro}</p>
+
+      <div class="grid-auto seasons">
+        {
+          t.seasons.map((s) => (
+            <div class="card season">
+              <span class="season__label">{s.s}</span>
+              <h3 class="season__h">{s.h}</h3>
+              <p class="muted">{s.t}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison ---------------------------------------------------------- -->
+  <section class="section">
+    <div class="shell">
+      <h2>How it compares</h2>
+      <div class="scroll-x cmp-wrap">
+        <table class="cmp">
+          <thead>
+            <tr>
+              <th scope="col"><span class="sr-only">What is compared</span></th>
+              <th scope="col" class="cmp__ours">Widgeta</th>
+              <th scope="col">{t.mkt}</th>
+              <th scope="col">DIY builder</th>
+              <th scope="col">Agency</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              t.rows.map((r) => (
+                <tr>
+                  <th scope="row">{r.k}</th>
+                  <td class="cmp__ours">{p(r.w)}</td>
+                  <td>{r.m}</td>
+                  <td>{r.d}</td>
+                  <td>{r.a}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <p class="cmp__src muted">
+        Competitor figures are typical published ranges, not quotes for your
+        business; check each company's current terms before deciding.
+      </p>
+
+      {vsEntry && (
+        <a class="morelink" href={`/vs/${vsEntry.slug}`}>{t.vsLabel}</a>
+      )}
+    </div>
+  </section>
+
+  <!-- Examples ------------------------------------------------------------ -->
+  <section class="section" id="examples">
+    <div class="shell">
+      <h2>{t.examplesH2}</h2>
+
+      <div class="grid-auto">
+        {
+          t.examples.map((ex) => (
+            <article class="card ex">
+              <div class="ex__chrome">
+                <span class="ex__domain">{ex.url}</span>
+                <span class="tag tag--sample">Sample</span>
+              </div>
+              <div class="ex__hero">
+                <strong class="ex__biz">{ex.name}</strong>
+                <span class="ex__areas">{ex.cities}</span>
+                <span class="ex__phone">{ex.phone}</span>
+              </div>
+              <ul class="ex__pages">
+                <li>{ex.p1}</li>
+                <li>{ex.p2}</li>
+                <li>{ex.p3}</li>
+              </ul>
+              <p class="ex__cap muted">{ex.caption}</p>
+            </article>
+          ))
+        }
+
+        <div class="card ex ex--yours">
+          <span class="ex__yours-t">Yours goes here.</span>
+          <span class="muted">Answer a few questions and this card is your site.</span>
+          <a class="btn btn--amber" href={PRIMARY_CTA.href}>{t.cta}</a>
+        </div>
+      </div>
+
+      <p class="disclosure muted">
+        Every example business and phone number on this page is invented for
+        illustration.
+      </p>
+    </div>
+  </section>
+
+  <!-- Proof ---------------------------------------------------------------- -->
+  <section class="section proof-sec">
+    <div class="shell">
+      <figure class="card proof">
+        <blockquote class="proof__q">“{t.quote}”</blockquote>
+        <figcaption class="proof__who">
+          <span class="proof__face" aria-hidden="true"></span>
+          <span>
+            <strong>{t.quoteName}</strong>
+            <span class="muted proof__biz">{t.quoteBiz}</span>
+          </span>
+        </figcaption>
+      </figure>
+      <p class="disclosure muted">
+        An illustrative example, not a statement from a named customer. It stays
+        labelled until real customers give written permission.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -------------------------------------------------------------------- -->
+  <section class="section faq-sec">
+    <div class="shell">
+      <h2 class="faq-sec__h">{t.faqH2}</h2>
+      <FaqList items={t.faqs.map((f) => ({ q: f.q, a: p(f.a) }))} />
+    </div>
+  </section>
+
+  <ClosingBand
+    title={`Be the ${t.tradeLower.replace(/s$/, '')} your neighbors find first.`}
+    lead="Answer a few questions today. Your site is live before your next job."
+    ctaLabel={t.cta}
+    ctaHref={`${APP_URL}/signup`}
+  />
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--s-4) var(--section-y);
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    gap: clamp(32px, 4vw, 64px);
+    align-items: start;
+  }
+
+  .hero__sub {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-lead);
+  }
+
+  .hero__cta {
+    display: flex;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+    margin-block-start: var(--s-8);
+  }
+
+  .searches__label {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .searches__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-block-start: var(--s-4);
+  }
+
+  .searches__note {
+    margin-block-start: var(--s-4);
+    font-size: 14px;
+  }
+
+  .para {
+    margin-block-start: var(--s-4);
+  }
+
+  h2 + .para {
+    margin-block-start: var(--s-6);
+  }
+
+  /* --- Matrix ---------------------------------------------------------- */
+  .matrix-sec {
+    background: var(--putty);
+  }
+
+  .matrix-card {
+    margin-block-start: var(--s-8);
+  }
+
+  .matrix {
+    inline-size: 100%;
+    min-inline-size: 560px;
+    border-collapse: collapse;
+    text-align: start;
+  }
+
+  .matrix th,
+  .matrix td {
+    padding: var(--s-3);
+    border-block-end: 1px solid var(--line);
+    text-align: start;
+    font-size: var(--fs-small);
+  }
+
+  .matrix thead th {
+    font-family: var(--font-body);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .matrix tbody th {
+    font-weight: 700;
+  }
+
+  .cell {
+    display: inline-block;
+    padding: 5px var(--s-2);
+    border: 1px solid var(--amber-tint-line);
+    border-radius: var(--r-tag);
+    background: var(--amber-tint);
+    color: var(--soon-text);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .matrix__note {
+    margin-block-start: var(--s-4);
+    font-weight: 700;
+  }
+
+  /* --- Built for ------------------------------------------------------- */
+  .builtfor {
+    margin-block-start: var(--s-8);
+  }
+
+  .bf h3 {
+    font-size: 20px;
+  }
+
+  .bf p {
+    margin-block-start: var(--s-2);
+  }
+
+  /* --- Seasons --------------------------------------------------------- */
+  .seasons {
+    margin-block-start: var(--s-8);
+  }
+
+  .season__label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    color: var(--amber-text);
+  }
+
+  .season__h {
+    margin-block: var(--s-2);
+    font-size: 21px;
+  }
+
+  /* --- Comparison ------------------------------------------------------ */
+  .cmp-wrap {
+    margin-block-start: var(--s-8);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card-lg);
+    background: var(--card);
+  }
+
+  .cmp {
+    inline-size: 100%;
+    min-inline-size: 720px;
+    border-collapse: collapse;
+  }
+
+  .cmp th,
+  .cmp td {
+    padding: var(--s-3) var(--s-4);
+    border-block-end: 1px solid var(--line);
+    text-align: start;
+    font-size: var(--fs-small);
+    vertical-align: top;
+  }
+
+  .cmp thead th {
+    font-family: var(--font-body);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .cmp tbody th {
+    font-weight: 700;
+    inline-size: 22%;
+  }
+
+  .cmp__ours {
+    background: var(--amber-tint);
+  }
+
+  .cmp thead .cmp__ours {
+    color: var(--ink);
+  }
+
+  .cmp__src {
+    margin-block-start: var(--s-4);
+    font-size: 14px;
+  }
+
+  .morelink {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    margin-block-start: var(--s-2);
+    color: var(--amber-text);
+    font-weight: 700;
+  }
+
+  .morelink:hover {
+    color: var(--ink);
+  }
+
+  /* --- Examples --------------------------------------------------------- */
+  .ex {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .ex__chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+    padding: var(--s-3) var(--s-4);
+    border-block-end: 1px solid var(--line);
+    background: var(--putty);
+  }
+
+  .ex__domain {
+    font-size: 12px;
+    color: var(--muted);
+    word-break: break-all;
+  }
+
+  .ex__hero {
+    display: grid;
+    gap: 4px;
+    padding: var(--s-6) var(--s-4);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .ex__biz {
+    font-family: var(--font-head);
+    font-size: 22px;
+  }
+
+  .ex__areas {
+    font-size: 13px;
+    opacity: .75;
+  }
+
+  .ex__phone {
+    justify-self: start;
+    margin-block-start: var(--s-2);
+    padding: 6px var(--s-3);
+    border-radius: var(--r-pill);
+    background: var(--amber);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .ex__pages {
+    margin: 0;
+    padding: var(--s-4);
+    list-style: none;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .ex__pages li {
+    padding: var(--s-2) var(--s-3);
+    border: 1px solid var(--line);
+    border-radius: var(--r-tag);
+    font-size: 14px;
+  }
+
+  .ex__cap {
+    padding: 0 var(--s-4) var(--s-4);
+    font-size: 13px;
+  }
+
+  .ex--yours {
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: var(--s-3);
+    padding: var(--s-6);
+    border: 2px dashed var(--line-strong);
+    background: transparent;
+  }
+
+  .ex__yours-t {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 24px;
+  }
+
+  .disclosure {
+    margin-block-start: var(--s-6);
+    font-size: 14px;
+  }
+
+  /* --- Proof ------------------------------------------------------------ */
+  .proof-sec {
+    background: var(--putty);
+  }
+
+  .proof {
+    max-inline-size: var(--measure);
+  }
+
+  .proof__q {
+    margin: 0;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(24px, 2vw + 16px, 32px);
+    line-height: 1.15;
+  }
+
+  .proof__who {
+    display: flex;
+    align-items: center;
+    gap: var(--s-4);
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-small);
+  }
+
+  .proof__face {
+    inline-size: 64px;
+    block-size: 64px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 1px dashed var(--line-strong);
+    flex: none;
+  }
+
+  .proof__biz {
+    display: block;
+  }
+
+  /* --- FAQ --------------------------------------------------------------- */
+  .faq-sec__h {
+    max-inline-size: var(--measure);
+    margin-inline: auto;
+    margin-block-end: var(--s-8);
+  }
+</style>

@@ -1,0 +1,70 @@
+---
+/**
+ * Breadcrumb trail. The visible list and the BreadcrumbList schema come from
+ * the same array, so the two can never disagree about where a page sits.
+ */
+interface Props {
+  items: { label: string; href?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="crumbs" aria-label="Breadcrumb">
+  <ol>
+    {
+      items.map((item, i) => (
+        <li>
+          {item.href && i < items.length - 1 ? (
+            <a href={item.href}>{item.label}</a>
+          ) : (
+            <span aria-current="page">{item.label}</span>
+          )}
+          {i < items.length - 1 && <span class="crumbs__sep" aria-hidden="true">/</span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .crumbs {
+    padding-block: var(--s-4);
+  }
+
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .crumbs li {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  /* A breadcrumb link is still a link people tap. Padding gives it the
+     44px target without pushing the text off its own line. */
+  .crumbs a,
+  .crumbs [aria-current] {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    color: var(--muted);
+  }
+
+  .crumbs a:hover {
+    color: var(--amber-text);
+  }
+
+  .crumbs__sep {
+    opacity: .5;
+  }
+</style>

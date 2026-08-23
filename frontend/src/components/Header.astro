@@ -6,7 +6,7 @@
  * rather than wrapping into a tall stack — on a phone the header has to stay
  * a header, not eat a third of the first screen.
  */
-import { NAV, PRIMARY_CTA } from '../data/site.js';
+import { NAV, PRIMARY_CTA, navHref, AR_SITE } from '../data/site.js';
 
 interface Props {
   lang?: 'en' | 'ar';
@@ -27,9 +27,12 @@ const home = lang === 'ar' ? '/ar' : '/';
 
     <nav class="hnav" aria-label="Primary">
       {
-        NAV.map((item) => (
+        /* An item whose page is not built yet, and which has no section of
+           the home page that answers the same question, is left out — a nav
+           label over a 404 is worse than a shorter nav. */
+        NAV.filter((item) => navHref(item)).map((item) => (
           <a
-            href={item.href}
+            href={navHref(item)}
             class:list={['hnav__link', { 'is-active': active && item.href.startsWith(active) }]}
           >
             {item.label}
@@ -39,9 +42,13 @@ const home = lang === 'ar' ? '/ar' : '/';
       }
     </nav>
 
-    <a class="langchip" href={lang === 'ar' ? '/' : '/ar'} lang={lang === 'ar' ? 'en' : 'ar'}>
-      EN · العربية
-    </a>
+    {
+      (lang === 'ar' || AR_SITE.built) && (
+        <a class="langchip" href={lang === 'ar' ? '/' : AR_SITE.href} lang={lang === 'ar' ? 'en' : 'ar'}>
+          EN · العربية
+        </a>
+      )
+    }
 
     <a class="btn btn--amber hdr__cta" href={PRIMARY_CTA.href}>{PRIMARY_CTA.label}</a>
   </div>

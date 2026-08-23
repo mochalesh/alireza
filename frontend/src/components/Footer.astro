@@ -9,7 +9,7 @@
  * by accident, and a capability that is not live carries its SOON label here
  * too — the brief names the footer link explicitly.
  */
-import { TRADES, CAPABILITIES, COMPARISONS } from '../data/site.js';
+import { TRADES, CAPABILITIES, COMPARISONS, RESOURCES, COMPANY, AR_SITE } from '../data/site.js';
 
 interface Props {
   lang?: 'en' | 'ar';
@@ -19,55 +19,44 @@ const { lang = 'en' } = Astro.props;
 
 const year = 2026;
 
-const resources = [
-  { label: 'Marketing guides', href: '/guides/plumbing-marketing' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Business name generator', href: '/tools/business-name-generator' },
-  { label: 'Website grader', href: '/tools/website-grader' },
-];
+/*
+ * Only built pages get a link. A column with nothing built yet does not
+ * render at all — an empty heading is a promise the footer cannot keep.
+ */
+const built = (list) => list.filter((i) => i.built);
 
-const company = [
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
-  { label: 'Privacy', href: '/privacy' },
-  { label: 'Terms', href: '/terms' },
-];
+const columns = [
+  { label: 'For your trade', items: built(TRADES).map((t) => ({ label: t.name, href: `/for/${t.slug}` })) },
+  {
+    label: 'What you get',
+    items: built(CAPABILITIES).map((c) => ({
+      label: c.name,
+      href: `/features/${c.slug}`,
+      soon: c.status !== 'live',
+    })),
+  },
+  { label: 'Compare', items: built(COMPARISONS).map((c) => ({ label: `Widgeta vs ${c.name}`, href: `/vs/${c.slug}` })) },
+  { label: 'Resources', items: built(RESOURCES) },
+  { label: 'Company', items: built(COMPANY) },
+].filter((col) => col.items.length > 0);
 ---
 
 <footer class="ftr">
   <div class="ftr__in">
     <div class="ftr__cols">
-      <nav class="ftr__col" aria-label="For your trade">
-        <span class="ftr__head">For your trade</span>
-        {TRADES.map((t) => <a href={`/for/${t.slug}`}>{t.name}</a>)}
-      </nav>
-
-      <nav class="ftr__col" aria-label="What you get">
-        <span class="ftr__head">What you get</span>
-        {
-          CAPABILITIES.map((c) => (
-            <a href={`/features/${c.slug}`}>
-              {c.name}
-              {c.status !== 'live' && <span class="soon"> SOON</span>}
-            </a>
-          ))
-        }
-      </nav>
-
-      <nav class="ftr__col" aria-label="Compare">
-        <span class="ftr__head">Compare</span>
-        {COMPARISONS.map((c) => <a href={`/vs/${c.slug}`}>Widgeta vs {c.name}</a>)}
-      </nav>
-
-      <nav class="ftr__col" aria-label="Resources">
-        <span class="ftr__head">Resources</span>
-        {resources.map((r) => <a href={r.href}>{r.label}</a>)}
-      </nav>
-
-      <nav class="ftr__col" aria-label="Company">
-        <span class="ftr__head">Company</span>
-        {company.map((c) => <a href={c.href}>{c.label}</a>)}
-      </nav>
+      {
+        columns.map((col) => (
+          <nav class="ftr__col" aria-label={col.label}>
+            <span class="ftr__head">{col.label}</span>
+            {col.items.map((item) => (
+              <a href={item.href}>
+                {item.label}
+                {item.soon && <span class="soon"> SOON</span>}
+              </a>
+            ))}
+          </nav>
+        ))
+      }
     </div>
 
     <div class="ftr__bar">
@@ -76,7 +65,11 @@ const company = [
         <span class="brand__word">widgeta</span>
       </span>
       <span class="ftr__legal">© {year} Widgeta · widgeta.app</span>
-      <a class="langchip" href={lang === 'ar' ? '/' : '/ar'}>EN · العربية</a>
+      {
+        (lang === 'ar' || AR_SITE.built) && (
+          <a class="langchip" href={lang === 'ar' ? '/' : AR_SITE.href}>EN · العربية</a>
+        )
+      }
     </div>
   </div>
 </footer>
