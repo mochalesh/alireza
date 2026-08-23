@@ -1,0 +1,210 @@
+---
+/**
+ * Blog post.
+ *
+ * A post marked `sample` is an example of what Widgeta publishes for a
+ * customer, not something this site is trying to rank for. It says so on the
+ * page and carries noindex — the SEO spec forbids building pages around the
+ * customer's searches, and ranking widgeta.app for "water heater replacement
+ * cost" would collect homeowners who cannot buy anything.
+ *
+ * At most one commercial link, per the spec. The pillar link is not it: that
+ * one is editorial, pointing back at the guide this post supports.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Prose from '../../components/Prose.astro';
+
+import { POSTS } from '../../data/posts.js';
+import { GUIDES } from '../../data/guides.js';
+import { SITE_URL, TRADES } from '../../data/site.js';
+
+export function getStaticPaths() {
+  return Object.keys(POSTS).map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const post = POSTS[slug];
+const path = `/blog/${slug}`;
+
+const pillar = post.pillar && GUIDES[post.pillar] ? { slug: post.pillar, ...GUIDES[post.pillar] } : null;
+const tradeEntry = TRADES.find((t) => t.slug === post.trade && t.built);
+
+const schema = post.sample ? [] : [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.h1,
+    description: post.description,
+    author: { '@type': 'Person', name: post.author },
+    publisher: { '@type': 'Organization', name: 'Widgeta', url: SITE_URL },
+    datePublished: post.updated,
+    dateModified: post.updated,
+    mainEntityOfPage: `${SITE_URL}${path}`,
+    inLanguage: 'en-US',
+  },
+];
+---
+
+<Base
+  title={post.title}
+  description={post.description}
+  path={path}
+  schema={schema}
+  noindex={post.sample}
+>
+  <div class="shell">
+    <Breadcrumb
+      items={[
+        { label: 'Home', href: '/' },
+        { label: 'Blog', href: '/blog' },
+        { label: post.tags[post.tags.length - 1] },
+      ]}
+    />
+  </div>
+
+  <article class="col">
+    {
+      post.sample && (
+        <p class="samplenote">
+          <strong>An example, not an article for you.</strong> This is the kind
+          of page Widgeta writes and publishes for a plumbing customer — their
+          town, their number, their name on it. It is here to show the work,
+          which is why it is not listed in search.
+        </p>
+      )
+    }
+
+    <header class="head">
+      <p class="tags">{post.tags.join(' · ')}</p>
+      <h1>{post.h1}</h1>
+      <p class="head__stand">{post.standfirst}</p>
+      <p class="byline muted">
+        <strong>{post.author}</strong> · Updated {post.updatedLabel} · {post.readingTime}
+      </p>
+    </header>
+
+    <Prose blocks={post.blocks} />
+
+    {
+      pillar && (
+        <aside class="pillar">
+          <span class="pillar__label">From the full guide</span>
+          <p class="pillar__text">{post.pillarNote}</p>
+          <a class="pillar__link" href={`/guides/${pillar.slug}`}>Read {pillar.h1} →</a>
+        </aside>
+      )
+    }
+
+    {
+      tradeEntry && (
+        <aside class="promo">
+          <span class="promo__label">For {tradeEntry.name.toLowerCase()} reading this</span>
+          <p class="promo__text">
+            Pages that answer questions like this — in your towns, with your
+            number on them — are what Widgeta publishes for you every month.
+          </p>
+          <a class="promo__link" href={`/for/${tradeEntry.slug}`}>
+            See Widgeta for {tradeEntry.name.toLowerCase()} →
+          </a>
+        </aside>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  .col {
+    max-inline-size: var(--measure-narrow);
+    margin-inline: auto;
+    padding: var(--s-4) var(--gutter) var(--section-y);
+  }
+
+  .samplenote {
+    padding: var(--s-4);
+    border: 2px dashed var(--soon-line);
+    border-radius: var(--r-card);
+    background: var(--soon-bg);
+    color: var(--soon-text);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+
+  .head {
+    margin-block-start: var(--s-8);
+  }
+
+  .tags {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+
+  .head h1 {
+    margin-block-start: var(--s-3);
+  }
+
+  .head__stand {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  .byline {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-small);
+  }
+
+  .byline strong { color: var(--ink); }
+
+  .pillar,
+  .promo {
+    margin-block-start: var(--s-12);
+    padding: var(--s-6);
+    border-radius: var(--r-card);
+  }
+
+  .pillar {
+    background: var(--putty);
+  }
+
+  .promo {
+    border: 2px solid var(--amber);
+    background: var(--amber-tint);
+  }
+
+  .pillar__label,
+  .promo__label {
+    display: block;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+
+  .pillar__text,
+  .promo__text {
+    margin-block-start: var(--s-3);
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .pillar__link,
+  .promo__link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    margin-block-start: var(--s-2);
+    font-weight: 700;
+    color: var(--amber-text);
+  }
+
+  .pillar__link:hover,
+  .promo__link:hover {
+    color: var(--ink);
+  }
+</style>

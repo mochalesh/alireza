@@ -1,0 +1,677 @@
+---
+/**
+ * Business name generator.
+ *
+ * The generator itself is small and runs entirely in the browser — there is
+ * no server here to ask, and there does not need to be one: combining a word
+ * bank is arithmetic. What it deliberately does not do is tell you a name is
+ * available. That answer lives in a state registry, a trademark database and
+ * a registrar, and a green tick invented on this page would be a number that
+ * cannot be checked. The page teaches the check instead.
+ *
+ * The rules, patterns, mistakes and FAQ below are the half a search engine
+ * can read, per the SEO spec's rule for tools, and the half a contractor
+ * still gets if the button never gets pressed.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import FaqList from '../../components/FaqList.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
+
+import { PLACES, TRAITS, TRADE_WORDS, PATTERNS, RULES, MISTAKES, CHECK, FAQ } from '../../data/tools.js';
+import { SITE_URL, TRADES } from '../../data/site.js';
+
+const path = '/tools/business-name-generator';
+const title = 'Trade Business Name Generator | Widgeta';
+const description =
+  'A free business name generator for plumbers, HVAC, roofers and electricians — plus the five naming patterns and the check to run before you commit.';
+
+/** The word bank the browser needs, and nothing else. */
+const bank = { PLACES, TRAITS, TRADE_WORDS };
+
+const tradeOptions = Object.entries(TRADE_WORDS).map(([key, t]) => ({ key, label: t.label }));
+
+/** Trade hubs that exist, for the one commercial link at the end. */
+const builtTrades = TRADES.filter((t) => t.built);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Trade Business Name Generator',
+    url: `${SITE_URL}${path}`,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Any',
+    browserRequirements: 'Requires JavaScript',
+    description:
+      'Generates business name ideas for plumbing, HVAC, roofing and electrical companies from your surname, city and trade.',
+    publisher: { '@type': 'Organization', name: 'Widgeta', url: SITE_URL },
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    inLanguage: 'en-US',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Business name generator', item: `${SITE_URL}${path}` },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
+---
+
+<Base title={title} description={description} path={path} schema={schema}>
+  <div class="shell">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Business name generator' }]} />
+  </div>
+
+  <section class="head">
+    <div class="head__in">
+      <p class="eyebrow">Free tool</p>
+      <h1>Business name generator for the trades</h1>
+      <p class="head__lead">
+        Give it your surname, your city or neither. It combines the five
+        patterns nearly every contractor name follows, so you get ideas you
+        could actually put on a van — not startup words with the vowels
+        removed.
+      </p>
+    </div>
+  </section>
+
+  <!-- The generator ---------------------------------------------------------- -->
+  <section class="gen" aria-labelledby="gen-h">
+    <div class="gen__in">
+      <h2 class="sr-only" id="gen-h">Generate names</h2>
+
+      <form class="gen__form" id="gen-form">
+        <div class="field">
+          <label class="field__label" for="f-trade">Trade</label>
+          <select class="field__input" id="f-trade" name="trade">
+            {tradeOptions.map((o) => <option value={o.key}>{o.label}</option>)}
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="f-name">Surname or a word you like</label>
+          <input
+            class="field__input"
+            id="f-name"
+            name="surname"
+            type="text"
+            maxlength="24"
+            autocomplete="off"
+            placeholder="Reyes"
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="f-city">City</label>
+          <input
+            class="field__input"
+            id="f-city"
+            name="city"
+            type="text"
+            maxlength="24"
+            autocomplete="off"
+            placeholder="Mesa"
+          />
+        </div>
+
+        <button class="btn btn--amber gen__go" type="submit">Generate names</button>
+      </form>
+
+      <p class="gen__fine">
+        Both text fields are optional, and nothing you type leaves your
+        browser — there is no server behind this page.
+      </p>
+
+      <div class="gen__out" id="gen-out" aria-live="polite">
+        <p class="gen__empty">
+          Press the button for twelve names. Press it again for twelve more.
+        </p>
+      </div>
+
+      <noscript>
+        <p class="gen__fine">
+          The generator needs JavaScript. The five patterns below are the
+          same thing done by hand, and they work either way.
+        </p>
+      </noscript>
+
+      <p class="gen__warn">
+        <strong>This does not check whether a name is taken.</strong> Nothing
+        on this page can — availability lives in your state registry, the
+        trademark database and a registrar. The twenty-minute check is further
+        down, in the order that catches problems earliest.
+      </p>
+    </div>
+  </section>
+
+  <!-- The rules --------------------------------------------------------------- -->
+  <section class="sec">
+    <div class="sec__in">
+      <h2>What actually makes a good trade name</h2>
+      <p class="sec__lead">
+        A contractor's name has a job most business names do not: it gets said
+        out loud, over a fence, by someone who used you once. Everything below
+        follows from that.
+      </p>
+      <ul class="rules">
+        {RULES.map((r) => (
+          <li class="rules__item">
+            <strong>{r.lead}</strong> {r.body}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- The patterns ------------------------------------------------------------ -->
+  <section class="sec sec--alt">
+    <div class="sec__in">
+      <h2>The five patterns nearly every trade name follows</h2>
+      <p class="sec__lead">
+        Look at the vans in any metro and they sort into five shapes. The
+        generator uses all five; this is how to choose between them.
+      </p>
+
+      <div class="pats">
+        {PATTERNS.map((p) => (
+          <article class="card pat">
+            <h3 class="pat__h">{p.label}</h3>
+            <p class="pat__ex">{p.example}</p>
+            <p class="pat__when">{p.when}</p>
+            <p class="pat__watch"><strong>Watch out:</strong> {p.watch}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Mistakes ----------------------------------------------------------------- -->
+  <section class="sec">
+    <div class="sec__in">
+      <h2>The mistakes that cost money later</h2>
+      <ul class="rules">
+        {MISTAKES.map((m) => (
+          <li class="rules__item">
+            <strong>{m.lead}</strong> {m.body}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- The check ---------------------------------------------------------------- -->
+  <section class="sec sec--alt">
+    <div class="sec__in">
+      <h2>Before you commit: the twenty-minute check</h2>
+      <p class="sec__lead">
+        In this order, because each step catches a different kind of collision
+        and the early ones are the expensive ones.
+      </p>
+      <ol class="check">
+        {CHECK.map((c) => <li class="check__item">{c}</li>)}
+      </ol>
+      <p class="sec__note">
+        Do it before the vans are wrapped, not after. A rename after the
+        lettering, the licence and the first hundred reviews is the most
+        expensive kind of cheap decision.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ ----------------------------------------------------------------------- -->
+  <section class="sec">
+    <div class="sec__in">
+      <h2 class="sec__center">Questions people ask about naming</h2>
+      <FaqList items={FAQ} />
+    </div>
+  </section>
+
+  <!-- The one commercial link ---------------------------------------------------- -->
+  {
+    builtTrades.length > 0 && (
+      <section class="sec sec--alt">
+        <div class="sec__in next">
+          <h2>Once the name is settled</h2>
+          <p class="sec__lead">
+            The name goes on a site, a Business Profile and a page for every
+            service in every town you cover. That is the part Widgeta builds
+            and keeps running.
+          </p>
+          <div class="next__links">
+            {builtTrades.map((t) => (
+              <a class="chip" href={`/for/${t.slug}`}>Widgeta for {t.name.toLowerCase()}</a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <ClosingBand
+    title="Your name on a site that gets found"
+    lead="Answer eight questions and the site, the pages and the monthly SEO come with it."
+  />
+
+  <!-- The word bank, read by the script below. -->
+  <script type="application/json" id="gen-bank" set:html={JSON.stringify(bank)} is:inline />
+</Base>
+
+<script>
+  /**
+   * The generator. Builds a candidate pool per pattern, shuffles inside each
+   * pattern, then deals one from each in turn — so a list of twelve is never
+   * twelve variations of the same shape.
+   */
+  const form = document.getElementById('gen-form');
+  const out = document.getElementById('gen-out');
+  const bankEl = document.getElementById('gen-bank');
+
+  if (form && out && bankEl) {
+    const bank = JSON.parse(bankEl.textContent || '{}');
+
+    const tidy = (s) =>
+      (s || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .replace(/^./, (c) => c.toUpperCase());
+
+    const shuffle = (arr) => {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    };
+
+    function build(tradeKey, surname, city) {
+      const t = bank.TRADE_WORDS[tradeKey] || bank.TRADE_WORDS.general;
+      const end = t.endings[0];
+      const groups = { 'Your name': [], Family: [], City: [], 'Place or image': [], 'How you work': [] };
+
+      if (surname) {
+        t.endings.forEach((e) => groups['Your name'].push(`${surname} ${e}`));
+        groups.Family.push(`${surname} & Sons ${end}`, `${surname} Brothers ${end}`, `${surname} Family ${end}`);
+      }
+      if (city) {
+        t.endings.forEach((e) => groups.City.push(`${city} ${e}`));
+      }
+      bank.PLACES.forEach((p) => groups['Place or image'].push(`${p} ${end}`));
+      t.nouns.forEach((n) => groups['Place or image'].push(`${n} ${end}`));
+      bank.TRAITS.forEach((x) => groups['How you work'].push(`${x} ${end}`));
+
+      const order = Object.keys(groups).filter((k) => groups[k].length);
+      const decks = {};
+      order.forEach((k) => (decks[k] = shuffle(groups[k])));
+
+      const picked = [];
+      const seen = new Set();
+      let empty = false;
+      while (picked.length < 12 && !empty) {
+        empty = true;
+        for (const k of order) {
+          if (picked.length >= 12) break;
+          const name = decks[k].shift();
+          if (!name) continue;
+          empty = false;
+          if (seen.has(name.toLowerCase())) continue;
+          seen.add(name.toLowerCase());
+          picked.push({ name, pattern: k });
+        }
+      }
+      return picked;
+    }
+
+    function render(list) {
+      out.textContent = '';
+
+      const h = document.createElement('p');
+      h.className = 'gen__count';
+      h.textContent = `${list.length} names — none of them checked for availability yet.`;
+      out.appendChild(h);
+
+      const ul = document.createElement('ul');
+      ul.className = 'names';
+      list.forEach((item) => {
+        const li = document.createElement('li');
+        li.className = 'names__item';
+
+        const n = document.createElement('span');
+        n.className = 'names__name';
+        n.textContent = item.name;
+
+        const p = document.createElement('span');
+        p.className = 'names__pattern';
+        p.textContent = item.pattern;
+
+        li.append(n, p);
+        ul.appendChild(li);
+      });
+      out.appendChild(ul);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      render(
+        build(
+          String(data.get('trade') || 'general'),
+          tidy(String(data.get('surname') || '')),
+          tidy(String(data.get('city') || ''))
+        )
+      );
+      form.querySelector('.gen__go').textContent = 'Generate twelve more';
+    });
+  }
+</script>
+
+<style>
+  /* --- Head ---------------------------------------------------------------- */
+  .head {
+    padding: var(--s-8) var(--gutter) var(--s-12);
+  }
+
+  .head__in {
+    max-inline-size: var(--measure);
+    margin-inline: auto;
+  }
+
+  .head h1 {
+    margin-block-start: var(--s-3);
+  }
+
+  .head__lead {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  /* --- Generator ------------------------------------------------------------ */
+  .gen {
+    padding-inline: var(--gutter);
+  }
+
+  .gen__in {
+    max-inline-size: var(--measure);
+    margin-inline: auto;
+    padding: var(--s-6);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+  }
+
+  .gen__form {
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  @media (min-width: 720px) {
+    .gen__form {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  .field {
+    display: grid;
+    gap: 6px;
+  }
+
+  .field__label {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .field__input {
+    min-block-size: var(--tap);
+    padding-inline: var(--s-3);
+    font: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-btn);
+  }
+
+  .field__input:focus-visible {
+    border-color: var(--amber);
+  }
+
+  /* Its own row: the label changes length after the first press, and a
+     button that resizes the fields beside it is a jumpy form. */
+  .gen__go {
+    min-block-size: var(--tap);
+    justify-self: start;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 720px) {
+    .gen__go {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .gen__fine {
+    margin-block-start: var(--s-3);
+    font-size: var(--fs-small);
+    color: var(--muted);
+  }
+
+  .gen__out {
+    margin-block-start: var(--s-6);
+    padding-block-start: var(--s-6);
+    border-block-start: 1px solid var(--line);
+  }
+
+  .gen__empty {
+    font-size: var(--fs-small);
+    color: var(--muted);
+  }
+
+  .gen__count {
+    font-size: var(--fs-small);
+    color: var(--muted);
+  }
+
+  .gen__warn {
+    margin-block-start: var(--s-6);
+    padding: var(--s-4);
+    background: var(--soon-bg);
+    border: 1px solid var(--soon-line);
+    border-radius: var(--r-card);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+    color: var(--soon-text);
+  }
+
+  /* Names list — rendered by the script, so these are global rules. */
+  .gen__out :global(.names) {
+    list-style: none;
+    margin: var(--s-4) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  @media (min-width: 640px) {
+    .gen__out :global(.names) {
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--s-4);
+    }
+  }
+
+  .gen__out :global(.names__item) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    min-block-size: var(--tap);
+    padding-inline: var(--s-3);
+    background: var(--putty);
+    border-radius: var(--r-btn);
+  }
+
+  .gen__out :global(.names__name) {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 19px;
+    line-height: 1.2;
+  }
+
+  .gen__out :global(.names__pattern) {
+    flex: none;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* --- Sections -------------------------------------------------------------- */
+  .sec {
+    padding: var(--section-y) var(--gutter);
+  }
+
+  .sec--alt {
+    background: var(--putty);
+  }
+
+  .sec__in {
+    max-inline-size: var(--measure);
+    margin-inline: auto;
+  }
+
+  .sec__lead {
+    margin-block-start: var(--s-4);
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .sec__note {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-small);
+    color: var(--muted);
+  }
+
+  .sec__center {
+    text-align: center;
+  }
+
+  .rules {
+    list-style: none;
+    margin: var(--s-6) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  .rules__item {
+    padding-inline-start: var(--s-4);
+    border-inline-start: 2px solid var(--line);
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .rules__item strong {
+    color: var(--ink);
+  }
+
+  /* --- Patterns --------------------------------------------------------------- */
+  .pats {
+    margin-block-start: var(--s-6);
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  @media (min-width: 720px) {
+    .pats {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* Cards in a row differ in length; pinning the caveat to the bottom keeps
+     the rules on one line across the pair. */
+  .pat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pat__h {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+
+  .pat__ex {
+    margin-block-start: var(--s-2);
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 1.15;
+  }
+
+  .pat__when {
+    margin-block-start: var(--s-3);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .pat__watch {
+    margin-block-start: auto;
+    padding-block-start: var(--s-3);
+    border-block-start: 1px solid var(--line);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .pat__watch strong {
+    color: var(--ink);
+  }
+
+  /* --- The check --------------------------------------------------------------- */
+  .check {
+    margin: var(--s-6) 0 0;
+    padding-inline-start: var(--s-6);
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .check__item {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* --- Next -------------------------------------------------------------------- */
+  .next__links {
+    margin-block-start: var(--s-6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  /* The shared chip is a label elsewhere; here it is a tap target. */
+  .next__links .chip {
+    min-block-size: var(--tap);
+  }
+</style>

@@ -1,0 +1,138 @@
+---
+/**
+ * Blog index.
+ *
+ * One post today, and it is a labelled sample rather than an article aimed
+ * at contractors — so the index says what the blog is for and what is
+ * missing, instead of dressing a single demo up as a publication. It carries
+ * noindex until posts written for our own audience exist.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { POSTS } from '../../data/posts.js';
+import { GUIDES } from '../../data/guides.js';
+
+const posts = Object.entries(POSTS).map(([slug, p]) => ({ slug, ...p }));
+const real = posts.filter((p) => !p.sample);
+const guides = Object.entries(GUIDES).map(([slug, g]) => ({ slug, ...g }));
+---
+
+<Base
+  title="Blog | Widgeta"
+  description="Notes on getting a trade business found and called, and examples of the pages Widgeta publishes for its customers."
+  path="/blog"
+  noindex={real.length === 0}
+>
+  <div class="shell">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
+  </div>
+
+  <section class="head">
+    <div class="shell measure">
+      <h1>Blog</h1>
+      <p class="head__sub">
+        Notes on getting a trade business found and called — and examples of
+        the pages Widgeta publishes for the businesses it builds for.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="grid-auto">
+        {posts.map((p) => (
+          <a class="card post" href={`/blog/${p.slug}`}>
+            <span class="post__tags">
+              {p.tags.join(' · ')}
+              {p.sample && <span class="post__sample">Example page</span>}
+            </span>
+            <span class="post__title">{p.h1}</span>
+            <span class="muted post__stand">{p.standfirst}</span>
+            <span class="muted post__meta">{p.updatedLabel} · {p.readingTime}</span>
+          </a>
+        ))}
+      </div>
+
+      {
+        guides.length > 0 && (
+          <div class="guides">
+            <h2 class="guides__h">Start with a guide instead</h2>
+            <div class="grid-auto">
+              {guides.map((g) => (
+                <a class="card post" href={`/guides/${g.slug}`}>
+                  <span class="post__tags">Guide · {g.tradeLabel}</span>
+                  <span class="post__title">{g.h1}</span>
+                  <span class="muted post__stand">{g.standfirst}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head { padding-block: var(--s-4) 0; }
+
+  .head__sub {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  .post {
+    display: grid;
+    gap: var(--s-2);
+    align-content: start;
+  }
+
+  .post:hover {
+    border-color: var(--amber);
+    color: var(--ink);
+  }
+
+  .post__tags {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    flex-wrap: wrap;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+
+  .post__sample {
+    padding: 3px var(--s-2);
+    border: 1px dashed var(--soon-line);
+    border-radius: var(--r-tag);
+    background: var(--soon-bg);
+    color: var(--soon-text);
+    letter-spacing: .06em;
+  }
+
+  .post__title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 1.12;
+  }
+
+  .post__stand { font-size: var(--fs-small); }
+
+  .post__meta { font-size: 13px; }
+
+  .guides {
+    margin-block-start: var(--s-16);
+    padding-block-start: var(--s-8);
+    border-block-start: 1px solid var(--line);
+  }
+
+  .guides__h {
+    font-size: var(--fs-h3);
+    margin-block-end: var(--s-6);
+  }
+</style>

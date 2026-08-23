@@ -68,10 +68,16 @@ export const COMPARISONS = [
   { slug: 'scorpion', name: 'Scorpion', built: false },
 ];
 
+/**
+ * The website grader stays off. It has to fetch a stranger's URL and analyse
+ * it, which needs a server this site does not have — and a grader that
+ * scores from nothing would be inventing numbers about someone's business.
+ * When there is a backend to do it honestly, the flag flips.
+ */
 export const RESOURCES = [
-  { label: 'Marketing guides', href: '/guides/plumbing-marketing', built: false },
-  { label: 'Blog', href: '/blog', built: false },
-  { label: 'Business name generator', href: '/tools/business-name-generator', built: false },
+  { label: 'Marketing guides', href: '/guides/plumbing-marketing', built: true },
+  { label: 'Blog', href: '/blog', built: true },
+  { label: 'Business name generator', href: '/tools/business-name-generator', built: true },
   { label: 'Website grader', href: '/tools/website-grader', built: false },
 ];
 
@@ -105,7 +111,7 @@ export const NAV = [
   { label: 'What you get', href: '/features/website', fallback: '/#capabilities', built: true, caret: true },
   { label: 'Pricing', href: '/pricing', fallback: null, built: true },
   { label: 'Examples', href: '/examples', fallback: '/#examples', built: true },
-  { label: 'Learn', href: '/guides/plumbing-marketing', fallback: null, built: false, caret: true },
+  { label: 'Learn', href: '/guides/plumbing-marketing', fallback: null, built: true, caret: true },
 ];
 
 /** The destination a nav item should actually point at right now. */

@@ -3,9 +3,26 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 import { SITE_URL } from './src/data/site.js';
+import { POSTS } from './src/data/posts.js';
+
+/*
+ * Sample posts — the ones that show what Widgeta publishes for a customer
+ * rather than targeting a search of our own — carry noindex, and so does the
+ * blog index while every post on it is a sample. Deriving both from the data
+ * means the sitemap cannot drift out of step with the meta tags: writing one
+ * real post fixes all three at once.
+ */
+const samples = Object.entries(POSTS).filter(([, post]) => post.sample);
+const blogIsAllSamples = samples.length === Object.keys(POSTS).length;
 
 /** Pages that carry a noindex tag, and so must not appear in the sitemap. */
-const NOINDEX = ['/privacy', '/terms', '/404'];
+const NOINDEX = [
+  '/privacy',
+  '/terms',
+  '/404',
+  ...samples.map(([slug]) => `/blog/${slug}`),
+  ...(blogIsAllSamples ? ['/blog'] : []),
+];
 
 /**
  * Static output on purpose.

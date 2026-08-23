@@ -1,0 +1,245 @@
+---
+/**
+ * Renders the typed content blocks used by guides and posts.
+ *
+ * Content is data, not markup: a chapter is an array of typed blocks, so the
+ * typography lives here and nothing in a data file can smuggle in HTML that
+ * breaks the page or slips past the voice rules.
+ */
+import { withPrice } from '../data/site.js';
+
+interface Props {
+  blocks: any[];
+}
+
+const { blocks } = Astro.props;
+const p = (text) => withPrice(text ?? '');
+---
+
+<div class="prose">
+  {
+    blocks.map((b) => {
+      if (b.type === 'h2') return <h2 class="prose__h2">{b.text}</h2>;
+
+      if (b.type === 'p') {
+        return (
+          <p class="prose__p">
+            {b.lead && <strong>{b.lead} </strong>}
+            {p(b.text)}
+          </p>
+        );
+      }
+
+      if (b.type === 'list') {
+        return (
+          <ul class="prose__list">
+            {b.items.map((i) => (
+              <li>
+                <strong>{i.lead}</strong> {p(i.body)}
+              </li>
+            ))}
+          </ul>
+        );
+      }
+
+      if (b.type === 'box') {
+        return (
+          <aside class="prose__box">
+            <span class="prose__box-label">{b.label}</span>
+            {b.p && <p class="prose__box-quote">{b.p}</p>}
+            {b.items && (
+              <ul class="prose__box-list">
+                {b.items.map((i) => <li>{i}</li>)}
+              </ul>
+            )}
+            {b.footer && <p class="prose__box-foot">{b.footer}</p>}
+          </aside>
+        );
+      }
+
+      if (b.type === 'pull') {
+        return <p class="prose__pull">{b.text}</p>;
+      }
+
+      if (b.type === 'table') {
+        return (
+          <>
+            <div class="scroll-x prose__tablewrap">
+              <table class="prose__table">
+                <tbody>
+                  {b.rows.map((r) => (
+                    <tr>
+                      <th scope="row">{r[0]}</th>
+                      <td>{r[1]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {b.note && <p class="prose__note">{b.note}</p>}
+          </>
+        );
+      }
+
+      if (b.type === 'quotes') {
+        return (
+          <ul class="prose__quotes">
+            {b.items.map((i) => <li>{i}</li>)}
+          </ul>
+        );
+      }
+
+      return null;
+    })
+  }
+</div>
+
+<style>
+  .prose__h2 {
+    margin-block: var(--s-12) var(--s-4);
+    font-size: clamp(24px, 1.6vw + 18px, 30px);
+  }
+
+  .prose__p {
+    margin-block-start: var(--s-4);
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .prose__p strong {
+    color: var(--ink);
+  }
+
+  .prose__list {
+    margin-block-start: var(--s-4);
+    padding-inline-start: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  .prose__list li {
+    padding-inline-start: var(--s-4);
+    border-inline-start: 2px solid var(--line);
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .prose__list strong {
+    color: var(--ink);
+  }
+
+  /* A boxed aside: the thing worth copying out of the chapter. */
+  .prose__box {
+    margin-block-start: var(--s-8);
+    padding: var(--s-6);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+  }
+
+  .prose__box-label {
+    display: block;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+
+  .prose__box-quote {
+    margin-block-start: var(--s-4);
+    padding-inline-start: var(--s-4);
+    border-inline-start: 3px solid var(--amber);
+    font-size: 18px;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .prose__box-list {
+    margin-block-start: var(--s-4);
+    padding-inline-start: var(--s-6);
+    display: grid;
+    gap: var(--s-2);
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .prose__box-foot {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-small);
+    color: var(--muted);
+  }
+
+  .prose__pull {
+    margin-block-start: var(--s-8);
+    padding-block: var(--s-4);
+    border-block: 2px solid var(--amber);
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(22px, 1.6vw + 16px, 28px);
+    line-height: 1.2;
+  }
+
+  .prose__tablewrap {
+    margin-block-start: var(--s-6);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    background: var(--card);
+  }
+
+  .prose__table {
+    inline-size: 100%;
+    min-inline-size: 460px;
+    border-collapse: collapse;
+  }
+
+  .prose__table th,
+  .prose__table td {
+    padding: var(--s-3) var(--s-4);
+    border-block-end: 1px solid var(--line);
+    text-align: start;
+    font-size: 16px;
+  }
+
+  .prose__table tr:last-child th,
+  .prose__table tr:last-child td {
+    border-block-end: 0;
+  }
+
+  .prose__table th {
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .prose__table td {
+    font-weight: 700;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prose__note {
+    margin-block-start: var(--s-3);
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .prose__quotes {
+    margin-block-start: var(--s-4);
+    padding-inline-start: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .prose__quotes li {
+    padding: var(--s-3) var(--s-4);
+    background: var(--putty);
+    border-radius: var(--r-card);
+    font-size: 18px;
+    font-style: italic;
+  }
+</style>

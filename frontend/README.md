@@ -60,6 +60,7 @@ Each is a single edit, and the file is named so nobody has to hunt.
 | Real team | `src/data/company.js` → `TEAM`, then `PLACEHOLDER = false` | Turns off the "placeholder team" notices on About and Contact together. |
 | Privacy and Terms | `src/pages/privacy.astro`, `src/pages/terms.astro` | Both are drafts and say so. They need real text from Widgeta's counsel. |
 | Photographs | testimonial and team cards | Dashed placeholders today. The SEO spec wants real faces; a stock photo of a stranger presented as a named customer is not one. |
+| Blog posts for contractors | `src/data/posts.js` | The only post today is a deliberately noindexed sample of what Widgeta publishes *for* a customer. The blog needs posts aimed at contractors before it should be indexed — see the file header. |
 
 ## How the site is put together
 
@@ -82,6 +83,13 @@ any sentence.
 that would not mirror. The Arabic site is this same stylesheet with
 `dir="rtl"`, and a physical property is a bug waiting for that day.
 
+**A tool that cannot be honest is not shipped.** The website grader in the
+resources list stays `built: false`: grading a stranger's site means fetching
+and analysing it, which needs a server this deployment does not have, and a
+score invented client-side would be a made-up number about someone's
+business. The name generator is buildable honestly — combining a word bank is
+arithmetic — and it says plainly that it cannot check availability.
+
 **Disclosures are load-bearing.** SAMPLE labels, the testimonial disclosure,
 the coming-soon treatment on call answering, and the source note under every
 competitor claim are legal and trust requirements, not decoration. The brief
@@ -91,13 +99,16 @@ already.
 ## Measured, not assumed
 
 Taken from the built output in a real browser, at 1440px and 390px, across
-all 18 pages.
+all 22 pages.
 
 - One `<h1>` per page, no heading-level skips.
 - Schema on every page: Organization + WebSite + SoftwareApplication +
   FAQPage on home; Service + BreadcrumbList + FAQPage on the trade hubs;
   SoftwareApplication with offers + FAQPage on pricing; BreadcrumbList +
-  FAQPage on comparisons; Service + BreadcrumbList on capabilities.
+  FAQPage on comparisons; Service + BreadcrumbList on capabilities;
+  Article + BreadcrumbList on the guide; WebApplication + BreadcrumbList +
+  FAQPage on the name generator. No Article schema on a sample post — it
+  carries noindex, and the two signals have to agree.
 - No `aggregateRating` anywhere — there are no real reviews yet.
 - Titles 42–60 characters, descriptions 130–153.
 - Canonical on every page; `hreflang` only where a true equivalent exists,
@@ -108,5 +119,7 @@ all 18 pages.
 - No dead internal links.
 - No console errors.
 - On a throttled phone (1.5 Mbps, 150ms RTT, 4× CPU slowdown): LCP
-  790–910ms, CLS 0.013–0.035, 118–182KB per page, and **zero third-party
-  requests** — no analytics, no CDN, no font host.
+  644–910ms, CLS 0.002–0.055, 108–182KB per page, and **zero third-party
+  requests** — no analytics, no CDN, no font host. The name generator's
+  script is small enough that Astro inlines it, so the tool page still
+  fetches nothing beyond the document, one stylesheet and the fonts.

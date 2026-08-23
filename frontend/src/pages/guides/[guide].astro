@@ -1,0 +1,357 @@
+---
+/**
+ * Pillar guide.
+ *
+ * The deepest page on the site, and the one place a visitor reads rather
+ * than scans — so it gets a 640px measure, a real table of contents, and
+ * chapter chips that stick to the top as they scroll.
+ *
+ * Exactly one commercial link, in chapter five, where the spec puts it. The
+ * "keep reading" block at the end links only to posts that exist: a guide
+ * teasing three articles and delivering one is the sort of small dishonesty
+ * that costs more trust than it buys clicks.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Prose from '../../components/Prose.astro';
+
+import { GUIDES } from '../../data/guides.js';
+import { POSTS } from '../../data/posts.js';
+import { SITE_URL, TRADES, withPrice } from '../../data/site.js';
+
+export function getStaticPaths() {
+  return Object.keys(GUIDES).map((guide) => ({ params: { guide } }));
+}
+
+const { guide } = Astro.params;
+const g = GUIDES[guide];
+const path = `/guides/${guide}`;
+
+const tradeEntry = TRADES.find((t) => t.slug === g.trade && t.built);
+
+/* Supporting posts: the ones that actually exist and point back at this. */
+const related = Object.entries(POSTS)
+  .filter(([, post]) => post.pillar === guide)
+  .map(([slug, post]) => ({ slug, ...post }));
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: g.h1,
+    description: g.description,
+    author: { '@type': 'Person', name: g.author },
+    publisher: { '@type': 'Organization', name: 'Widgeta', url: SITE_URL },
+    datePublished: g.updated,
+    dateModified: g.updated,
+    mainEntityOfPage: `${SITE_URL}${path}`,
+    inLanguage: 'en-US',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Guides', item: `${SITE_URL}${path}` },
+      { '@type': 'ListItem', position: 3, name: `${g.tradeLabel} marketing`, item: `${SITE_URL}${path}` },
+    ],
+  },
+];
+---
+
+<Base title={g.title} description={g.description} path={path} schema={schema}>
+  <div class="shell">
+    <Breadcrumb
+      items={[
+        { label: 'Home', href: '/' },
+        { label: 'Guides' },
+        { label: `${g.tradeLabel} marketing` },
+      ]}
+    />
+  </div>
+
+  <!-- Chapter chips, sticky under the header -------------------------------- -->
+  <nav class="chips" aria-label="Chapters">
+    <div class="chips__in">
+      {g.chapters.map((c) => (
+        <a class="chips__chip" href={`#c${c.n}`}>{c.n} · {c.chip}</a>
+      ))}
+    </div>
+  </nav>
+
+  <article class="col">
+    <header class="head">
+      <p class="eyebrow">Guide · {g.tradeLabel}</p>
+      <h1>{g.h1}</h1>
+      <p class="head__stand">{g.standfirst}</p>
+      <p class="byline muted">
+        <strong>{g.author}</strong> · {g.authorNote}
+        <span class="byline__sep">·</span>
+        Updated {g.updatedLabel} · {g.readingTime}
+      </p>
+    </header>
+
+    <nav class="toc" aria-label="In this guide">
+      <span class="toc__label">In this guide</span>
+      <ol class="toc__list">
+        {g.chapters.map((c) => (
+          <li><a href={`#c${c.n}`}>{c.h2}</a></li>
+        ))}
+      </ol>
+    </nav>
+
+    {
+      g.chapters.map((c) => (
+        <section class="chapter" id={`c${c.n}`}>
+          <span class="chapter__n">Chapter {c.n}</span>
+          <h2 class="chapter__h">{c.h2}</h2>
+
+          <Prose blocks={c.blocks.filter((b) => b.type !== 'cta')} />
+
+          {
+            /* The single commercial link, and only where the trade hub it
+               points at has been built. */
+            c.blocks
+              .filter((b) => b.type === 'cta' && tradeEntry)
+              .map((b) => (
+                <aside class="cta">
+                  <span class="cta__label">{b.label}</span>
+                  <p class="cta__text">{withPrice(b.text)}</p>
+                  <a class="cta__link" href={`/for/${tradeEntry.slug}`}>
+                    See Widgeta for {tradeEntry.name.toLowerCase()} →
+                  </a>
+                </aside>
+              ))
+          }
+        </section>
+      ))
+    }
+
+    {
+      related.length > 0 && (
+        <section class="keep">
+          <h2 class="keep__h">Keep reading</h2>
+          <div class="keep__grid">
+            {related.map((post) => (
+              <a class="card keep__card" href={`/blog/${post.slug}`}>
+                <span class="keep__tags">{post.tags.join(' · ')}</span>
+                <span class="keep__title">{post.h1}</span>
+                <span class="muted keep__stand">{post.standfirst}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  /* --- Chapter chips ------------------------------------------------------ */
+  .chips {
+    position: sticky;
+    inset-block-start: 69px;
+    z-index: 40;
+    background: var(--paper);
+    border-block-end: 1px solid var(--line);
+  }
+
+  .chips__in {
+    max-inline-size: var(--shell);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    display: flex;
+    gap: var(--s-2);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .chips__in::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chips__chip {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    padding-inline: var(--s-3);
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    border-block-end: 3px solid transparent;
+  }
+
+  .chips__chip:hover {
+    color: var(--ink);
+    border-block-end-color: var(--amber);
+  }
+
+  /* --- Column -------------------------------------------------------------- */
+  .col {
+    max-inline-size: var(--measure-narrow);
+    margin-inline: auto;
+    padding: var(--s-8) var(--gutter) var(--section-y);
+  }
+
+  .head h1 {
+    margin-block-start: var(--s-4);
+  }
+
+  .head__stand {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  .byline {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-small);
+  }
+
+  .byline strong {
+    color: var(--ink);
+  }
+
+  .byline__sep {
+    margin-inline: 6px;
+    opacity: .5;
+  }
+
+  /* --- Table of contents ---------------------------------------------------- */
+  .toc {
+    margin-block-start: var(--s-8);
+    padding: var(--s-6);
+    background: var(--putty);
+    border-radius: var(--r-card);
+  }
+
+  .toc__label {
+    display: block;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .toc__list {
+    margin: var(--s-3) 0 0;
+    padding-inline-start: var(--s-6);
+    display: grid;
+  }
+
+  .toc__list a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .toc__list a:hover {
+    color: var(--amber-text);
+  }
+
+  /* --- Chapters -------------------------------------------------------------- */
+  .chapter {
+    padding-block-start: var(--s-16);
+    scroll-margin-block-start: 128px;
+  }
+
+  .chapter__n {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+
+  .chapter__h {
+    margin-block-start: var(--s-3);
+    font-size: clamp(26px, 2vw + 18px, 36px);
+  }
+
+  /* --- The one commercial link ------------------------------------------------ */
+  .cta {
+    margin-block-start: var(--s-8);
+    padding: var(--s-6);
+    border: 2px solid var(--amber);
+    border-radius: var(--r-card);
+    background: var(--amber-tint);
+  }
+
+  .cta__label {
+    display: block;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+
+  .cta__text {
+    margin-block-start: var(--s-3);
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .cta__link {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    margin-block-start: var(--s-2);
+    font-weight: 700;
+    color: var(--amber-text);
+  }
+
+  .cta__link:hover {
+    color: var(--ink);
+  }
+
+  /* --- Keep reading ------------------------------------------------------------ */
+  .keep {
+    margin-block-start: var(--s-16);
+    padding-block-start: var(--s-8);
+    border-block-start: 1px solid var(--line);
+  }
+
+  .keep__h {
+    font-size: var(--fs-h3);
+  }
+
+  .keep__grid {
+    display: grid;
+    gap: var(--s-4);
+    margin-block-start: var(--s-6);
+  }
+
+  .keep__card {
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .keep__card:hover {
+    border-color: var(--amber);
+    color: var(--ink);
+  }
+
+  .keep__tags {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+
+  .keep__title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1.15;
+  }
+
+  .keep__stand {
+    font-size: var(--fs-small);
+  }
+</style>
