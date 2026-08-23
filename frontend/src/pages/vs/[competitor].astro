@@ -1,0 +1,306 @@
+---
+/**
+ * Comparison template.
+ *
+ * An 840px column, because this page is read rather than scanned — someone
+ * deciding where next month's marketing money goes.
+ *
+ * The tone rule from the brief is structural, not decorative: the table
+ * marks the row where the competitor wins and the page says so in plain
+ * words. Credibility is the strategy here; a comparison that never concedes
+ * is an advert, and this audience recognises adverts.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import FaqList from '../../components/FaqList.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
+
+import { COMPARISON_CONTENT } from '../../data/comparisons.js';
+import { SITE_URL, APP_URL, withPrice, COMPARISONS } from '../../data/site.js';
+
+export function getStaticPaths() {
+  return Object.keys(COMPARISON_CONTENT).map((competitor) => ({ params: { competitor } }));
+}
+
+const { competitor } = Astro.params;
+const c = COMPARISON_CONTENT[competitor];
+const p = (text) => withPrice(text);
+
+const path = `/vs/${competitor}`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Compare', item: `${SITE_URL}${path}` },
+      { '@type': 'ListItem', position: 3, name: `Widgeta vs ${c.name}`, item: `${SITE_URL}${path}` },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: c.faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: p(f.a) },
+    })),
+  },
+];
+---
+
+<Base title={c.title} description={c.description} path={path} schema={schema}>
+  <div class="col">
+    <Breadcrumb
+      items={[
+        { label: 'Home', href: '/' },
+        { label: 'Compare' },
+        { label: `Widgeta vs ${c.name}` },
+      ]}
+    />
+
+    <header class="intro">
+      <h1>{c.h1}</h1>
+      <p class="intro__p">{c.intro1}</p>
+      <p class="intro__p">{c.intro2}</p>
+    </header>
+
+    <!-- The table ------------------------------------------------------- -->
+    <div class="scroll-x table-wrap">
+      <table class="cmp">
+        <caption class="sr-only">Widgeta compared with {c.name}, row by row</caption>
+        <thead>
+          <tr>
+            <th scope="col"><span class="sr-only">What is compared</span></th>
+            <th scope="col" class="cmp__ours">Widgeta</th>
+            <th scope="col">{c.name}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            c.rows.map((r) => (
+              <tr>
+                <th scope="row">{r.k}</th>
+                <td class="cmp__ours">{p(r.w)}</td>
+                <td>
+                  {r.a}
+                  {r.theirWin && (
+                    <span class="wins">{c.name} wins this one</span>
+                  )}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="src muted">{c.sourceNote}</p>
+
+    <!-- Who each is right for -------------------------------------------- -->
+    <section class="section">
+      <h2>Who each one is right for</h2>
+
+      <div class="who">
+        <div class="card who__col">
+          <h3>{c.theirsTitle}</h3>
+          <ul class="who__list">
+            {c.theirs.map((line) => <li><span aria-hidden="true">·</span>{line}</li>)}
+          </ul>
+        </div>
+
+        <div class="card who__col who__col--ours">
+          <h3>{c.oursTitle}</h3>
+          <ul class="who__list">
+            {c.ours.map((line) => <li><span aria-hidden="true">·</span>{line}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <p class="callout">
+        <strong>{c.calloutLead}</strong> {c.callout}
+      </p>
+    </section>
+
+    <!-- FAQ ---------------------------------------------------------------- -->
+    <section class="section">
+      <h2 class="faq__h">Fair questions</h2>
+      <FaqList items={c.faqs.map((f) => ({ q: f.q, a: p(f.a) }))} />
+    </section>
+
+    <!-- Sibling comparisons ------------------------------------------------ -->
+    {
+      COMPARISONS.filter((o) => o.built && o.slug !== competitor).length > 0 && (
+        <section class="section others">
+          <h2 class="others__h">Compare something else</h2>
+          <div class="others__row">
+            {COMPARISONS.filter((o) => o.built && o.slug !== competitor).map((o) => (
+              <a class="chip others__chip" href={`/vs/${o.slug}`}>Widgeta vs {o.name}</a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+
+  <ClosingBand
+    title="Stop renting your customers. Start owning them."
+    ctaLabel="Get your business online"
+    ctaHref={`${APP_URL}/signup`}
+  />
+</Base>
+
+<style>
+  /* Read, not scanned: a single column at a comfortable measure. */
+  .col {
+    max-inline-size: 840px;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .intro {
+    padding-block: var(--s-4) var(--s-8);
+  }
+
+  .intro__p {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  .section {
+    padding-block: var(--section-y) 0;
+  }
+
+  /* --- Table ------------------------------------------------------------- */
+  .table-wrap {
+    border: 1px solid var(--line);
+    border-radius: var(--r-card-lg);
+    background: var(--card);
+  }
+
+  .cmp {
+    inline-size: 100%;
+    min-inline-size: 640px;
+    border-collapse: collapse;
+  }
+
+  .cmp th,
+  .cmp td {
+    padding: var(--s-4);
+    border-block-end: 1px solid var(--line);
+    text-align: start;
+    vertical-align: top;
+    font-size: var(--fs-small);
+  }
+
+  .cmp tbody tr:last-child th,
+  .cmp tbody tr:last-child td {
+    border-block-end: 0;
+  }
+
+  .cmp thead th {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 0;
+  }
+
+  .cmp tbody th {
+    font-weight: 700;
+    inline-size: 26%;
+    color: var(--muted);
+  }
+
+  .cmp__ours {
+    background: var(--amber-tint);
+  }
+
+  /* The row the competitor wins is marked, not buried. */
+  .wins {
+    display: inline-block;
+    margin-block-start: var(--s-2);
+    padding: 3px var(--s-2);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-tag);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--ink);
+    background: var(--putty);
+  }
+
+  .src {
+    margin-block-start: var(--s-4);
+    font-size: 14px;
+  }
+
+  /* --- Who ---------------------------------------------------------------- */
+  .who {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: var(--s-6);
+    margin-block-start: var(--s-8);
+    align-items: start;
+  }
+
+  .who__col--ours {
+    border: 2px solid var(--amber);
+    background: var(--amber-tint);
+  }
+
+  .who__list {
+    margin: var(--s-4) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--s-3);
+    font-size: 16px;
+  }
+
+  .who__list li {
+    display: flex;
+    gap: var(--s-3);
+    color: var(--muted);
+  }
+
+  .callout {
+    margin-block-start: var(--s-8);
+    padding: var(--s-6);
+    background: var(--putty);
+    border-radius: var(--r-card);
+    font-size: 17px;
+  }
+
+  /* --- FAQ ----------------------------------------------------------------- */
+  .faq__h {
+    margin-block-end: var(--s-8);
+  }
+
+  /* --- Others -------------------------------------------------------------- */
+  .others {
+    padding-block-end: var(--section-y);
+  }
+
+  .others__h {
+    font-size: var(--fs-h3);
+    margin-block-end: var(--s-4);
+  }
+
+  .others__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  .others__chip {
+    min-block-size: var(--tap);
+    color: var(--ink);
+  }
+
+  .others__chip:hover {
+    border-color: var(--amber);
+    color: var(--ink);
+  }
+</style>

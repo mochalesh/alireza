@@ -61,8 +61,8 @@ export const CAPABILITIES = [
 
 /** Comparison pages. Never link to one that has not been built. */
 export const COMPARISONS = [
-  { slug: 'angi', name: 'Angi', built: false },
-  { slug: 'thumbtack', name: 'Thumbtack', built: false },
+  { slug: 'angi', name: 'Angi', built: true },
+  { slug: 'thumbtack', name: 'Thumbtack', built: true },
   { slug: 'durable', name: 'Durable', built: false },
   { slug: 'wix', name: 'Wix', built: false },
   { slug: 'scorpion', name: 'Scorpion', built: false },
@@ -89,7 +89,7 @@ export const COMPANY = [
  */
 export const AR_SITE = { href: '/ar', built: false };
 
-export const PRICING_PAGE = { href: '/pricing', built: false };
+export const PRICING_PAGE = { href: '/pricing', built: true };
 export const EXAMPLES_PAGE = { href: '/examples', built: false };
 
 /**
@@ -103,7 +103,7 @@ export const EXAMPLES_PAGE = { href: '/examples', built: false };
 export const NAV = [
   { label: 'For your trade', href: '/for/plumbers', fallback: null, built: true, caret: true },
   { label: 'What you get', href: '/features/website', fallback: '/#capabilities', built: false, caret: true },
-  { label: 'Pricing', href: '/pricing', fallback: null, built: false },
+  { label: 'Pricing', href: '/pricing', fallback: null, built: true },
   { label: 'Examples', href: '/examples', fallback: '/#examples', built: false },
   { label: 'Learn', href: '/guides/plumbing-marketing', fallback: null, built: false, caret: true },
 ];

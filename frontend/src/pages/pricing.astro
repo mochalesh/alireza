@@ -1,0 +1,518 @@
+---
+/**
+ * Pricing.
+ *
+ * The brief describes this page becoming a real configurator once more than
+ * one optional capability exists. Today exactly one does, and it is not for
+ * sale — so the page is a single price card plus a coming-soon card, and the
+ * summary column reflects the one choice a visitor can actually make: whether
+ * to be told when call answering lands.
+ *
+ * That choice changes nothing about the price, and the summary says so. A
+ * toggle that appeared to add a line item to a total would be selling
+ * something that cannot be bought.
+ */
+import Base from '../layouts/Base.astro';
+import FaqList from '../components/FaqList.astro';
+import { SITE_URL, APP_URL, PRICE, PRIMARY_CTA } from '../data/site.js';
+import { ROADMAP } from '../data/home.js';
+
+const price = PRICE.en;
+
+const included = [
+  {
+    tag: 'Website',
+    line: 'A complete website with your name on it',
+  },
+  {
+    tag: 'SEO',
+    line: 'Found on Google in every area you serve',
+  },
+  {
+    tag: 'Content',
+    line: 'New pages every month, matched to local searches',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Is there a contract?',
+    a: 'No. Month to month, cancel whenever you want. If you cancel, the site you built is still yours to take with you.',
+  },
+  {
+    q: 'Do I have to write anything or learn software?',
+    a: 'No. You answer a few questions once — about 2 minutes, like replying to texts. Everything after that happens on its own.',
+  },
+  {
+    q: 'What do I actually get for the money?',
+    a: 'A complete website, a page for every service in every area you cover, and new pages each month matched to what neighbors search. You can watch it grow — but you never have to.',
+  },
+];
+
+const title = 'Pricing — One Flat Monthly Price, No Contract | Widgeta';
+const description =
+  'Website, SEO and content for home-service businesses at one flat monthly price. No setup fee, no contract, and the site stays yours if you leave.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Widgeta',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    url: SITE_URL,
+    offers: {
+      '@type': 'Offer',
+      price: price.amount,
+      priceCurrency: price.currency,
+      url: `${SITE_URL}/pricing`,
+      availability: 'https://schema.org/InStock',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
+---
+
+<Base title={title} description={description} path="/pricing" schema={schema}>
+  <section class="head">
+    <div class="shell">
+      <h1>Pick what you want done. The price adds itself.</h1>
+      <p class="head__sub">
+        Three things every business needs come standard. Add more when you're
+        ready. One monthly price, no contract, cancel anytime.
+      </p>
+    </div>
+  </section>
+
+  <section class="section pricing">
+    <div class="shell pricing__grid">
+      <!-- Left: what you can buy, and what you cannot yet ---------------- -->
+      <div class="stack" style="--flow: var(--s-6)">
+        <div class="card plan">
+          <span class="plan__label">Always included</span>
+
+          <p class="plan__price">
+            <span class="plan__amount">{price.display}</span>
+            <span class="plan__period">{price.period}</span>
+          </p>
+
+          <h2 class="plan__h">Neighbors find you on Google</h2>
+          <p class="muted">
+            The foundation every business gets: a complete site, ranking work in
+            every area you serve, and fresh pages answering what locals search
+            for. It runs itself.
+          </p>
+
+          <div class="plan__tags">
+            {included.map((i) => <span class="tag tag--live">{i.tag}</span>)}
+          </div>
+        </div>
+
+        <div class="card soon">
+          <div class="soon__top">
+            <span class="tag tag--soon">Coming soon</span>
+            <span class="muted soon__note">Pricing announced at launch</span>
+          </div>
+
+          <h2 class="plan__h">Every call answered — even on a ladder</h2>
+          <p class="muted">
+            {/*
+              The design opened this with "about 1 in 4 calls to the trades goes
+              unanswered". We cannot source that figure, and the brief forbids
+              stating one we cannot. The argument does not need it.
+            */}
+            A call you miss on a job is a job someone else takes. Widgeta will
+            pick up, take the job details, and send them straight to you.
+          </p>
+
+          <div class="switchrow">
+            <label class="switch">
+              <input type="checkbox" data-notify-toggle />
+              <span class="switch__track" aria-hidden="true"><span class="switch__knob"></span></span>
+              <span class="switch__label">Tell me when this launches</span>
+            </label>
+          </div>
+
+          <form class="notify" hidden data-notify-form action="/pricing" method="get">
+            <label class="sr-only" for="soon-email">Email address</label>
+            <input
+              class="notify__input"
+              id="soon-email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              placeholder="you@yourbusiness.com"
+            />
+            <button class="btn btn--ink" type="submit">Notify me</button>
+          </form>
+
+          <p class="notify__done" hidden data-notify-done>
+            <span aria-hidden="true">✓</span> You're on the list — we'll email you the day it launches.
+          </p>
+        </div>
+
+        <div class="card roadmap-card">
+          <span class="plan__label">Later, as you grow</span>
+          <p class="muted">On the roadmap — added over time, only if you want them:</p>
+          <div class="roadmap__chips">
+            {ROADMAP.map((r) => <span class="chip">{r}</span>)}
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: the running summary ------------------------------------- -->
+      <aside class="ssum on-ink" aria-label="Your Widgeta">
+        <span class="ssum__label">Your Widgeta</span>
+
+        <ul class="ssum__list">
+          {included.map((i) => <li><span class="ssum__tick" aria-hidden="true">✓</span>{i.line}</li>)}
+          <li class="ssum__pending" hidden data-notify-line>
+            <span class="ssum__clock" aria-hidden="true">◷</span>
+            Call answering — we'll email you at launch
+          </li>
+        </ul>
+
+        <p class="ssum__price">
+          <span class="ssum__amount">{price.display}</span>
+        </p>
+        <p class="ssum__per">per month · cancel anytime</p>
+
+        <a class="btn btn--amber ssum__cta" href={`${APP_URL}/signup`}>
+          Start now — about 2 minutes
+        </a>
+        <p class="ssum__fine">Live today · No contract · You own the site</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section faq-sec">
+    <div class="shell">
+      <h2 class="faq-sec__h">Straight answers</h2>
+      <FaqList items={faqs} variant="cards" />
+    </div>
+  </section>
+</Base>
+
+<script>
+  /*
+   * The toggle only ever says "tell me later". It reveals the email field and
+   * adds a pending line to the summary; it never touches the price, because
+   * nothing here is for sale yet.
+   */
+  const toggle = document.querySelector('[data-notify-toggle]');
+  const form = document.querySelector('[data-notify-form]');
+  const done = document.querySelector('[data-notify-done]');
+  const line = document.querySelector('[data-notify-line]');
+
+  if (toggle instanceof HTMLInputElement && form instanceof HTMLFormElement) {
+    toggle.addEventListener('change', () => {
+      const on = toggle.checked;
+      if (line instanceof HTMLElement) line.hidden = !on;
+      form.hidden = !on || !(done instanceof HTMLElement && done.hidden);
+      if (on) form.querySelector('input')?.focus();
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      // TODO: post to the real capture endpoint once it exists.
+      form.hidden = true;
+      if (done instanceof HTMLElement) done.hidden = false;
+    });
+  }
+</script>
+
+<style>
+  .head {
+    padding-block: var(--s-12) 0;
+  }
+
+  .head h1 {
+    max-inline-size: 18ch;
+  }
+
+  .head__sub {
+    margin-block-start: var(--s-6);
+    max-inline-size: var(--measure);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  .pricing__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+    gap: clamp(24px, 3vw, 48px);
+    align-items: start;
+  }
+
+  @media (max-width: 920px) {
+    .pricing__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* --- Plan card -------------------------------------------------------- */
+  .plan {
+    border: 2px solid var(--ink);
+  }
+
+  .plan__label {
+    display: block;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .plan__price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-2);
+    margin-block: var(--s-3) var(--s-4);
+  }
+
+  .plan__amount {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(44px, 4vw + 20px, 64px);
+    line-height: 1;
+  }
+
+  .plan__period {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .plan__h {
+    font-size: clamp(22px, 1.4vw + 16px, 28px);
+    margin-block-end: var(--s-3);
+  }
+
+  .plan__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-block-start: var(--s-6);
+  }
+
+  /* --- Coming-soon card -------------------------------------------------- */
+  .soon {
+    background: var(--soon-bg);
+    border: 2px dashed var(--soon-line);
+  }
+
+  .soon__top {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+    margin-block-end: var(--s-4);
+  }
+
+  .soon__note {
+    font-size: var(--fs-small);
+  }
+
+  .switchrow {
+    margin-block-start: var(--s-6);
+  }
+
+  .switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-3);
+    min-block-size: var(--tap);
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  /* The control itself covers the whole row rather than hiding at 1px in a
+     corner: the thing that takes the tap should be the thing that is the
+     target, not a label standing in for it. */
+  .switch input {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .switch__track {
+    inline-size: 48px;
+    block-size: 28px;
+    border-radius: var(--r-pill);
+    background: var(--line-strong);
+    flex: none;
+    position: relative;
+    transition: background-color .15s ease;
+  }
+
+  .switch__knob {
+    position: absolute;
+    inset-block-start: 3px;
+    inset-inline-start: 3px;
+    inline-size: 22px;
+    block-size: 22px;
+    border-radius: 50%;
+    background: var(--card);
+    transition: translate .15s ease;
+  }
+
+  .switch input:checked + .switch__track {
+    background: var(--live);
+  }
+
+  /* Logical translation, so the knob travels the right way in Arabic. */
+  .switch input:checked + .switch__track .switch__knob {
+    translate: 20px 0;
+  }
+
+  :dir(rtl) .switch input:checked + .switch__track .switch__knob {
+    translate: -20px 0;
+  }
+
+  .switch input:focus-visible + .switch__track {
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  .notify {
+    display: flex;
+    gap: var(--s-2);
+    flex-wrap: wrap;
+    margin-block-start: var(--s-4);
+  }
+
+  .notify__input {
+    flex: 1 1 200px;
+    min-block-size: var(--tap);
+    padding-inline: var(--s-3);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-btn);
+    background: var(--card);
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  .notify__done {
+    margin-block-start: var(--s-4);
+    color: var(--live);
+    font-weight: 600;
+    font-size: var(--fs-small);
+  }
+
+  .roadmap__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-block-start: var(--s-4);
+  }
+
+  /* --- Sticky summary ---------------------------------------------------- */
+  .ssum {
+    position: sticky;
+    inset-block-start: 88px;
+    border-radius: var(--r-card-lg);
+    padding: var(--s-6);
+    box-shadow: var(--shadow-lift);
+  }
+
+  @media (max-width: 920px) {
+    .ssum {
+      position: static;
+    }
+  }
+
+  .ssum__label {
+    display: block;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+
+  .ssum__list {
+    margin: var(--s-6) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--s-3);
+    font-size: var(--fs-small);
+  }
+
+  .ssum__list li {
+    display: flex;
+    gap: var(--s-3);
+  }
+
+  .ssum__tick {
+    color: var(--amber);
+    font-weight: 700;
+    flex: none;
+  }
+
+  .ssum__clock {
+    color: #CFC9BF;
+    flex: none;
+  }
+
+  .ssum__pending {
+    color: #CFC9BF;
+  }
+
+  .ssum__price {
+    margin-block: var(--s-8) 0;
+  }
+
+  .ssum__amount {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 56px;
+    line-height: 1;
+  }
+
+  .ssum__per {
+    margin-block-start: var(--s-2);
+    font-size: var(--fs-small);
+    color: #CFC9BF;
+  }
+
+  .ssum__cta {
+    display: flex;
+    inline-size: 100%;
+    margin-block-start: var(--s-6);
+  }
+
+  .ssum__fine {
+    margin-block-start: var(--s-3);
+    font-size: 13px;
+    color: #CFC9BF;
+    text-align: center;
+  }
+
+  /* --- FAQ ---------------------------------------------------------------- */
+  .faq-sec {
+    background: var(--putty);
+  }
+
+  .faq-sec__h {
+    max-inline-size: var(--measure);
+    margin-inline: auto;
+    margin-block-end: var(--s-8);
+  }
+</style>
