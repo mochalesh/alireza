@@ -83,3 +83,43 @@
   font-style: italic;
   font-display: swap;
 }
+
+/* --- IBM Plex Sans Arabic — the Arabic site ------------------------------
+   Arabic subset only. The Latin runs that survive on those pages — the
+   domain in the footer, the WhatsApp numbers, "EN" in the language chip —
+   fall through to Barlow, which is already declared above and already in
+   cache. That is deliberate: a second Latin subset would be 19KB to render
+   about forty characters per page.
+
+   Three weights, not four. The design uses 700 almost everywhere, 600 for
+   navigation and labels, and 400 for body; the nine places it asks for 500
+   resolve down to 400 by the CSS font-matching rules, which is invisible at
+   those sizes and saves 45KB on every Arabic page.
+
+   The headline weight carries `optional` for the same reason the Latin one
+   does — it is preloaded in the head, and a late swap on the largest text
+   on the page is where layout shift comes from.                          */
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/fonts/plex-arabic-700-normal.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/fonts/plex-arabic-600-normal.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  src: url('/fonts/plex-arabic-400-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: optional;
+}

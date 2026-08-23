@@ -1,0 +1,262 @@
+---
+/**
+ * Arabic pricing.
+ *
+ * One column rather than the English page's two. The English page carries a
+ * running summary because it is on its way to becoming a configurator; here
+ * the buying decision is simpler and the second column would be a box repeating
+ * the first one back.
+ *
+ * WhatsApp sits beside the signup button, at the same weight, because in this
+ * market it is not a fallback contact — it is how the conversation starts.
+ *
+ * The price is a placeholder and the line under it says so in Arabic. That
+ * note comes out the day a real price is set, and not before.
+ */
+import Base from '../../layouts/Base.astro';
+import '../../styles/pricing.css';
+import FaqList from '../../components/FaqList.astro';
+
+import { SITE_URL, PRICE, PRIMARY_CTA } from '../../data/site.js';
+import { AR, AR_PRIMARY_CTA, AR_WHATSAPP, waHref } from '../../data/ar/site.js';
+import { AR_PRICING } from '../../data/ar/pricing.js';
+
+const path = `${AR}/pricing`;
+const price = PRICE.ar;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Widgeta',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    url: `${SITE_URL}${path}`,
+    inLanguage: 'ar',
+    offers: {
+      '@type': 'Offer',
+      price: price.amount,
+      priceCurrency: price.currency,
+      availability: 'https://schema.org/InStock',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: 'ar',
+    mainEntity: AR_PRICING.faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
+---
+
+<Base
+  title={AR_PRICING.title}
+  description={AR_PRICING.metaDesc}
+  path={path}
+  lang="ar"
+  altPath="/pricing"
+  schema={schema}
+>
+  <div class="pricingpage arprice">
+    <section class="head">
+      <div class="shell">
+        <h1>{AR_PRICING.h1}</h1>
+        <p class="head__sub">{AR_PRICING.sub}</p>
+      </div>
+    </section>
+
+    <section class="section pricing">
+      <div class="shell arprice__col stack" style="--flow: var(--s-6)">
+        <!-- The one thing you can buy ---------------------------------- -->
+        <div class="card plan">
+          <span class="plan__label">{AR_PRICING.includedLabel}</span>
+
+          <div class="plan__tags">
+            {AR_PRICING.includedTags.map((t) => <span class="tag tag--live">{t}</span>)}
+          </div>
+
+          <ul class="arprice__list">
+            {
+              AR_PRICING.included.map((line) => (
+                <li><span class="arprice__tick" aria-hidden="true">✓</span>{line}</li>
+              ))
+            }
+          </ul>
+
+          <p class="plan__price">
+            <span class="plan__amount">{price.display}</span>
+            <span class="plan__period">{price.period}</span>
+          </p>
+          <p class="muted arprice__pricenote">{AR_PRICING.priceNote}</p>
+
+          <div class="arprice__cta">
+            <a class="btn btn--amber" href={PRIMARY_CTA.href}>{AR_PRICING.ctaPrimary}</a>
+            <a
+              class="btn btn--wa"
+              href={waHref('السلام عليكم، أرغب بمعرفة تفاصيل ويدجيتا لشركتي.')}
+              rel="noopener"
+            >
+              {AR_PRICING.ctaWhatsapp}
+            </a>
+          </div>
+          <p class="arprice__fine muted">{AR_PRICING.ctaFine}</p>
+          {
+            AR_WHATSAPP.placeholder && (
+              <p class="arprice__wanote muted">
+                رقم الواتساب المعروض ({AR_WHATSAPP.display}) رقم تجريبي إلى أن
+                يُفعَّل الرقم الرسمي.
+              </p>
+            )
+          }
+        </div>
+
+        <!-- The one thing you cannot ------------------------------------ -->
+        <div class="card soon">
+          <div class="soon__top">
+            <span class="tag tag--soon">{AR_PRICING.soon.tag}</span>
+            <span class="muted soon__note">{AR_PRICING.soon.priceLine}</span>
+          </div>
+
+          <h2 class="plan__h">{AR_PRICING.soon.title}</h2>
+          <p class="muted">{AR_PRICING.soon.body}</p>
+
+          <div class="switchrow">
+            <label class="switch">
+              <input type="checkbox" data-notify-toggle />
+              <span class="switch__track" aria-hidden="true"><span class="switch__knob"></span></span>
+              <span class="switch__label">أبلغوني عند الإطلاق</span>
+            </label>
+          </div>
+
+          <form class="notify" hidden data-notify-form action={path} method="get">
+            <label class="sr-only" for="soon-email">البريد الإلكتروني</label>
+            <input
+              class="notify__input"
+              id="soon-email"
+              name="email"
+              type="email"
+              required
+              autocomplete="email"
+              placeholder="name@company.com"
+            />
+            <button class="btn btn--ink" type="submit">أبلغوني</button>
+          </form>
+
+          <p class="notify__done" hidden data-notify-done>
+            <span aria-hidden="true">✓</span> سجّلناك — سنراسلك يوم الإطلاق.
+          </p>
+        </div>
+
+        <!-- Roadmap ------------------------------------------------------ -->
+        <div class="card roadmap-card">
+          <span class="plan__label">{AR_PRICING.roadmapTitle}</span>
+          <p class="muted">{AR_PRICING.roadmapLead}</p>
+          <div class="roadmap__chips">
+            {AR_PRICING.roadmap.map((r) => <span class="chip">{r}</span>)}
+          </div>
+          <p class="muted arprice__fine">{AR_PRICING.roadmapNote}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq-sec">
+      <div class="shell">
+        <h2 class="faq-sec__h">{AR_PRICING.faqH2}</h2>
+        <FaqList items={AR_PRICING.faqs} variant="cards" />
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  /*
+   * Same toggle as the English page and the same rule: it only ever says
+   * "tell me later". It reveals the email field; it never touches the price,
+   * because nothing on this card is for sale yet.
+   */
+  const toggle = document.querySelector('[data-notify-toggle]');
+  const form = document.querySelector('[data-notify-form]');
+  const done = document.querySelector('[data-notify-done]');
+
+  if (toggle instanceof HTMLInputElement && form instanceof HTMLFormElement) {
+    toggle.addEventListener('change', () => {
+      form.hidden = !toggle.checked || !(done instanceof HTMLElement && done.hidden);
+      if (toggle.checked) form.querySelector('input')?.focus();
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      // TODO: post to the real capture endpoint once it exists.
+      form.hidden = true;
+      if (done instanceof HTMLElement) done.hidden = false;
+    });
+  }
+</script>
+
+<style>
+  /* One column, centred on the reading measure rather than stretched across
+     the shell — there is no second column to balance it. */
+  .arprice__col {
+    max-inline-size: 720px;
+    margin-inline: auto;
+  }
+
+  .arprice__list {
+    margin: var(--s-6) 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .arprice__list li {
+    display: flex;
+    gap: var(--s-3);
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  .arprice__tick {
+    flex: none;
+    color: var(--live);
+    font-weight: 700;
+  }
+
+  .arprice__pricenote {
+    font-size: var(--fs-small);
+  }
+
+  .arprice__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-block-start: var(--s-6);
+  }
+
+  /* WhatsApp green carries the button, but the label is ink: white on this
+     green measures 1.9:1 and is unreadable in daylight, which is exactly
+     where this page gets read. */
+  .btn--wa {
+    background: var(--whatsapp);
+    color: #05310F;
+  }
+
+  .btn--wa:hover {
+    background: #1FBA59;
+    color: #05310F;
+  }
+
+  .arprice__fine {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-small);
+  }
+
+  .arprice__wanote {
+    margin-block-start: var(--s-2);
+    font-size: 13px;
+  }
+</style>

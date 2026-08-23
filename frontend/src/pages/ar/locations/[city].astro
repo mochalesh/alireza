@@ -1,0 +1,251 @@
+---
+/**
+ * Arabic city page.
+ *
+ * The English site has none of these on purpose — the brief forbids it —
+ * because US contractors do not search that way and city pages there would
+ * be doorway pages. Here they are the point: a Gulf buyer searches by city
+ * and by district, and a page that names the districts is a page their
+ * competitor does not have.
+ *
+ * Which is also why `getStaticPaths` reads `built`: a city exists as a page
+ * only once someone has written its districts, its market, its seasons and
+ * its local-currency numbers. Six cities, hand-written, never generated.
+ *
+ * The cost table is the only place on this site that prints market money.
+ * Widgeta's own row carries no figure — the subscription price is still a
+ * placeholder, and putting a placeholder beside researched competitor ranges
+ * would read as a comparison it has not earned.
+ */
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/ar-page.css';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import FaqList from '../../../components/FaqList.astro';
+import ClosingBand from '../../../components/ClosingBand.astro';
+
+import { SITE_URL, PRIMARY_CTA } from '../../../data/site.js';
+import { AR, AR_CITIES, AR_TRADES, AR_PRIMARY_CTA } from '../../../data/ar/site.js';
+import { AR_CITY_PAGES } from '../../../data/ar/cities.js';
+
+export function getStaticPaths() {
+  return AR_CITIES.filter((c) => c.built && AR_CITY_PAGES[c.slug]).map((c) => ({
+    params: { city: c.slug },
+  }));
+}
+
+const { city } = Astro.params;
+const c = AR_CITY_PAGES[city];
+const path = `${AR}/locations/${city}`;
+
+const trades = AR_TRADES.filter((t) => t.built);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `تصميم مواقع لشركات الصيانة في ${c.city} — ويدجيتا`,
+    serviceType: 'تصميم مواقع وتحسين الظهور في البحث',
+    provider: { '@type': 'Organization', name: 'ويدجيتا', url: `${SITE_URL}${AR}` },
+    areaServed: { '@type': 'City', name: c.city, addressCountry: c.country },
+    description: c.metaDesc,
+    inLanguage: 'ar',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: `${SITE_URL}${AR}` },
+      { '@type': 'ListItem', position: 2, name: c.city, item: `${SITE_URL}${path}` },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: 'ar',
+    mainEntity: c.faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
+---
+
+{/* Self-referencing: there is no English equivalent of a Riyadh page, and
+    the spec names city pages as exactly the case where hreflang must not
+    invent a pair. */}
+<Base title={c.title} description={c.metaDesc} path={path} lang="ar" schema={schema}>
+  <div class="arpage">
+    <div class="shell">
+      <Breadcrumb
+        items={[
+          { label: 'الرئيسية', href: AR },
+          { label: 'المدن' },
+          { label: c.city },
+        ]}
+      />
+    </div>
+
+    <!-- Hero -------------------------------------------------------------- -->
+    <section class="hero">
+      <div class="shell measure">
+        <p class="eyebrow">ويدجيتا في {c.city}</p>
+        <h1 class="hero__h1">{c.h1}</h1>
+        <p class="hero__sub">{c.sub}</p>
+        <div class="hero__cta">
+          <a class="btn btn--amber" href={PRIMARY_CTA.href}>{AR_PRIMARY_CTA.label}</a>
+          <a class="btn btn--outline" href="#examples">أمثلة من {c.city}</a>
+        </div>
+        <p class="hero__fine muted">{c.priceLine} · دقيقتان من الأسئلة · بدون عقد</p>
+      </div>
+    </section>
+
+    <!-- Districts ---------------------------------------------------------- -->
+    <section class="searches">
+      <div class="shell">
+        <p class="eyebrow">أحياء ومناطق يبحث سكانها كل أسبوع</p>
+        <div class="searches__chips">
+          {c.districts.map((d) => <span class="chip">{d}</span>)}
+        </div>
+        <p class="searches__note muted">
+          ويدجيتا يبني صفحة لكل خدمة في كل حي تخدمه — لأن «فني تكييف
+          {' '}{c.sampleDistrict}» بحث مختلف عن «فني تكييف {c.city}».
+        </p>
+      </div>
+    </section>
+
+    <!-- The market --------------------------------------------------------- -->
+    <section class="section">
+      <div class="shell measure">
+        <p class="eyebrow">سوق {c.city}</p>
+        <h2>{c.marketH2}</h2>
+        {c.market.map((para) => <p class="para muted">{para}</p>)}
+      </div>
+    </section>
+
+    <!-- Cost, in local currency --------------------------------------------- -->
+    <section class="section matrixsec">
+      <div class="shell">
+        <p class="eyebrow">بالعملة المحلية</p>
+        <h2 class="h2">{c.costH2}</h2>
+        <p class="para muted matrix__lead">{c.costIntro}</p>
+
+        <div class="scroll-x">
+          <table class="cmp">
+            <thead>
+              <tr>
+                {c.costHead.map((h) => <th scope="col">{h}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {
+                c.costRows.map((r) => (
+                  <tr>
+                    <th scope="row" class:list={[{ 'cmp__col--ours': r.ours }]}>{r.k}</th>
+                    <td class:list={[{ cmp__ours: r.ours }]}>{r.c}</td>
+                    <td class:list={[{ cmp__ours: r.ours }]}>{r.a}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <p class="matrix__note muted">{c.costNote}</p>
+      </div>
+    </section>
+
+    <!-- Seasons -------------------------------------------------------------- -->
+    <section class="section seasonsec">
+      <div class="shell">
+        <p class="eyebrow">السنة في {c.city}</p>
+        <h2 class="h2">{c.seasonH2}</h2>
+        <div class="grid-auto">
+          {
+            c.seasons.map((s) => (
+              <div class="card season">
+                <span class="season__s">{s.s}</span>
+                <h3 class="season__h">{s.h}</h3>
+                <p class="muted">{s.t}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Examples -------------------------------------------------------------- -->
+    <section class="section exsec" id="examples">
+      <div class="shell">
+        <p class="eyebrow">أمثلة</p>
+        <h2 class="h2">مواقع لشركات في {c.city}.</h2>
+
+        <div class="grid-auto">
+          {
+            c.examples.map((ex) => (
+              <article class="card ex">
+                <div class="ex__chrome">
+                  <span class="ex__domain">{ex.domain}</span>
+                  <span class="tag tag--sample">مثال</span>
+                </div>
+                <div class="ex__hero">
+                  <strong class="ex__biz">{ex.business}</strong>
+                  <span class="ex__areas">{ex.areas}</span>
+                  <span class="ex__wa">{ex.wa}</span>
+                </div>
+                <ul class="ex__pages">
+                  {ex.pages.map((p) => <li>{p}</li>)}
+                </ul>
+                <p class="ex__cap muted">{ex.caption}</p>
+              </article>
+            ))
+          }
+
+          <div class="card ex ex--yours">
+            <strong class="ex__yours">موقعك هنا.</strong>
+            <p class="muted">أجب على بضعة أسئلة وشاهد موقعك اليوم.</p>
+            <a class="btn btn--amber" href={PRIMARY_CTA.href}>ابدأ الآن</a>
+          </div>
+        </div>
+
+        <p class="matrix__note muted">
+          أمثلة توضيحية — ستُستبدل بعملاء حقيقيين عند الإطلاق.
+        </p>
+      </div>
+    </section>
+
+    <!-- Trades in this city ---------------------------------------------------- -->
+    {
+      trades.length > 0 && (
+        <section class="section">
+          <div class="shell">
+            <h2 class="h2">حسب نشاطك في {c.city}</h2>
+            <div class="citysec__links">
+              {trades.map((t) => (
+                <a class="chip citysec__chip" href={`${AR}/for/${t.slug}`}>
+                  {t.name}<span aria-hidden="true"> ←</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- FAQ ---------------------------------------------------------------------- -->
+    <section class="section faqsec">
+      <div class="shell">
+        <p class="eyebrow">أجوبة مباشرة</p>
+        <h2 class="h2">أسئلة أصحاب الشركات في {c.city}</h2>
+        <FaqList items={c.faqs} />
+      </div>
+    </section>
+
+    <ClosingBand
+      title={c.close}
+      ctaLabel={AR_PRIMARY_CTA.label}
+      ctaHref={PRIMARY_CTA.href}
+      fine="دقيقتان · يعمل اليوم · كل شيء ملكك"
+    />
+  </div>
+</Base>

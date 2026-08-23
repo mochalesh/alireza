@@ -19,6 +19,66 @@ html {
   scroll-padding-block-start: 88px;
 }
 
+/*
+ * The Arabic site is this stylesheet with two tokens swapped.
+ *
+ * One family for both roles, because Barlow Semi Condensed has no Arabic and
+ * a condensed Arabic display face is not a thing the script wants — Arabic
+ * gets its contrast from weight, not width. The design system's rule for
+ * Arabic headlines is IBM Plex Sans Arabic 700 at letter-spacing 0, and the
+ * negative tracking that tightens Latin headlines actively damages Arabic:
+ * it pulls joined letterforms into each other.
+ *
+ * Headline weight drops from 800 to 700 because the family stops at 700, and
+ * synthesising the missing weight would smear the strokes.
+ */
+html[lang='ar'] {
+  /*
+   * The Latin fallback is the device's own UI font, not Barlow.
+   *
+   * The Arabic subset carries no Latin glyphs, so the domains, the WhatsApp
+   * numbers and the "EN" in the language chip fall through to whatever comes
+   * next. Putting Barlow there was measured: the browser pulled three more
+   * weights, 66KB, to set about forty characters a page. On the phone this
+   * gets read on, at a job site, that trade is not worth making — system-ui
+   * is a real typeface on every device that matters.
+   */
+  --font-head: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --lh-head: 1.28;
+  --lh-body: 1.85;
+}
+
+html[lang='ar'] h1,
+html[lang='ar'] h2,
+html[lang='ar'] h3,
+html[lang='ar'] h4 {
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* The highlighter stroke behind the last words of a headline is measured to
+   Latin x-height. Arabic sits lower in the line box and the same stop leaves
+   the band floating under the word instead of behind it, so the Arabic band
+   is drawn as an explicit slab rather than a half-gradient. */
+html[lang='ar'] .mark {
+  background: linear-gradient(
+    transparent 48%,
+    var(--amber) 48%,
+    var(--amber) 92%,
+    transparent 92%
+  );
+}
+
+/* Uppercase and wide tracking are Latin typographic devices. Arabic has no
+   case, and tracking breaks the joins, so the label treatment loses both. */
+html[lang='ar'] .eyebrow,
+html[lang='ar'] .tag,
+html[lang='ar'] .chip {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 body {
   margin: 0;
   background: var(--paper);

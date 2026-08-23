@@ -10,4 +10,7 @@ Allow: /
 Disallow: /privacy
 Disallow: /terms
 
+# One sitemap per language, so indexation can be read per language rather
+# than as a single mixed number.
 Sitemap: https://widgeta.app/sitemap-index.xml
+Sitemap: https://widgeta.app/sitemap-ar.xml

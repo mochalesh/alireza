@@ -1,0 +1,373 @@
+/* ============================================================================
+   The home page's layout, shared by both languages.
+
+   This was a scoped block inside the English page until the Arabic home page
+   needed the same blocks: the same hero grid, the same three steps, the same
+   four capability cards, the same rent-versus-own columns. Duplicating three
+   hundred lines of CSS into a second page file would have guaranteed the two
+   drifted apart the first time either was touched.
+
+   Everything is namespaced under `.home`, which both pages put on their
+   wrapper, so these generic names cannot leak into the rest of the site. And
+   because every rule here is written in logical properties, the Arabic page
+   is this same stylesheet under dir="rtl" — nothing mirrors by hand.
+   ============================================================================ */
+/* --- Hero --------------------------------------------------------- */
+.home .hero {
+  padding-block: clamp(40px, 5vw, 72px) clamp(56px, 6vw, 88px);
+}
+
+.home .hero__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(32px, 4vw, 64px);
+  align-items: center;
+}
+
+.home .hero__h1 {
+  margin-block-start: var(--s-4);
+}
+
+  /* The highlighter behind the last two words: a marker stroke, the way a
+     job sheet gets marked up. */
+.home .mark {
+  background: linear-gradient(transparent 62%, var(--amber) 62%);
+}
+
+.home .hero__sub {
+  margin-block-start: var(--s-6);
+  font-size: var(--fs-lead);
+  max-inline-size: 46ch;
+}
+
+.home .hero__cta {
+  display: flex;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  margin-block-start: var(--s-8);
+}
+
+.home .hero__fine {
+  margin-block-start: var(--s-4);
+  font-size: var(--fs-small);
+}
+
+  /* --- Strip -------------------------------------------------------- */
+.home .strip {
+  padding-block: var(--s-4);
+}
+
+.home .strip__in {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4) var(--s-8);
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+  /* --- Section heads ------------------------------------------------ */
+.home .sec__h2 {
+  margin-block-start: var(--s-3);
+  margin-block-end: var(--s-8);
+  max-inline-size: 20ch;
+}
+
+.home .sec__h2--center {
+  margin-inline: auto;
+  text-align: center;
+  max-inline-size: none;
+}
+
+  /* --- Steps -------------------------------------------------------- */
+.home .step {
+  display: grid;
+  align-content: start;
+  gap: var(--s-2);
+}
+
+.home .step__n {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 32px;
+  color: var(--amber-text);
+  line-height: 1;
+}
+
+.home .step__tag {
+  justify-self: start;
+  background: var(--amber);
+  color: var(--ink);
+}
+
+.home .step__title {
+  margin-block-start: var(--s-1);
+}
+
+  /* --- Keeps working ------------------------------------------------ */
+.home .keeps__p {
+  margin-block-start: var(--s-4);
+}
+
+.home .keeps__h3 {
+  margin-block: var(--s-12) var(--s-6);
+}
+
+.home .tradecard {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+  transition: border-color .15s ease;
+}
+
+.home .tradecard:hover {
+  border-color: var(--amber);
+  color: var(--ink);
+}
+
+.home .tradecard__name {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 22px;
+}
+
+  /* --- Capabilities ------------------------------------------------- */
+  /* Narrower minimum than the default grid so all four sit on one row on a
+     wide screen — the three live pieces and the one that is not, read
+     together, is the whole point of the section. */
+.home .caps {
+  display: grid;
+  gap: var(--s-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(255px, 100%), 1fr));
+  align-items: start;
+}
+
+.home .cap {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+}
+
+.home .cap--soon {
+  background: var(--soon-bg);
+  border: 2px dashed var(--soon-line);
+}
+
+.home .cap__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.home .cap__label {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.home .cap__title {
+  font-size: 21px;
+}
+
+.home .roadmap {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  margin-block-start: var(--s-8);
+  font-size: var(--fs-small);
+}
+
+  /* --- Examples ------------------------------------------------------ */
+.home .ex {
+  padding: 0;
+  overflow: hidden;
+}
+
+.home .ex__chrome {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border-block-end: 1px solid var(--line);
+  background: var(--putty);
+}
+
+.home .ex__dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.home .ex__dots i {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+
+.home .ex__domain {
+  font-size: 12px;
+  color: var(--muted);
+  margin-inline-end: auto;
+  word-break: break-all;
+}
+
+.home .ex__hero {
+  display: grid;
+  gap: 4px;
+  padding: var(--s-6) var(--s-4);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.home .ex__biz {
+  font-family: var(--font-head);
+  font-size: 22px;
+}
+
+.home .ex__areas {
+  font-size: 13px;
+  opacity: .75;
+}
+
+.home .ex__phone {
+  justify-self: start;
+  margin-block-start: var(--s-2);
+  padding: 6px var(--s-3);
+  border-radius: var(--r-pill);
+  background: var(--amber);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.home .ex__pages {
+  margin: 0;
+  padding: var(--s-4);
+  list-style: none;
+  display: grid;
+  gap: var(--s-2);
+}
+
+.home .ex__pages li {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-tag);
+  font-size: 14px;
+}
+
+.home .ex__cap {
+  padding: 0 var(--s-4) var(--s-4);
+  font-size: 13px;
+}
+
+.home .ex__note {
+  margin-block-start: var(--s-6);
+  font-size: var(--fs-small);
+}
+
+  /* Its own target rather than a link inside the disclosure sentence: an
+     inline link in body copy cannot meet the 44px minimum without wrecking
+     the line height around it. */
+.home .ex__more {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tap);
+  margin-block-start: var(--s-2);
+  color: var(--amber-text);
+  font-weight: 700;
+}
+
+.home .ex__more:hover {
+  color: var(--ink);
+}
+
+  /* --- Difference ---------------------------------------------------- */
+.home .diff__eyebrow {
+  color: #CFC9BF;
+}
+
+.home .diff {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: var(--s-6);
+}
+
+.home .diff__col--own {
+  border: 2px solid var(--amber);
+  border-radius: var(--r-card-lg);
+  background: rgba(245, 168, 0, .06);
+  padding: var(--s-6);
+}
+
+.home .diff__col--own h3 {
+  color: var(--amber);
+}
+
+.home .diff__list {
+  margin-block-start: var(--s-4);
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--s-3);
+}
+
+.home .diff__list li {
+  display: flex;
+  gap: var(--s-3);
+  font-size: 16px;
+}
+
+.home .diff__x,
+.home .diff__tick {
+  flex: none;
+  font-weight: 700;
+}
+
+.home .diff__tick {
+  color: var(--amber);
+}
+
+  /* --- Proof ---------------------------------------------------------- */
+.home .proof {
+  display: grid;
+  align-content: start;
+  gap: var(--s-6);
+}
+
+.home .proof__quote {
+  margin: 0;
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.home .proof__who {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-size: var(--fs-small);
+}
+
+  /* Empty circle until a real photograph exists — the SEO spec asks for
+     faces, and a stock face would be a lie about a named person. */
+.home .proof__face {
+  inline-size: 48px;
+  block-size: 48px;
+  border-radius: 50%;
+  background: var(--putty);
+  border: 1px dashed var(--line-strong);
+  flex: none;
+}
+
+.home .proof__biz {
+  display: block;
+}
+
+  /* --- FAQ ------------------------------------------------------------ */
+.home .faqsec {
+  background: var(--putty);
+}

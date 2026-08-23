@@ -1,0 +1,395 @@
+---
+/**
+ * Arabic home — the flagship of the Arabic tree.
+ *
+ * Same skeleton as the English home page and the same shared stylesheet, so
+ * the two cannot drift; the argument inside it is different, because the
+ * buyer is. Three changes are structural rather than translated:
+ *
+ *   - The multi-trade maintenance company leads the trades block and gets a
+ *     card twice the size of the others. One licence covering AC, plumbing
+ *     and electrical is the normal shape of a contractor here.
+ *   - WhatsApp is the action, in the mock and in the copy.
+ *   - There is no testimonial block. The English page's is labelled
+ *     illustrative; three invented Gulf contractors with quotes attached
+ *     would be the same debt in a market where those names read as real.
+ *
+ * The commercial phrase for this market — تصميم مواقع — carries the H2 over
+ * the trades block, the way "contractor website builder" carries one on the
+ * English page. The title tag carries it too.
+ */
+import Base from '../../layouts/Base.astro';
+import HeroSearchMock from '../../components/HeroSearchMock.astro';
+import FaqList from '../../components/FaqList.astro';
+import NotifyMe from '../../components/NotifyMe.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
+import '../../styles/home.css';
+
+import { SITE_URL, PRICE, PRIMARY_CTA } from '../../data/site.js';
+import { AR, AR_TRADES, AR_CITIES, AR_PRIMARY_CTA } from '../../data/ar/site.js';
+import {
+  HERO, MOCK, BADGES, STEPS, CAPABILITY_CARDS, TRADE_CARDS,
+  EXAMPLES, EXAMPLES_NOTE, RENTING, OWNING, FAQ, CLOSING,
+} from '../../data/ar/home.js';
+
+const title = 'تصميم مواقع لشركات الصيانة والخدمات المنزلية | ويدجيتا';
+const description =
+  'ويدجيتا يبني ويشغّل موقع شركتك: صفحة لكل خدمة في كل مدينة تخدمها، تظهر في قوقل، وزر واتساب في كل صفحة — بسعر شهري ثابت وبدون عقد.';
+
+const price = PRICE.ar;
+
+/** A trade card links only where the hub exists. */
+const built = new Map(AR_TRADES.filter((t) => t.built).map((t) => [t.slug, t]));
+const cities = AR_CITIES.filter((c) => c.built);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'ويدجيتا',
+    alternateName: 'Widgeta',
+    url: `${SITE_URL}${AR}`,
+    description: 'مواقع وظهور في البحث ومحتوى شهري لشركات الصيانة والخدمات المنزلية في الخليج.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'ويدجيتا',
+    url: `${SITE_URL}${AR}`,
+    inLanguage: 'ar',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Widgeta',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    url: `${SITE_URL}${AR}`,
+    offers: {
+      '@type': 'Offer',
+      price: price.amount,
+      priceCurrency: price.currency,
+    },
+    /* No aggregateRating. There are no real reviews in this market either,
+       and an invented one is a manual action waiting to happen. */
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: 'ar',
+    mainEntity: FAQ.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+];
+---
+
+<Base title={title} description={description} path={AR} lang="ar" altPath="/" schema={schema}>
+  <div class="home">
+    <!-- Hero ------------------------------------------------------------- -->
+    <section class="hero">
+      <div class="shell hero__grid">
+        <div class="hero__copy">
+          <p class="eyebrow">{HERO.eyebrow}</p>
+          <h1 class="hero__h1">
+            جيرانك يبحثون عن فني <span class="mark">الآن.</span>
+          </h1>
+          <p class="hero__sub">{HERO.sub}</p>
+          <div class="hero__cta">
+            <a class="btn btn--amber" href={PRIMARY_CTA.href}>{AR_PRIMARY_CTA.label}</a>
+            <a class="btn btn--outline" href={HERO.ctaSecondary.href}>{HERO.ctaSecondary.label}</a>
+          </div>
+          <p class="hero__fine muted">{HERO.fine}</p>
+        </div>
+
+        <div class="hero__art">
+          <HeroSearchMock data={MOCK} />
+        </div>
+      </div>
+    </section>
+
+    <!-- Credibility strip ------------------------------------------------- -->
+    <section class="strip on-ink">
+      <div class="shell strip__in">
+        {BADGES.map((b) => <span>✓ {b}</span>)}
+      </div>
+    </section>
+
+    <!-- How it works ------------------------------------------------------ -->
+    <section class="section">
+      <div class="shell">
+        <p class="eyebrow">كيف يعمل</p>
+        <h2 class="sec__h2">ثلاث خطوات. واحدة فقط عليك.</h2>
+
+        <div class="grid-auto steps">
+          {
+            STEPS.map((step) => (
+              <div class="card step">
+                <span class="step__n">{step.n}</span>
+                {step.tag && <span class="tag step__tag">{step.tag}</span>}
+                <h3 class="step__title">{step.title}</h3>
+                <p class="muted">{step.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Capabilities ------------------------------------------------------ -->
+    <section class="section" id="capabilities">
+      <div class="shell">
+        <p class="eyebrow">ما تحصل عليه</p>
+        <h2 class="sec__h2">ثلاثة أجزاء، نظام واحد — ويكبر معك.</h2>
+
+        <div class="caps">
+          {
+            CAPABILITY_CARDS.map((c) => (
+              <div class:list={['card', 'cap', { 'cap--soon': c.status !== 'live' }]}>
+                <div class="cap__top">
+                  <span class="cap__label">{c.label}</span>
+                  {c.status === 'live' ? (
+                    <span class="tag tag--live">يعمل</span>
+                  ) : (
+                    <span class="tag tag--soon">قريباً</span>
+                  )}
+                </div>
+                <h3 class="cap__title">{c.title}</h3>
+                <p class="muted">{c.body}</p>
+                {
+                  c.status !== 'live' && (
+                    <NotifyMe
+                      id="notify-ar-home"
+                      label="أبلغوني عند الإطلاق"
+                      sendLabel="أبلغوني"
+                      fieldLabel="البريد الإلكتروني"
+                      placeholder="name@company.com"
+                      done="سجّلناك — سنراسلك يوم الإطلاق."
+                    />
+                  )
+                }
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Trades ------------------------------------------------------------- -->
+    <section class="section trades">
+      <div class="shell">
+        <p class="eyebrow">لكل نشاط نخدمه</p>
+        <h2 class="sec__h2">تصميم مواقع مبني لنشاطك، لا قالب عام.</h2>
+
+        {
+          TRADE_CARDS.filter((t) => t.feature).map((t) => (
+            <div class="card feat">
+              <span class="tag feat__tag">{t.tag}</span>
+              <h3 class="feat__title">{t.name}</h3>
+              <p class="muted feat__line">{t.line}</p>
+              {built.has(t.slug) && (
+                <a class="feat__cta" href={`${AR}/for/${t.slug}`}>
+                  {t.cta} <span aria-hidden="true">←</span>
+                </a>
+              )}
+            </div>
+          ))
+        }
+
+        <div class="grid-auto trades__rest">
+          {
+            TRADE_CARDS.filter((t) => !t.feature).map((t) =>
+              built.has(t.slug) ? (
+                <a class="card tradecard" href={`${AR}/for/${t.slug}`}>
+                  <span class="tradecard__name">
+                    {t.name} <span aria-hidden="true">←</span>
+                  </span>
+                  <span class="muted">{t.line}</span>
+                </a>
+              ) : (
+                /* No hub yet, so no link. The card still says what the trade
+                   gets, and the label says why it does not click. */
+                <div class="card tradecard tradecard--soon">
+                  <span class="tradecard__name">{t.name}</span>
+                  <span class="muted">{t.line}</span>
+                  <span class="tag tag--soon tradecard__soon">الصفحة قريباً</span>
+                </div>
+              )
+            )
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Examples ---------------------------------------------------------- -->
+    <section class="section" id="examples">
+      <div class="shell">
+        <p class="eyebrow">أمثلة</p>
+        <h2 class="sec__h2">مواقع حقيقية، من مجرد إجابات.</h2>
+
+        <div class="grid-auto">
+          {
+            EXAMPLES.map((ex) => (
+              <article class="card ex">
+                <div class="ex__chrome">
+                  <span class="ex__dots" aria-hidden="true"><i /><i /><i /></span>
+                  <span class="ex__domain">{ex.domain}</span>
+                  <span class="tag tag--sample">مثال</span>
+                </div>
+
+                <div class="ex__hero">
+                  <strong class="ex__biz">{ex.business}</strong>
+                  <span class="ex__areas">{ex.areas}</span>
+                  <span class="ex__phone">{ex.wa}</span>
+                </div>
+
+                <ul class="ex__pages">
+                  {ex.pages.map((p) => <li>{p}</li>)}
+                </ul>
+
+                <p class="ex__cap muted">{ex.caption}</p>
+              </article>
+            ))
+          }
+        </div>
+
+        <p class="ex__note muted">{EXAMPLES_NOTE}</p>
+      </div>
+    </section>
+
+    <!-- Cities ------------------------------------------------------------- -->
+    {
+      cities.length > 0 && (
+        <section class="section citysec">
+          <div class="shell">
+            <p class="eyebrow">المدن</p>
+            <h2 class="sec__h2">اختر مدينتك</h2>
+            <div class="citysec__links">
+              {cities.map((c) => (
+                <a class="chip citysec__chip" href={`${AR}/locations/${c.slug}`}>{c.name}</a>
+              ))}
+            </div>
+            <p class="ex__note muted">
+              صفحات المدن الأخرى تُكتب واحدة واحدة — بأحيائها وأسعارها ومواسمها،
+              لا بنسخ الصفحة نفسها وتغيير الاسم.
+            </p>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- The difference ---------------------------------------------------- -->
+    <section class="section on-ink">
+      <div class="shell">
+        <p class="eyebrow diff__eyebrow">الفرق</p>
+        <h2 class="sec__h2">لا تستأجر عملاءك من أحد.</h2>
+
+        <div class="diff">
+          <div class="diff__col">
+            <h3>{RENTING.title}</h3>
+            <ul class="diff__list">
+              {RENTING.items.map((r) => <li><span class="diff__x" aria-hidden="true">✕</span>{r}</li>)}
+            </ul>
+          </div>
+
+          <div class="diff__col diff__col--own">
+            <h3>{OWNING.title}</h3>
+            <ul class="diff__list">
+              {OWNING.items.map((o) => <li><span class="diff__tick" aria-hidden="true">✓</span>{o}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ ---------------------------------------------------------------- -->
+    <section class="section faqsec">
+      <div class="shell">
+        <h2 class="sec__h2 sec__h2--center">أسئلة يسألها الجميع</h2>
+        <FaqList items={FAQ} variant="cards" />
+      </div>
+    </section>
+
+    <ClosingBand
+      title={CLOSING.title}
+      lead={CLOSING.lead}
+      ctaLabel={AR_PRIMARY_CTA.label}
+      ctaHref={PRIMARY_CTA.href}
+      fine={CLOSING.fine}
+    />
+  </div>
+</Base>
+
+<style>
+  /* The featured multi-trade card. It is bigger than the other four because
+     it is the primary hub of this tree, not because it looks nice. */
+  .feat {
+    display: grid;
+    gap: var(--s-3);
+    justify-items: start;
+    border: 2px solid var(--amber);
+    background: var(--amber-tint);
+  }
+
+  .feat__tag {
+    background: var(--amber);
+    color: var(--ink);
+  }
+
+  .feat__title {
+    font-size: clamp(24px, 1.8vw + 18px, 32px);
+  }
+
+  .feat__line {
+    max-inline-size: 62ch;
+  }
+
+  .feat__cta {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    font-weight: 700;
+    color: var(--amber-text);
+  }
+
+  .feat__cta:hover {
+    color: var(--ink);
+  }
+
+  .feat__cta span,
+  .tradecard__name span {
+    margin-inline-start: 6px;
+  }
+
+  /* Four across on a wide screen: they are one set, and a lone fourth card
+     on its own row reads as an afterthought. */
+  .trades__rest {
+    margin-block-start: var(--s-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  }
+
+  .tradecard--soon {
+    border-style: dashed;
+  }
+
+  .tradecard__soon {
+    justify-self: start;
+    margin-block-start: var(--s-1);
+  }
+
+  .citysec {
+    background: var(--putty);
+  }
+
+  .citysec__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  .citysec__chip {
+    min-block-size: var(--tap);
+  }
+</style>

@@ -24,7 +24,10 @@ export const APP_URL = 'https://app.widgeta.app';
  */
 export const PRICE = {
   en: { amount: 99, currency: 'USD', symbol: '$', display: '$99', period: '/mo' },
-  ar: { amount: 399, currency: 'SAR', symbol: 'SAR', display: '399 ر.س', period: '/شهرياً' },
+  /* Eastern Arabic numerals, because that is what the design sets and what
+     the market reads. The figure is a placeholder and every Arabic page that
+     shows it says so on the page. */
+  ar: { amount: 399, currency: 'SAR', symbol: 'ريال', display: '٣٩٩ ريال', period: ' شهرياً' },
 };
 
 /** Written into copy wherever the flat price is quoted. */
@@ -93,7 +96,7 @@ export const COMPANY = [
  * crossing point and wants it on every page — but it cannot cross to a page
  * that has not been built. The chip appears the moment this flips.
  */
-export const AR_SITE = { href: '/ar', built: false };
+export const AR_SITE = { href: '/ar', built: true };
 
 export const PRICING_PAGE = { href: '/pricing', built: true };
 export const EXAMPLES_PAGE = { href: '/examples', built: true };

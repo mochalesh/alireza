@@ -12,6 +12,8 @@ interface Props {
   lead?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  /** The small print. The Arabic band does not quote the price here. */
+  fine?: string;
 }
 
 const {
@@ -19,6 +21,7 @@ const {
   lead,
   ctaLabel = PRIMARY_CTA.label,
   ctaHref = PRIMARY_CTA.href,
+  fine,
 } = Astro.props;
 
 const price = PRICE.en;
@@ -30,7 +33,7 @@ const price = PRICE.en;
     {lead && <p class="band__lead">{lead}</p>}
     <a class="btn btn--ink band__cta" href={ctaHref}>{ctaLabel}</a>
     <p class="band__fine">
-      From {price.display}{price.period} · No contract · You own everything
+      {fine ?? `From ${price.display}${price.period} · No contract · You own everything`}
     </p>
   </div>
 </section>

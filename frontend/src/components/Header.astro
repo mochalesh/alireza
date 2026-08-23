@@ -7,6 +7,7 @@
  * a header, not eat a third of the first screen.
  */
 import { NAV, PRIMARY_CTA, navHref, AR_SITE } from '../data/site.js';
+import { AR_NAV, AR_PRIMARY_CTA, arNavHref } from '../data/ar/site.js';
 
 interface Props {
   lang?: 'en' | 'ar';
@@ -15,24 +16,40 @@ interface Props {
 }
 
 const { lang = 'en', active } = Astro.props;
-const home = lang === 'ar' ? '/ar' : '/';
+const isAr = lang === 'ar';
+
+/*
+ * One header, two registries. The structure is identical — five items, a
+ * language chip, one action — and the layout is written in logical
+ * properties, so the Arabic version is this same bar mirrored. Only the data
+ * changes, which is the rule the rest of the site follows too.
+ */
+const home = isAr ? '/ar' : '/';
+const items = isAr ? AR_NAV : NAV;
+const hrefOf = isAr ? arNavHref : navHref;
+const mark = isAr ? 'و' : 'W';
+const brandWord = isAr ? 'ويدجيتا' : 'widgeta';
+const cta = isAr
+  ? { label: AR_PRIMARY_CTA.shortLabel, href: PRIMARY_CTA.href }
+  : PRIMARY_CTA;
+const brandLabel = isAr ? 'ويدجيتا — الرئيسية' : 'Widgeta — home';
 ---
 
 <header class="hdr">
   <div class="hdr__in">
-    <a class="brand" href={home} aria-label="Widgeta — home">
-      <span class="brand__mark" aria-hidden="true">W</span>
-      <span class="brand__word">widgeta</span>
+    <a class="brand" href={home} aria-label={brandLabel}>
+      <span class="brand__mark" aria-hidden="true">{mark}</span>
+      <span class="brand__word">{brandWord}</span>
     </a>
 
-    <nav class="hnav" aria-label="Primary">
+    <nav class="hnav" aria-label={isAr ? 'التنقل الرئيسي' : 'Primary'}>
       {
         /* An item whose page is not built yet, and which has no section of
            the home page that answers the same question, is left out — a nav
            label over a 404 is worse than a shorter nav. */
-        NAV.filter((item) => navHref(item)).map((item) => (
+        items.filter((item) => hrefOf(item)).map((item) => (
           <a
-            href={navHref(item)}
+            href={hrefOf(item)}
             class:list={['hnav__link', { 'is-active': active && item.href.startsWith(active) }]}
           >
             {item.label}
@@ -44,13 +61,13 @@ const home = lang === 'ar' ? '/ar' : '/';
 
     {
       (lang === 'ar' || AR_SITE.built) && (
-        <a class="langchip" href={lang === 'ar' ? '/' : AR_SITE.href} lang={lang === 'ar' ? 'en' : 'ar'}>
-          EN · العربية
+        <a class="langchip" href={isAr ? '/' : AR_SITE.href} hreflang={isAr ? 'en' : 'ar'}>
+          {isAr ? 'العربية · EN' : 'EN · العربية'}
         </a>
       )
     }
 
-    <a class="btn btn--amber hdr__cta" href={PRIMARY_CTA.href}>{PRIMARY_CTA.label}</a>
+    <a class="btn btn--amber hdr__cta" href={cta.href}>{cta.label}</a>
   </div>
 </header>
 

@@ -48,10 +48,19 @@ export default defineConfig({
        * out of it, or the two signals contradict each other and Search
        * Console reports the page as an error rather than a choice.
        *
-       * The i18n option is deliberately absent until the Arabic site exists:
-       * it would write hreflang entries pointing at pages that are not there.
+       * The i18n option stays absent: it would write an hreflang pair onto
+       * every page, and most pages here have no true counterpart. Those
+       * pairs are set per page, by hand, where the equivalence is real.
        */
-      filter: (page) => !NOINDEX.some((path) => page.endsWith(path)),
+      filter: (page) =>
+        !NOINDEX.some((path) => page.endsWith(path)) &&
+        /*
+         * English only. The spec wants indexation reported per language, so
+         * the Arabic tree gets its own file — `src/pages/sitemap-ar.xml.js`,
+         * generated from the same registry the Arabic pages are. Both are
+         * listed in robots.txt and both should be submitted.
+         */
+        !new URL(page).pathname.startsWith('/ar'),
     }),
   ],
   prefetch: false,

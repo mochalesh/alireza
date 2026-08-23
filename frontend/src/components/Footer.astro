@@ -10,12 +10,16 @@
  * too — the brief names the footer link explicitly.
  */
 import { TRADES, CAPABILITIES, COMPARISONS, RESOURCES, COMPANY, AR_SITE } from '../data/site.js';
+import {
+  AR, AR_TRADES, AR_CITIES, AR_CAPABILITIES, AR_COMPARISONS, AR_COMPANY, ar,
+} from '../data/ar/site.js';
 
 interface Props {
   lang?: 'en' | 'ar';
 }
 
 const { lang = 'en' } = Astro.props;
+const isAr = lang === 'ar';
 
 const year = 2026;
 
@@ -25,7 +29,7 @@ const year = 2026;
  */
 const built = (list) => list.filter((i) => i.built);
 
-const columns = [
+const en = [
   { label: 'For your trade', items: built(TRADES).map((t) => ({ label: t.name, href: `/for/${t.slug}` })) },
   {
     label: 'What you get',
@@ -38,7 +42,26 @@ const columns = [
   { label: 'Compare', items: built(COMPARISONS).map((c) => ({ label: `Widgeta vs ${c.name}`, href: `/vs/${c.slug}` })) },
   { label: 'Resources', items: built(RESOURCES) },
   { label: 'Company', items: built(COMPANY) },
-].filter((col) => col.items.length > 0);
+];
+
+/* The Arabic footer adds a cities column — the brief names it, and it is
+   where the long tail of that market lives. */
+const arabic = [
+  { label: 'حسب نشاطك', items: built(AR_TRADES).map((t) => ({ label: t.name, href: `${AR}/for/${t.slug}` })) },
+  { label: 'المدن', items: built(AR_CITIES).map((c) => ({ label: c.name, href: `${AR}/locations/${c.slug}` })) },
+  {
+    label: 'ما تحصل عليه',
+    items: built(AR_CAPABILITIES).map((c) => ({
+      label: c.name,
+      href: `${AR}/features/${c.slug}`,
+      soon: c.status !== 'live',
+    })),
+  },
+  { label: 'المقارنات', items: built(AR_COMPARISONS).map((c) => ({ label: `ويدجيتا مقابل ${c.name}`, href: `${AR}/vs/${c.slug}` })) },
+  { label: 'الشركة', items: built(AR_COMPANY) },
+];
+
+const columns = (isAr ? arabic : en).filter((col) => col.items.length > 0);
 ---
 
 <footer class="ftr">
@@ -51,7 +74,7 @@ const columns = [
             {col.items.map((item) => (
               <a href={item.href}>
                 {item.label}
-                {item.soon && <span class="soon"> SOON</span>}
+                {item.soon && <span class="soon"> {isAr ? 'قريباً' : 'SOON'}</span>}
               </a>
             ))}
           </nav>
@@ -61,13 +84,17 @@ const columns = [
 
     <div class="ftr__bar">
       <span class="brand">
-        <span class="brand__mark" aria-hidden="true">W</span>
-        <span class="brand__word">widgeta</span>
+        <span class="brand__mark" aria-hidden="true">{isAr ? 'و' : 'W'}</span>
+        <span class="brand__word">{isAr ? 'ويدجيتا' : 'widgeta'}</span>
       </span>
-      <span class="ftr__legal">© {year} Widgeta · widgeta.app</span>
+      <span class="ftr__legal">
+        © {isAr ? ar(year) : year} {isAr ? 'ويدجيتا' : 'Widgeta'} · widgeta.app
+      </span>
       {
-        (lang === 'ar' || AR_SITE.built) && (
-          <a class="langchip" href={lang === 'ar' ? '/' : AR_SITE.href}>EN · العربية</a>
+        (isAr || AR_SITE.built) && (
+          <a class="langchip" href={isAr ? '/' : AR_SITE.href} hreflang={isAr ? 'en' : 'ar'}>
+            {isAr ? 'العربية · EN' : 'EN · العربية'}
+          </a>
         )
       }
     </div>

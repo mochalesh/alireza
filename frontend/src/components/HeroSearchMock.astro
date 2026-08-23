@@ -7,48 +7,78 @@
  * It shows Mike's own customers' search, not ours. That distinction matters
  * enough that the SAMPLE label and the caption both say so — this is a
  * demonstration of the product, not a keyword we rank for.
+ *
+ * The Arabic home page passes its own `data`. The shape is identical because
+ * the picture is identical — a search, your result, two aggregators under it,
+ * and the contact arriving out of the bottom. Only the last row changes
+ * meaning: in the Gulf what arrives is a WhatsApp message, not a call.
+ * Everything is laid out in logical properties, so the mirrored version is
+ * this same markup under dir="rtl".
  */
+interface Props {
+  data?: any;
+}
+
+const EN = {
+  label: 'SAMPLE',
+  query: 'water heater repair mesa az',
+  ours: {
+    mark: 'R',
+    url: 'reyesplumbing.com › water-heater-repair-mesa',
+    title: 'Reyes Plumbing — Water Heater Repair, Mesa AZ',
+    badge: "THAT'S YOU",
+    snippet:
+      'Same-day water heater repair and replacement across Mesa. Licensed and insured local pros…',
+    action: 'Incoming call',
+    phone: '(480) 555-0114',
+  },
+  others: [
+    { url: 'angi.com › plumbers', title: 'Angi — Find Top Plumbers Near You', desc: 'Compare quotes from local pros…' },
+    { url: 'thumbtack.com › water-heater', title: 'Thumbtack — Water Heater Pros' },
+  ],
+  pill: 'Water heater replacement — Mesa',
+};
+
+const { data = EN } = Astro.props;
+const d = data;
 ---
 
 <div class="mock">
-  <span class="tag tag--sample mock__sample">SAMPLE</span>
+  <span class="tag tag--sample mock__sample">{d.label}</span>
 
   <div class="mock__query" aria-hidden="true">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
       <circle cx="11" cy="11" r="7"></circle>
       <path d="m20 20-3.5-3.5"></path>
     </svg>
-    <span>water heater repair mesa az</span>
+    <span>{d.query}</span>
   </div>
 
   <div class="mock__hit">
-    <span class="tag mock__you">THAT'S YOU</span>
+    <span class="tag mock__you">{d.ours.badge}</span>
     <div class="mock__site">
-      <span class="mock__favicon" aria-hidden="true">R</span>
-      <span class="mock__url">reyesplumbing.com › water-heater-repair-mesa</span>
+      <span class="mock__favicon" aria-hidden="true">{d.ours.mark}</span>
+      <span class="mock__url">{d.ours.url}</span>
     </div>
-    <p class="mock__title">Reyes Plumbing — Water Heater Repair, Mesa AZ</p>
-    <p class="mock__desc">
-      Same-day water heater repair and replacement across Mesa. Licensed and insured local pros…
-    </p>
+    <p class="mock__title">{d.ours.title}</p>
+    <p class="mock__desc">{d.ours.snippet}</p>
   </div>
 
-  <div class="mock__row">
-    <span class="mock__url">angi.com › plumbers</span>
-    <p class="mock__title mock__title--dim">Angi — Find Top Plumbers Near You</p>
-    <p class="mock__desc">Compare quotes from local pros…</p>
-  </div>
-
-  <div class="mock__row">
-    <span class="mock__url">thumbtack.com › water-heater</span>
-    <p class="mock__title mock__title--dim">Thumbtack — Water Heater Pros</p>
-  </div>
+  {
+    d.others.map((row) => (
+      <div class="mock__row">
+        <span class="mock__url">{row.url}</span>
+        <p class="mock__title mock__title--dim">{row.title}</p>
+        {row.desc && <p class="mock__desc">{row.desc}</p>}
+      </div>
+    ))
+  }
 
   <div class="mock__call">
     <span class="mock__dot" aria-hidden="true"></span>
     <span>
-      <strong>Incoming call · (480) 555-0114</strong>
-      <span class="mock__job">Water heater replacement — Mesa</span>
+      <strong>{d.ours.action} · {d.ours.phone}</strong>
+      <span class="mock__job">{d.pill}</span>
     </span>
   </div>
 </div>

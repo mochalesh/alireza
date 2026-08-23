@@ -13,8 +13,9 @@
  * something that cannot be bought.
  */
 import Base from '../layouts/Base.astro';
+import '../styles/pricing.css';
 import FaqList from '../components/FaqList.astro';
-import { SITE_URL, APP_URL, PRICE, PRIMARY_CTA } from '../data/site.js';
+import { SITE_URL, APP_URL, PRICE, PRIMARY_CTA, AR_SITE } from '../data/site.js';
 import { ROADMAP } from '../data/home.js';
 
 const price = PRICE.en;
@@ -81,7 +82,16 @@ const schema = [
 ];
 ---
 
-<Base title={title} description={description} path="/pricing" schema={schema}>
+{/* The Arabic pricing page is a true equivalent — same product, same one
+    price, same page — so this pair is real rather than convenient. */}
+<Base
+  title={title}
+  description={description}
+  path="/pricing"
+  altPath={AR_SITE.built ? '/ar/pricing' : undefined}
+  schema={schema}
+>
+  <div class="pricingpage">
   <section class="head">
     <div class="shell">
       <h1>Pick what you want done. The price adds itself.</h1>
@@ -200,6 +210,7 @@ const schema = [
       <FaqList items={faqs} variant="cards" />
     </div>
   </section>
+  </div>
 </Base>
 
 <script>
@@ -230,289 +241,3 @@ const schema = [
   }
 </script>
 
-<style>
-  .head {
-    padding-block: var(--s-12) 0;
-  }
-
-  .head h1 {
-    max-inline-size: 18ch;
-  }
-
-  .head__sub {
-    margin-block-start: var(--s-6);
-    max-inline-size: var(--measure);
-    font-size: var(--fs-lead);
-    color: var(--muted);
-  }
-
-  .pricing__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
-    gap: clamp(24px, 3vw, 48px);
-    align-items: start;
-  }
-
-  @media (max-width: 920px) {
-    .pricing__grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* --- Plan card -------------------------------------------------------- */
-  .plan {
-    border: 2px solid var(--ink);
-  }
-
-  .plan__label {
-    display: block;
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .plan__price {
-    display: flex;
-    align-items: baseline;
-    gap: var(--s-2);
-    margin-block: var(--s-3) var(--s-4);
-  }
-
-  .plan__amount {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: clamp(44px, 4vw + 20px, 64px);
-    line-height: 1;
-  }
-
-  .plan__period {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--muted);
-  }
-
-  .plan__h {
-    font-size: clamp(22px, 1.4vw + 16px, 28px);
-    margin-block-end: var(--s-3);
-  }
-
-  .plan__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-2);
-    margin-block-start: var(--s-6);
-  }
-
-  /* --- Coming-soon card -------------------------------------------------- */
-  .soon {
-    background: var(--soon-bg);
-    border: 2px dashed var(--soon-line);
-  }
-
-  .soon__top {
-    display: flex;
-    align-items: center;
-    gap: var(--s-3);
-    flex-wrap: wrap;
-    margin-block-end: var(--s-4);
-  }
-
-  .soon__note {
-    font-size: var(--fs-small);
-  }
-
-  .switchrow {
-    margin-block-start: var(--s-6);
-  }
-
-  .switch {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--s-3);
-    min-block-size: var(--tap);
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  /* The control itself covers the whole row rather than hiding at 1px in a
-     corner: the thing that takes the tap should be the thing that is the
-     target, not a label standing in for it. */
-  .switch input {
-    position: absolute;
-    inset: 0;
-    inline-size: 100%;
-    block-size: 100%;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  .switch__track {
-    inline-size: 48px;
-    block-size: 28px;
-    border-radius: var(--r-pill);
-    background: var(--line-strong);
-    flex: none;
-    position: relative;
-    transition: background-color .15s ease;
-  }
-
-  .switch__knob {
-    position: absolute;
-    inset-block-start: 3px;
-    inset-inline-start: 3px;
-    inline-size: 22px;
-    block-size: 22px;
-    border-radius: 50%;
-    background: var(--card);
-    transition: translate .15s ease;
-  }
-
-  .switch input:checked + .switch__track {
-    background: var(--live);
-  }
-
-  /* Logical translation, so the knob travels the right way in Arabic. */
-  .switch input:checked + .switch__track .switch__knob {
-    translate: 20px 0;
-  }
-
-  :dir(rtl) .switch input:checked + .switch__track .switch__knob {
-    translate: -20px 0;
-  }
-
-  .switch input:focus-visible + .switch__track {
-    outline: 3px solid var(--ink);
-    outline-offset: 2px;
-  }
-
-  .notify {
-    display: flex;
-    gap: var(--s-2);
-    flex-wrap: wrap;
-    margin-block-start: var(--s-4);
-  }
-
-  .notify__input {
-    flex: 1 1 200px;
-    min-block-size: var(--tap);
-    padding-inline: var(--s-3);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--r-btn);
-    background: var(--card);
-    font-family: var(--font-body);
-    font-size: 16px;
-    color: var(--ink);
-  }
-
-  .notify__done {
-    margin-block-start: var(--s-4);
-    color: var(--live);
-    font-weight: 600;
-    font-size: var(--fs-small);
-  }
-
-  .roadmap__chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-2);
-    margin-block-start: var(--s-4);
-  }
-
-  /* --- Sticky summary ---------------------------------------------------- */
-  .ssum {
-    position: sticky;
-    inset-block-start: 88px;
-    border-radius: var(--r-card-lg);
-    padding: var(--s-6);
-    box-shadow: var(--shadow-lift);
-  }
-
-  @media (max-width: 920px) {
-    .ssum {
-      position: static;
-    }
-  }
-
-  .ssum__label {
-    display: block;
-    font-size: var(--fs-label);
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--amber);
-  }
-
-  .ssum__list {
-    margin: var(--s-6) 0 0;
-    padding: 0;
-    list-style: none;
-    display: grid;
-    gap: var(--s-3);
-    font-size: var(--fs-small);
-  }
-
-  .ssum__list li {
-    display: flex;
-    gap: var(--s-3);
-  }
-
-  .ssum__tick {
-    color: var(--amber);
-    font-weight: 700;
-    flex: none;
-  }
-
-  .ssum__clock {
-    color: #CFC9BF;
-    flex: none;
-  }
-
-  .ssum__pending {
-    color: #CFC9BF;
-  }
-
-  .ssum__price {
-    margin-block: var(--s-8) 0;
-  }
-
-  .ssum__amount {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: 56px;
-    line-height: 1;
-  }
-
-  .ssum__per {
-    margin-block-start: var(--s-2);
-    font-size: var(--fs-small);
-    color: #CFC9BF;
-  }
-
-  .ssum__cta {
-    display: flex;
-    inline-size: 100%;
-    margin-block-start: var(--s-6);
-  }
-
-  .ssum__fine {
-    margin-block-start: var(--s-3);
-    font-size: 13px;
-    color: #CFC9BF;
-    text-align: center;
-  }
-
-  /* --- FAQ ---------------------------------------------------------------- */
-  .faq-sec {
-    background: var(--putty);
-  }
-
-  .faq-sec__h {
-    max-inline-size: var(--measure);
-    margin-inline: auto;
-    margin-block-end: var(--s-8);
-  }
-</style>

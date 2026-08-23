@@ -42,12 +42,23 @@ const {
   altPath,
   schema = [],
   noindex = false,
-  image = '/og-default.png',
+  image,
 } = Astro.props;
 
+const isAr = lang === 'ar';
 const canonical = new URL(path === '/' ? '' : path, SITE_URL).href;
-const ogImage = new URL(image, SITE_URL).href;
-const dir = lang === 'ar' ? 'rtl' : 'ltr';
+const dir = isAr ? 'rtl' : 'ltr';
+
+/* Each language gets its own share card: the English one is a Latin headline
+   in a condensed face, which says nothing to an Arabic reader. */
+const ogImage = new URL(image ?? (isAr ? '/og-ar.png' : '/og-default.png'), SITE_URL).href;
+
+/* The two faces above the fold, named so they can be preloaded. Arabic pages
+   preload the Arabic ones instead — preloading a Latin face for a page with
+   no Latin headline on it would be 45KB spent on nothing. */
+const preloadFonts = isAr
+  ? ['/fonts/plex-arabic-700-normal.woff2', '/fonts/plex-arabic-400-normal.woff2']
+  : ['/fonts/barlow-semi-condensed-latin-800-normal.woff2', '/fonts/barlow-latin-400-normal.woff2'];
 ---
 
 <!doctype html>
@@ -85,7 +96,10 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Widgeta — your neighbors are searching for you right now." />
+    <meta
+      property="og:image:alt"
+      content={isAr ? 'ويدجيتا — جيرانك يبحثون عن فني الآن.' : 'Widgeta — your neighbors are searching for you right now.'}
+    />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:title" content={title} />
@@ -93,10 +107,9 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
 
     {/* The two faces above the fold, fetched with the stylesheet rather than
         after it — this is what keeps the headline from reflowing. */}
-    <link rel="preload" as="font" type="font/woff2" crossorigin
-          href="/fonts/barlow-semi-condensed-latin-800-normal.woff2" />
-    <link rel="preload" as="font" type="font/woff2" crossorigin
-          href="/fonts/barlow-latin-400-normal.woff2" />
+    {preloadFonts.map((href) => (
+      <link rel="preload" as="font" type="font/woff2" crossorigin href={href} />
+    ))}
 
     <meta name="theme-color" content="#FAF7F2" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -109,7 +122,7 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
   </head>
 
   <body>
-    <a class="skip" href="#main">Skip to content</a>
+    <a class="skip" href="#main">{isAr ? 'تخطَّ إلى المحتوى' : 'Skip to content'}</a>
     <Header lang={lang} />
     <main id="main">
       <slot />

@@ -1,0 +1,308 @@
+/* ============================================================================
+   The Arabic long-page layout: trade hubs and city pages.
+
+   Both are the same page in a different order — a hero, a strip of the
+   customers' own searches, a wide table, seasonality cards, example sites and
+   an FAQ — so they share one stylesheet rather than two that slowly diverge.
+   Namespaced under `.arpage`, which both put on their wrapper.
+
+   Written in logical properties like everything else here, which is the whole
+   reason these pages needed no mirroring work: dir="rtl" on <html> does it.
+   ============================================================================ */
+/* --- Hero -------------------------------------------------------------- */
+.arpage .hero {
+  padding-block: var(--s-8) var(--section-y);
+}
+
+.arpage .hero__h1 {
+  margin-block-start: var(--s-4);
+  font-size: clamp(32px, 3.6vw + 14px, 58px);
+}
+
+.arpage .hero__sub {
+  margin-block-start: var(--s-6);
+  font-size: var(--fs-lead);
+  color: var(--muted);
+}
+
+.arpage .hero__cta {
+  display: flex;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  margin-block-start: var(--s-8);
+}
+
+.arpage .hero__fine {
+  margin-block-start: var(--s-4);
+  font-size: var(--fs-small);
+}
+
+  /* --- Searches ----------------------------------------------------------- */
+.arpage .searches {
+  padding-block: var(--s-8);
+  background: var(--putty);
+}
+
+.arpage .searches__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-block-start: var(--s-4);
+}
+
+.arpage .searches__note {
+  margin-block-start: var(--s-4);
+  font-size: var(--fs-small);
+}
+
+.arpage .searches__note strong {
+  color: var(--ink);
+}
+
+  /* --- Prose --------------------------------------------------------------- */
+.arpage .h2 {
+  margin-block-end: var(--s-6);
+}
+
+.arpage .para {
+  margin-block-start: var(--s-4);
+  font-size: 18px;
+}
+
+  /* --- Matrix -------------------------------------------------------------- */
+.arpage .matrixsec {
+  background: var(--putty);
+}
+
+.arpage .matrix__lead {
+  max-inline-size: var(--measure);
+  margin-block-end: var(--s-6);
+}
+
+.arpage .matrix,
+.arpage .cmp {
+  inline-size: 100%;
+  min-inline-size: 560px;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  overflow: hidden;
+}
+
+.arpage .matrix th,
+.arpage .matrix td,
+.arpage .cmp th,
+.arpage .cmp td {
+  padding: var(--s-3) var(--s-4);
+  border-block-end: 1px solid var(--line);
+  text-align: start;
+  font-size: 15px;
+  vertical-align: top;
+}
+
+.arpage .matrix thead th,
+.arpage .cmp thead th {
+  background: var(--putty);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.arpage .matrix tbody th,
+.arpage .cmp tbody th {
+  font-weight: 700;
+  inline-size: 30%;
+}
+
+.arpage .matrix td {
+  color: var(--live);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.arpage .cmp__col--ours,
+.arpage .cmp__ours {
+  background: var(--amber-tint);
+}
+
+.arpage .cmp__col--ours {
+  color: var(--amber-text);
+}
+
+.arpage .matrix__note {
+  margin-block-start: var(--s-4);
+  font-size: var(--fs-small);
+  max-inline-size: var(--measure);
+}
+
+  /* --- Includes ------------------------------------------------------------- */
+.arpage .inc {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+}
+
+.arpage .inc__title {
+  font-size: 19px;
+}
+
+.arpage .inc__tick {
+  color: var(--live);
+}
+
+  /* --- Seasons -------------------------------------------------------------- */
+.arpage .seasonsec {
+  background: var(--putty);
+}
+
+.arpage .season__lead,
+.arpage .season {
+  max-inline-size: none;
+}
+
+.arpage .season {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+}
+
+.arpage .season__s {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  color: var(--amber-text);
+}
+
+.arpage .season__h {
+  font-size: 20px;
+}
+
+  /* --- Examples -------------------------------------------------------------- */
+.arpage .ex {
+  padding: 0;
+  overflow: hidden;
+}
+
+.arpage .ex__chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border-block-end: 1px solid var(--line);
+  background: var(--putty);
+}
+
+.arpage .ex__domain {
+  font-size: 12px;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.arpage .ex__hero {
+  display: grid;
+  gap: 4px;
+  padding: var(--s-6) var(--s-4);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.arpage .ex__biz {
+  font-family: var(--font-head);
+  font-size: 22px;
+}
+
+.arpage .ex__areas {
+  font-size: 13px;
+  opacity: .75;
+}
+
+.arpage .ex__wa {
+  justify-self: start;
+  margin-block-start: var(--s-2);
+  padding: 6px var(--s-3);
+  border-radius: var(--r-pill);
+  background: var(--whatsapp);
+  color: #05310F;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.arpage .ex__pages {
+  margin: 0;
+  padding: var(--s-4);
+  list-style: none;
+  display: grid;
+  gap: var(--s-2);
+}
+
+.arpage .ex__pages li {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-tag);
+  font-size: 14px;
+}
+
+.arpage .ex__cap {
+  padding: 0 var(--s-4) var(--s-4);
+  font-size: 13px;
+}
+
+.arpage .ex--yours {
+  display: grid;
+  gap: var(--s-3);
+  align-content: center;
+  justify-items: start;
+  padding: var(--s-6);
+  border: 2px dashed var(--line-strong);
+  background: transparent;
+}
+
+.arpage .ex__yours {
+  font-family: var(--font-head);
+  font-size: 24px;
+}
+
+  /* --- Cross-link ------------------------------------------------------------- */
+.arpage .cross {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: start;
+  border: 2px solid var(--amber);
+  background: var(--amber-tint);
+}
+
+.arpage .cross__h {
+  font-size: clamp(22px, 1.4vw + 16px, 28px);
+}
+
+.arpage .cross__body {
+  max-inline-size: 62ch;
+}
+
+.arpage .cross__cta {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tap);
+  font-weight: 700;
+  color: var(--amber-text);
+}
+
+.arpage .cross__cta:hover {
+  color: var(--ink);
+}
+
+  /* --- Cities ------------------------------------------------------------------ */
+.arpage .citysec__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.arpage .citysec__chip {
+  min-block-size: var(--tap);
+}
+
+  /* --- FAQ --------------------------------------------------------------------- */
+.arpage .faqsec {
+  background: var(--putty);
+}

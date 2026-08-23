@@ -1,0 +1,332 @@
+---
+/**
+ * Arabic trade hub — the money page of this tree.
+ *
+ * Built from the registry, so only hubs that have real copy exist as pages:
+ * `getStaticPaths` reads the same `built` flags the navigation filters on,
+ * which means a link and its page can never disagree.
+ *
+ * The blocks the SEO spec requires are all here — breadcrumb, outcome H1,
+ * the commercial phrase inside the first hundred words, the keyword H2, the
+ * customers'-searches chips labelled as the customers' searches, the
+ * service × city matrix, seasonality written only for this trade, examples,
+ * and a six-question FAQ with schema. The optional ones (what your site
+ * includes, the four-way comparison, the cities strip, the cross-link to the
+ * multi-trade hub) render only where the data carries them, because not
+ * every trade needs the same page and padding is worse than nothing.
+ */
+import Base from '../../../layouts/Base.astro';
+import '../../../styles/ar-page.css';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import FaqList from '../../../components/FaqList.astro';
+import ClosingBand from '../../../components/ClosingBand.astro';
+
+import { SITE_URL, PRIMARY_CTA } from '../../../data/site.js';
+import { AR, AR_TRADES, AR_CITIES, AR_PRIMARY_CTA } from '../../../data/ar/site.js';
+import { AR_TRADE_PAGES } from '../../../data/ar/trades.js';
+
+export function getStaticPaths() {
+  return AR_TRADES.filter((t) => t.built && AR_TRADE_PAGES[t.slug]).map((t) => ({
+    params: { trade: t.slug },
+  }));
+}
+
+const { trade } = Astro.params;
+const t = AR_TRADE_PAGES[trade];
+const path = `${AR}/for/${trade}`;
+
+const cities = AR_CITIES.filter((c) => c.built);
+const crossBuilt =
+  t.crossLink && AR_TRADES.some((x) => x.slug === t.crossLink.slug && x.built);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `${t.nameFor} — ويدجيتا`,
+    serviceType: 'تصميم مواقع وتحسين الظهور في البحث',
+    provider: { '@type': 'Organization', name: 'ويدجيتا', url: `${SITE_URL}${AR}` },
+    areaServed: ['SA', 'AE'],
+    description: t.metaDesc,
+    inLanguage: 'ar',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'الرئيسية', item: `${SITE_URL}${AR}` },
+      { '@type': 'ListItem', position: 2, name: t.name, item: `${SITE_URL}${path}` },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: 'ar',
+    mainEntity: t.faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
+---
+
+{/* No hreflang pair: the English site sells to four US trades and has no
+    equivalent of a Gulf multi-trade maintenance company. A wrong pair is
+    worse than none, so these are self-referencing. */}
+<Base title={t.title} description={t.metaDesc} path={path} lang="ar" schema={schema}>
+  <div class="arpage">
+  <div class="shell">
+    <Breadcrumb
+      items={[
+        { label: 'الرئيسية', href: AR },
+        { label: 'حسب نشاطك' },
+        { label: t.name },
+      ]}
+    />
+  </div>
+
+  <!-- Hero ---------------------------------------------------------------- -->
+  <section class="hero">
+    <div class="shell measure">
+      <p class="eyebrow">ويدجيتا لـ{t.nameFor}</p>
+      <h1 class="hero__h1">{t.h1}</h1>
+      <p class="hero__sub">{t.sub}</p>
+      <div class="hero__cta">
+        <a class="btn btn--amber" href={PRIMARY_CTA.href}>{AR_PRIMARY_CTA.label}</a>
+        <a class="btn btn--outline" href="#examples">شاهد أمثلة</a>
+      </div>
+      <p class="hero__fine muted">دقيقتان من الأسئلة · يعمل في نفس اليوم · بدون عقد</p>
+    </div>
+  </section>
+
+  <!-- The customers' searches ---------------------------------------------- -->
+  <section class="searches">
+    <div class="shell">
+      <p class="eyebrow">ما يبحث عنه عملاؤك كل أسبوع</p>
+      <div class="searches__chips">
+        {t.searches.map((q) => <span class="chip">{q}</span>)}
+      </div>
+      <p class="searches__note muted">
+        هذه عمليات بحث <strong>عملائك</strong>، لا كلماتنا. ويدجيتا يبني صفحة
+        تجيب على كل واحدة — باسمك ورقم واتسابك.
+      </p>
+    </div>
+  </section>
+
+  <!-- The keyword H2 -------------------------------------------------------- -->
+  <section class="section">
+    <div class="shell measure">
+      <p class="eyebrow">لماذا موقع مبني لتخصصك</p>
+      <h2>{t.kwH2}</h2>
+      {t.kw.map((para) => <p class="para muted">{para}</p>)}
+    </div>
+  </section>
+
+  <!-- The matrix ------------------------------------------------------------ -->
+  <section class="section matrixsec">
+    <div class="shell">
+      <p class="eyebrow">كيف يعمل</p>
+      <h2 class="h2">صفحة لكل خدمة، في كل مدينة تخدمها</h2>
+      <p class="para muted matrix__lead">
+        لا أحد يبحث عن «شركة صيانة» بشكل عام — يبحث عن مشكلة واحدة في مكان
+        واحد. لذلك لا يبني ويدجيتا صفحة خدمات واحدة، بل الشبكة كاملة:
+      </p>
+
+      <div class="scroll-x">
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th scope="col">الخدمة</th>
+              {t.matrixCities.map((c) => <th scope="col">{c}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {
+              t.matrixServices.map((s) => (
+                <tr>
+                  <th scope="row">{s}</th>
+                  {t.matrixCities.map(() => <td>✓ صفحة خاصة</td>)}
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <p class="matrix__note muted">{t.matrixNote}</p>
+    </div>
+  </section>
+
+  <!-- What your site includes (optional) ------------------------------------ -->
+  {
+    t.includes && (
+      <section class="section">
+        <div class="shell">
+          <p class="eyebrow">ما يشمله موقعك</p>
+          <h2 class="h2">{t.includesH2}</h2>
+          <div class="grid-auto">
+            {t.includes.map((i) => (
+              <div class="card inc">
+                <h3 class="inc__title">
+                  <span class="inc__tick" aria-hidden="true">✓</span> {i.title}
+                </h3>
+                <p class="muted">{i.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Seasonality ------------------------------------------------------------ -->
+  <section class="section seasonsec">
+    <div class="shell">
+      <p class="eyebrow">السنة في عمليات البحث</p>
+      <h2 class="h2">{t.seasonH2}</h2>
+      <p class="para muted season__lead">{t.seasonIntro}</p>
+
+      <div class="grid-auto">
+        {
+          t.seasons.map((s) => (
+            <div class="card season">
+              <span class="season__s">{s.s}</span>
+              <h3 class="season__h">{s.h}</h3>
+              <p class="muted">{s.t}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- The four-way comparison (optional) -------------------------------------- -->
+  {
+    t.compareRows && (
+      <section class="section">
+        <div class="shell">
+          <p class="eyebrow">خياراتك بصراحة</p>
+          <h2 class="h2">{t.compareH2}</h2>
+
+          <div class="scroll-x">
+            <table class="cmp">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  {t.compareCols.map((c, i) => (
+                    <th scope="col" class:list={['cmp__col', { 'cmp__col--ours': i === 0 }]}>{c}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {t.compareRows.map((r) => (
+                  <tr>
+                    <th scope="row">{r.k}</th>
+                    {r.v.map((v, i) => (
+                      <td class:list={[{ 'cmp__ours': i === 0 }]}>{v}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p class="matrix__note muted">{t.compareNote}</p>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Examples ---------------------------------------------------------------- -->
+  <section class="section exsec" id="examples">
+    <div class="shell">
+      <p class="eyebrow">أمثلة</p>
+      <h2 class="h2">{t.examplesH2}</h2>
+
+      <div class="grid-auto">
+        {
+          t.examples.map((ex) => (
+            <article class="card ex">
+              <div class="ex__chrome">
+                <span class="ex__domain">{ex.domain}</span>
+                <span class="tag tag--sample">مثال</span>
+              </div>
+              <div class="ex__hero">
+                <strong class="ex__biz">{ex.business}</strong>
+                <span class="ex__areas">{ex.areas}</span>
+                <span class="ex__wa">{ex.wa}</span>
+              </div>
+              <ul class="ex__pages">
+                {ex.pages.map((p) => <li>{p}</li>)}
+              </ul>
+              <p class="ex__cap muted">{ex.caption}</p>
+            </article>
+          ))
+        }
+
+        <div class="card ex ex--yours">
+          <strong class="ex__yours">موقعك هنا.</strong>
+          <p class="muted">أجب على بضعة أسئلة وشاهد موقعك اليوم.</p>
+          <a class="btn btn--amber" href={PRIMARY_CTA.href}>ابدأ الآن</a>
+        </div>
+      </div>
+
+      <p class="matrix__note muted">
+        أمثلة توضيحية — ستُستبدل بعملاء حقيقيين عند الإطلاق.
+      </p>
+    </div>
+  </section>
+
+  <!-- Cross-link to the multi-trade hub (optional) ------------------------------ -->
+  {
+    crossBuilt && (
+      <section class="section">
+        <div class="shell">
+          <div class="card cross">
+            <span class="eyebrow">{t.crossLink.eyebrow}</span>
+            <h2 class="cross__h">{t.crossLink.title}</h2>
+            <p class="muted cross__body">{t.crossLink.body}</p>
+            <a class="cross__cta" href={`${AR}/for/${t.crossLink.slug}`}>
+              {t.crossLink.cta}<span aria-hidden="true"> ←</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Cities (optional) --------------------------------------------------------- -->
+  {
+    t.citiesH2 && cities.length > 0 && (
+      <section class="section citysec">
+        <div class="shell">
+          <h2 class="h2">{t.citiesH2}</h2>
+          <div class="citysec__links">
+            {cities.map((c) => (
+              <a class="chip citysec__chip" href={`${AR}/locations/${c.slug}`}>{c.name}</a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- FAQ ------------------------------------------------------------------------ -->
+  <section class="section faqsec">
+    <div class="shell">
+      <p class="eyebrow">أجوبة مباشرة</p>
+      <h2 class="h2">{t.faqH2}</h2>
+      <FaqList items={t.faqs} />
+    </div>
+  </section>
+
+  <ClosingBand
+    title={t.close}
+    ctaLabel={AR_PRIMARY_CTA.label}
+    ctaHref={PRIMARY_CTA.href}
+    fine="دقيقتان · يعمل اليوم · كل شيء ملكك"
+  />
+  </div>
+</Base>
+

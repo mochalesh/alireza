@@ -15,12 +15,19 @@ interface Props {
   id: string;
   label?: string;
   done?: string;
+  /** Everything the Arabic site needs to say the same three things. */
+  fieldLabel?: string;
+  placeholder?: string;
+  sendLabel?: string;
 }
 
 const {
   id,
   label = 'Notify me when it launches',
   done = "You're on the list — we'll email you at launch.",
+  fieldLabel = 'Email address',
+  placeholder = 'you@yourbusiness.com',
+  sendLabel = 'Notify me',
 } = Astro.props;
 ---
 
@@ -30,7 +37,7 @@ const {
   </button>
 
   <form class="notify__form" hidden data-notify-form action="/contact" method="get">
-    <label class="sr-only" for={`${id}-email`}>Email address</label>
+    <label class="sr-only" for={`${id}-email`}>{fieldLabel}</label>
     <input
       class="notify__input"
       id={`${id}-email`}
@@ -38,9 +45,9 @@ const {
       type="email"
       required
       autocomplete="email"
-      placeholder="you@yourbusiness.com"
+      placeholder={placeholder}
     />
-    <button class="btn btn--ink notify__send" type="submit">Notify me</button>
+    <button class="btn btn--ink notify__send" type="submit">{sendLabel}</button>
   </form>
 
   <p class="notify__done" hidden data-notify-done>
