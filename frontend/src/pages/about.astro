@@ -1,0 +1,205 @@
+---
+/**
+ * About.
+ *
+ * The SEO spec asks for real, named people here because this audience buys
+ * from people. The names below are the design's placeholders, and the page
+ * says so out loud rather than passing them off — one flag in company.js
+ * removes both the notice and the pretence when the real team is in.
+ */
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import ClosingBand from '../components/ClosingBand.astro';
+
+import { ABOUT, TEAM, CONTACT, PLACEHOLDER } from '../data/company.js';
+import { SITE_URL, APP_URL } from '../data/site.js';
+
+const title = 'About Widgeta — The People Behind It | Widgeta';
+const description =
+  'Widgeta exists so a trade business can own a working online presence instead of renting leads. Who builds it, and how to reach a person.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'About', item: `${SITE_URL}/about` },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} path="/about" schema={schema}>
+  <div class="shell">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
+  </div>
+
+  <section class="head">
+    <div class="shell measure">
+      <h1>{ABOUT.h1}</h1>
+      <p class="para">{ABOUT.p1}</p>
+      <p class="para">{ABOUT.p2}</p>
+    </div>
+  </section>
+
+  <section class="section team-sec">
+    <div class="shell">
+      <h2>The people behind it</h2>
+      {
+        PLACEHOLDER && (
+          <p class="notice">
+            Placeholder team — real names, photos and bios go here before launch.
+          </p>
+        )
+      }
+
+      <div class="grid-auto team">
+        {
+          TEAM.map((m) => (
+            <div class="card person">
+              <span class="person__face" aria-hidden="true"></span>
+              <h3 class="person__name">{m.name}</h3>
+              <span class="person__role">{m.role}</span>
+              <p class="muted">{m.bio}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="shell measure">
+      <h2>Talk to a human</h2>
+      <p class="para muted">
+        Questions before you start, press, partnerships, or a problem with your
+        site — write and a person answers within {CONTACT.responseWindow}. No
+        ticket numbers, no chatbot maze.
+      </p>
+
+      <dl class="contact">
+        <div class="contact__row">
+          <dt>Email</dt>
+          <dd><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></dd>
+        </div>
+        <div class="contact__row">
+          <dt>Phone / text</dt>
+          <dd>{CONTACT.phone}</dd>
+        </div>
+        <div class="contact__row">
+          <dt>Gulf (WhatsApp)</dt>
+          <dd>{CONTACT.whatsapp}</dd>
+        </div>
+      </dl>
+
+      {
+        PLACEHOLDER && (
+          <p class="notice">Contact details are placeholders until launch.</p>
+        )
+      }
+    </div>
+  </section>
+
+  <ClosingBand
+    title="Put your business where your neighbors are looking."
+    ctaLabel="Get your business online"
+    ctaHref={`${APP_URL}/signup`}
+  />
+</Base>
+
+<style>
+  .head {
+    padding-block: var(--s-4) 0;
+  }
+
+  .para {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  .team-sec {
+    background: var(--putty);
+  }
+
+  .team {
+    margin-block-start: var(--s-8);
+  }
+
+  /* A visible, labelled stand-in rather than a stock face: the spec wants
+     real photographs, and a bought one of a stranger is not that. */
+  .notice {
+    display: inline-block;
+    margin-block-start: var(--s-4);
+    padding: var(--s-2) var(--s-3);
+    border: 1px dashed var(--soon-line);
+    border-radius: var(--r-tag);
+    background: var(--soon-bg);
+    color: var(--soon-text);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .person__face {
+    display: block;
+    inline-size: 72px;
+    block-size: 72px;
+    border-radius: 50%;
+    background: var(--putty);
+    border: 1px dashed var(--line-strong);
+    margin-block-end: var(--s-4);
+  }
+
+  .person__name {
+    font-size: 22px;
+  }
+
+  .person__role {
+    display: block;
+    margin-block: 4px var(--s-3);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--amber-text);
+  }
+
+  .contact {
+    margin-block-start: var(--s-8);
+    display: grid;
+    gap: var(--s-4);
+  }
+
+  .contact__row {
+    display: grid;
+    gap: 2px;
+    padding-block-end: var(--s-4);
+    border-block-end: 1px solid var(--line);
+  }
+
+  .contact dt {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .contact dd {
+    margin: 0;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 24px;
+  }
+
+  .contact dd a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+  }
+
+  .contact dd a:hover {
+    color: var(--amber-text);
+  }
+</style>

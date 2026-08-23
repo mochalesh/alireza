@@ -1,0 +1,258 @@
+---
+/**
+ * Examples showcase.
+ *
+ * The spec wants this page to earn "best plumbing website examples", which
+ * a wall of screenshots cannot do — so every card carries a "why it works"
+ * line, and each trade gets its own H2 and commentary.
+ *
+ * Filtering is done with anchors and CSS rather than script: eight cards do
+ * not need a runtime, and a link to /examples#hvac is something a person can
+ * send to someone else. Without JavaScript every card is still on the page.
+ */
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import ClosingBand from '../components/ClosingBand.astro';
+
+import { EXAMPLE_SITES, EXAMPLE_FILTERS, EXAMPLE_HEADINGS } from '../data/examples.js';
+import { SITE_URL, APP_URL, PRIMARY_CTA } from '../data/site.js';
+
+const groups = EXAMPLE_FILTERS.filter((f) => f.key !== 'all').map((f) => ({
+  ...f,
+  heading: EXAMPLE_HEADINGS[f.key],
+  sites: EXAMPLE_SITES.filter((s) => s.trade === f.key),
+}));
+
+const title = 'Best Trade Website Examples, by Trade | Widgeta';
+const description =
+  'Sample plumbing, HVAC, roofing and electrical websites built from a few answers — with what makes each one work. All businesses shown are samples.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Examples', item: `${SITE_URL}/examples` },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} path="/examples" schema={schema}>
+  <div class="shell">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Examples' }]} />
+  </div>
+
+  <section class="head">
+    <div class="shell">
+      <h1>{EXAMPLE_HEADINGS.all[0]}</h1>
+      <p class="head__sub">{EXAMPLE_HEADINGS.all[1]}</p>
+      <p class="head__note muted">
+        Every business, phone number and domain below is invented for
+        illustration and labelled as a sample.
+      </p>
+
+      <nav class="filters" aria-label="Jump to a trade">
+        {groups.map((g) => <a class="chip filters__chip" href={`#${g.key}`}>{g.label}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  {
+    groups.map((g) => (
+      <section class="section group" id={g.key}>
+        <div class="shell">
+          <h2>{g.heading[0]}</h2>
+          <p class="group__intro muted">{g.heading[1]}</p>
+
+          <div class="grid-auto">
+            {g.sites.map((ex) => (
+              <article class="card ex">
+                <div class="ex__chrome">
+                  <span class="ex__domain">{ex.url}</span>
+                  <span class="tag tag--sample">Sample</span>
+                </div>
+
+                <div class="ex__hero">
+                  <strong class="ex__biz">{ex.name}</strong>
+                  <span class="ex__areas">{ex.cities}</span>
+                  <span class="ex__phone">{ex.phone}</span>
+                </div>
+
+                <ul class="ex__pages">
+                  <li>{ex.p1}</li>
+                  <li>{ex.p2}</li>
+                  <li>{ex.p3}</li>
+                </ul>
+
+                <p class="ex__cap muted">
+                  {ex.tradeLabel} · {ex.pages} pages · live in about a minute
+                </p>
+                <p class="ex__why">{ex.why}</p>
+              </article>
+            ))}
+
+            <div class="card ex ex--yours">
+              <span class="ex__yours-t">Yours goes here.</span>
+              <span class="muted">Answer a few questions and see your own site today.</span>
+              <a class="btn btn--amber" href={PRIMARY_CTA.href}>Start now</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <ClosingBand
+    title="The next example could have your name on it."
+    ctaLabel="Get your business online"
+    ctaHref={`${APP_URL}/signup`}
+  />
+</Base>
+
+<style>
+  .head {
+    padding-block: var(--s-4) 0;
+  }
+
+  .head__sub {
+    margin-block-start: var(--s-6);
+    max-inline-size: var(--measure);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  .head__note {
+    margin-block-start: var(--s-4);
+    max-inline-size: var(--measure);
+    font-size: 14px;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-block-start: var(--s-8);
+  }
+
+  .filters__chip {
+    min-block-size: var(--tap);
+    color: var(--ink);
+  }
+
+  .filters__chip:hover {
+    border-color: var(--amber);
+    color: var(--ink);
+  }
+
+  .group {
+    scroll-margin-block-start: 88px;
+  }
+
+  .group:nth-of-type(even) {
+    background: var(--putty);
+  }
+
+  .group__intro {
+    margin-block: var(--s-4) var(--s-8);
+    max-inline-size: var(--measure);
+  }
+
+  .ex {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .ex__chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-2);
+    padding: var(--s-3) var(--s-4);
+    border-block-end: 1px solid var(--line);
+    background: var(--putty);
+  }
+
+  .group:nth-of-type(even) .ex__chrome {
+    background: var(--card);
+  }
+
+  .ex__domain {
+    font-size: 12px;
+    color: var(--muted);
+    word-break: break-all;
+  }
+
+  .ex__hero {
+    display: grid;
+    gap: 4px;
+    padding: var(--s-6) var(--s-4);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .ex__biz {
+    font-family: var(--font-head);
+    font-size: 22px;
+  }
+
+  .ex__areas {
+    font-size: 13px;
+    opacity: .75;
+  }
+
+  .ex__phone {
+    justify-self: start;
+    margin-block-start: var(--s-2);
+    padding: 6px var(--s-3);
+    border-radius: var(--r-pill);
+    background: var(--amber);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .ex__pages {
+    margin: 0;
+    padding: var(--s-4);
+    list-style: none;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .ex__pages li {
+    padding: var(--s-2) var(--s-3);
+    border: 1px solid var(--line);
+    border-radius: var(--r-tag);
+    font-size: 14px;
+  }
+
+  .ex__cap {
+    padding-inline: var(--s-4);
+    font-size: 13px;
+  }
+
+  .ex__why {
+    padding: var(--s-3) var(--s-4) var(--s-4);
+    font-size: 14px;
+    color: var(--amber-text);
+    font-weight: 600;
+  }
+
+  .ex--yours {
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: var(--s-3);
+    padding: var(--s-6);
+    border: 2px dashed var(--line-strong);
+    background: transparent;
+  }
+
+  .ex__yours-t {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 24px;
+  }
+</style>

@@ -53,10 +53,10 @@ export const TRADES = [
  * coming-soon treatment everywhere it appears, including the footer link.
  */
 export const CAPABILITIES = [
-  { slug: 'website', name: 'Website', status: 'live', built: false },
-  { slug: 'seo', name: 'SEO', status: 'live', built: false },
-  { slug: 'content', name: 'Content', status: 'live', built: false },
-  { slug: 'call-answering', name: 'AI call answering', status: 'coming-soon', built: false },
+  { slug: 'website', name: 'Website', status: 'live', built: true },
+  { slug: 'seo', name: 'SEO', status: 'live', built: true },
+  { slug: 'content', name: 'Content', status: 'live', built: true },
+  { slug: 'call-answering', name: 'AI call answering', status: 'coming-soon', built: true },
 ];
 
 /** Comparison pages. Never link to one that has not been built. */
@@ -76,10 +76,10 @@ export const RESOURCES = [
 ];
 
 export const COMPANY = [
-  { label: 'About', href: '/about', built: false },
-  { label: 'Contact', href: '/contact', built: false },
-  { label: 'Privacy', href: '/privacy', built: false },
-  { label: 'Terms', href: '/terms', built: false },
+  { label: 'About', href: '/about', built: true },
+  { label: 'Contact', href: '/contact', built: true },
+  { label: 'Privacy', href: '/privacy', built: true },
+  { label: 'Terms', href: '/terms', built: true },
 ];
 
 /**
@@ -90,7 +90,7 @@ export const COMPANY = [
 export const AR_SITE = { href: '/ar', built: false };
 
 export const PRICING_PAGE = { href: '/pricing', built: true };
-export const EXAMPLES_PAGE = { href: '/examples', built: false };
+export const EXAMPLES_PAGE = { href: '/examples', built: true };
 
 /**
  * Header: five items plus one persistent action, per the IA.
@@ -102,9 +102,9 @@ export const EXAMPLES_PAGE = { href: '/examples', built: false };
  */
 export const NAV = [
   { label: 'For your trade', href: '/for/plumbers', fallback: null, built: true, caret: true },
-  { label: 'What you get', href: '/features/website', fallback: '/#capabilities', built: false, caret: true },
+  { label: 'What you get', href: '/features/website', fallback: '/#capabilities', built: true, caret: true },
   { label: 'Pricing', href: '/pricing', fallback: null, built: true },
-  { label: 'Examples', href: '/examples', fallback: '/#examples', built: false },
+  { label: 'Examples', href: '/examples', fallback: '/#examples', built: true },
   { label: 'Learn', href: '/guides/plumbing-marketing', fallback: null, built: false, caret: true },
 ];
 

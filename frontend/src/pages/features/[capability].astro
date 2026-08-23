@@ -1,0 +1,376 @@
+---
+/**
+ * Capability page — one template, four capabilities.
+ *
+ * Thin on purpose: these convert, the trade hubs rank. What every one of
+ * them owes the site is the block linking to all four hubs, which is why it
+ * is in the template rather than left to each page.
+ *
+ * The only structural difference between them is `buyable`. A capability
+ * that is not live gets a notify-me and a plain sentence saying nothing is
+ * for sale yet — never a CTA, never a price, never a path that looks like
+ * checkout.
+ */
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import NotifyMe from '../../components/NotifyMe.astro';
+import ClosingBand from '../../components/ClosingBand.astro';
+
+import { CAPABILITY_CONTENT } from '../../data/capabilities.js';
+import {
+  SITE_URL, APP_URL, PRICE, TRADES, CAPABILITIES, withPrice, PRIMARY_CTA,
+} from '../../data/site.js';
+
+export function getStaticPaths() {
+  return Object.keys(CAPABILITY_CONTENT).map((capability) => ({ params: { capability } }));
+}
+
+const { capability } = Astro.params;
+const c = CAPABILITY_CONTENT[capability];
+const price = PRICE.en;
+const p = (text) => withPrice(text);
+
+const path = `/features/${capability}`;
+
+const titles = {
+  website: 'A Real Website for Your Trade Business | Widgeta',
+  seo: 'Found on Google in Every Area — SEO | Widgeta',
+  content: 'Monthly Content Matched to Local Searches | Widgeta',
+  'call-answering': 'AI Call Answering for the Trades — Coming Soon | Widgeta',
+};
+
+const descriptions = {
+  website: 'A complete website for a trade business, live in about a minute: a page for every service in every area, your license and photos where customers look.',
+  seo: 'The local search work that decides which contractor shows up: a page per service per area, the technical checklist, adjusted every month.',
+  content: 'New pages every month, matched to what people near you actually search — seasonal problems, costs and comparisons, each with your number on it.',
+  'call-answering': 'Call answering for trade businesses is coming soon: it picks up when you cannot, takes the job details, and sends them straight to you.',
+};
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `${c.name} for home-service businesses`,
+    serviceType: c.name,
+    provider: { '@type': 'Organization', name: 'Widgeta', url: SITE_URL },
+    ...(c.buyable
+      ? {
+          offers: {
+            '@type': 'Offer',
+            price: price.amount,
+            priceCurrency: price.currency,
+          },
+        }
+      : {}),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'What you get', item: `${SITE_URL}/features/website` },
+      { '@type': 'ListItem', position: 3, name: c.name, item: `${SITE_URL}${path}` },
+    ],
+  },
+];
+---
+
+<Base title={titles[capability]} description={descriptions[capability]} path={path} schema={schema}>
+  <div class="shell">
+    <Breadcrumb
+      items={[
+        { label: 'Home', href: '/' },
+        { label: 'What you get', href: '/features/website' },
+        { label: c.name },
+      ]}
+    />
+  </div>
+
+  <section class="hero">
+    <div class="shell measure">
+      <div class="hero__tags">
+        <span class="cap__label">{c.tagCaps}</span>
+        {
+          c.buyable ? (
+            <span class="tag tag--live">Live · always included</span>
+          ) : (
+            <span class="tag tag--soon">Coming soon</span>
+          )
+        }
+      </div>
+
+      <h1>{c.h1}</h1>
+      <p class="hero__sub">{p(c.sub)}</p>
+
+      {
+        c.buyable ? (
+          <>
+            <a class="btn btn--amber hero__cta" href={PRIMARY_CTA.href}>
+              Get your business online
+            </a>
+            <p class="hero__fine muted">
+              From {price.display}{price.period}, all three foundation pieces included · No contract
+            </p>
+          </>
+        ) : (
+          <>
+            <NotifyMe id={`notify-${capability}`} />
+            <p class="hero__fine muted">
+              No purchase yet — pricing announced at launch.
+            </p>
+          </>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- What it gives you -------------------------------------------------- -->
+  <section class="section">
+    <div class="shell">
+      <div class="grid-auto">
+        {
+          c.bullets.map((b) => (
+            <div class="card bullet">
+              <h2 class="bullet__t">{b.t}</h2>
+              <p class="muted">{p(b.d)}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Plain-English explanation ------------------------------------------- -->
+  <section class="section explain">
+    <div class="shell measure">
+      <h2>{c.kwH2}</h2>
+      <p class="para muted">{p(c.k1)}</p>
+      <p class="para muted">{p(c.k2)}</p>
+    </div>
+  </section>
+
+  <!-- How it works --------------------------------------------------------- -->
+  <section class="section">
+    <div class="shell">
+      <h2 class="how__h">How it works</h2>
+      <div class="grid-auto">
+        {
+          c.how.map((h) => (
+            <div class="card step">
+              <span class="step__n">{h.n}</span>
+              <h3 class="step__t">{h.t}</h3>
+              <p class="muted">{p(h.d)}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- The link block every capability page owes the site -------------------- -->
+  <section class="section on-ink">
+    <div class="shell">
+      <h2>See it for your trade</h2>
+      <div class="grid-auto trades">
+        {
+          TRADES.filter((t) => t.built).map((t) => (
+            <a class="tradecard" href={`/for/${t.slug}`}>
+              {t.name} <span aria-hidden="true">→</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Sibling capabilities --------------------------------------------------- -->
+  <section class="section siblings">
+    <div class="shell">
+      <h2 class="siblings__h">The rest of what you get</h2>
+      <div class="siblings__row">
+        {
+          CAPABILITIES.filter((o) => o.built && o.slug !== capability).map((o) => (
+            <a class="chip siblings__chip" href={`/features/${o.slug}`}>
+              {o.name}
+              {o.status !== 'live' && <span class="soonmark"> · soon</span>}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    c.buyable ? (
+      <ClosingBand
+        title={c.closeH2}
+        ctaLabel="Get your business online"
+        ctaHref={`${APP_URL}/signup`}
+      />
+    ) : (
+      <section class="soonband">
+        <div class="shell soonband__in">
+          <span class="tag tag--soon">Coming soon</span>
+          <h2 class="soonband__h">{c.closeH2}</h2>
+          <NotifyMe id={`notify-${capability}-end`} />
+          <p class="soonband__fine muted">
+            The foundation pieces are live today — this joins them soon.
+          </p>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--s-4) var(--section-y);
+  }
+
+  .hero__tags {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+    margin-block-end: var(--s-4);
+  }
+
+  .cap__label {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero__sub {
+    margin-block-start: var(--s-6);
+    font-size: var(--fs-lead);
+    color: var(--muted);
+  }
+
+  .hero__cta {
+    margin-block-start: var(--s-8);
+  }
+
+  .hero__fine {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-small);
+  }
+
+  .bullet__t {
+    font-size: 20px;
+    margin-block-end: var(--s-2);
+  }
+
+  .explain {
+    background: var(--putty);
+  }
+
+  .para {
+    margin-block-start: var(--s-4);
+  }
+
+  h2 + .para {
+    margin-block-start: var(--s-6);
+  }
+
+  .how__h {
+    margin-block-end: var(--s-8);
+  }
+
+  .step__n {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 32px;
+    color: var(--amber-text);
+    line-height: 1;
+  }
+
+  .step__t {
+    margin-block: var(--s-2);
+    font-size: 20px;
+  }
+
+  .trades {
+    margin-block-start: var(--s-8);
+  }
+
+  .tradecard {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    padding: var(--s-4);
+    border: 1px solid rgba(250, 247, 242, .25);
+    border-radius: var(--r-card);
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--paper);
+  }
+
+  .tradecard:hover {
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+
+  .siblings__h {
+    font-size: var(--fs-h3);
+    margin-block-end: var(--s-4);
+  }
+
+  .siblings__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  .siblings__chip {
+    min-block-size: var(--tap);
+    color: var(--ink);
+  }
+
+  .siblings__chip:hover {
+    border-color: var(--amber);
+    color: var(--ink);
+  }
+
+  .soonmark {
+    color: var(--soon-text);
+    font-weight: 700;
+  }
+
+  /* A coming-soon page ends in a caution band, not an amber CTA band —
+     the closing moment must not look like a place to buy. */
+  .soonband {
+    background: var(--soon-bg);
+    border-block-start: 2px dashed var(--soon-line);
+  }
+
+  .soonband__in {
+    max-inline-size: 720px;
+    margin-inline: auto;
+    padding-block: clamp(48px, 6vw, 88px);
+    text-align: center;
+  }
+
+  .soonband__h {
+    margin-block: var(--s-4) 0;
+    font-size: var(--fs-band);
+  }
+
+  .soonband__fine {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-small);
+  }
+
+  /* The notify control is centred here, unlike inside a card. */
+  .soonband__in :global(.notify) {
+    display: flex;
+    justify-content: center;
+  }
+
+  .soonband__in :global(.notify__form) {
+    justify-content: center;
+  }
+</style>

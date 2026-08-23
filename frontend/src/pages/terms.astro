@@ -1,0 +1,127 @@
+---
+/**
+ * Terms.
+ *
+ * Same posture as the privacy page: the commercial terms of a subscription
+ * are a legal document, and inventing one would be worse than shipping
+ * nothing. The promises the marketing site already makes in public are
+ * listed here, because those are real and the final terms must not
+ * contradict them.
+ */
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { CONTACT } from '../data/company.js';
+import { PRICE } from '../data/site.js';
+
+const price = PRICE.en;
+---
+
+<Base
+  title="Terms | Widgeta"
+  description="The terms of a Widgeta subscription, and the promises the site already makes in public."
+  path="/terms"
+  noindex={true}
+>
+  <div class="shell">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Terms' }]} />
+  </div>
+
+  <article class="doc">
+    <p class="draft">
+      <strong>Draft — not yet in force.</strong> Widgeta's counsel has to write
+      and approve the binding terms before launch. Listed below are the
+      promises this site already makes in public; the final terms need to keep
+      every one of them.
+    </p>
+
+    <h1>Terms</h1>
+
+    <h2>What the site already promises</h2>
+    <ul class="promises">
+      <li>One flat price of {price.display}{price.period}, with no setup fee.</li>
+      <li>No contract — month to month, cancel at any time.</li>
+      <li>The site, the domain and every page belong to the customer, and go with them if they leave.</li>
+      <li>Calls from the customer's site go to the customer alone; nothing is shared with another business.</li>
+      <li>Hosting and the ongoing technical work are included in the monthly price.</li>
+      <li>Call answering is not for sale and is described everywhere as coming soon.</li>
+    </ul>
+    <p>
+      These appear on the home page, the pricing page, the trade hubs and the
+      comparison pages. Any final wording that narrows one of them makes those
+      pages inaccurate and both would need changing together.
+    </p>
+
+    <h2>Still to be written</h2>
+    <p class="todo">
+      Billing and renewal, refunds, what happens to a site during and after
+      cancellation, domain transfer, acceptable use, uptime and support
+      commitments, liability, and the governing law for each market Widgeta
+      sells in.
+    </p>
+
+    <h2>Questions</h2>
+    <p>
+      Write to <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> and a
+      person answers within {CONTACT.responseWindow}.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .doc {
+    max-inline-size: var(--measure-narrow);
+    margin-inline: auto;
+    padding: var(--s-4) var(--gutter) var(--section-y);
+  }
+
+  .draft {
+    padding: var(--s-4);
+    border: 2px dashed var(--soon-line);
+    border-radius: var(--r-card);
+    background: var(--soon-bg);
+    color: var(--soon-text);
+    font-size: var(--fs-small);
+  }
+
+  .doc h1 { margin-block-start: var(--s-8); }
+
+  .doc h2 {
+    margin-block-start: var(--s-12);
+    font-size: var(--fs-h3);
+  }
+
+  .doc p {
+    margin-block-start: var(--s-4);
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .promises {
+    margin-block-start: var(--s-4);
+    padding-inline-start: var(--s-6);
+    display: grid;
+    gap: var(--s-3);
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* An email address inside a sentence still gets tapped, so it gets a real
+     target: padding rather than a taller line, so the paragraph keeps its
+     rhythm. */
+  .doc a {
+    display: inline-block;
+    padding-block: 11px;
+    color: var(--amber-text);
+    font-weight: 600;
+  }
+
+  .todo {
+    padding: var(--s-3) var(--s-4);
+    border-inline-start: 3px solid var(--soon-line);
+    background: var(--soon-bg);
+    color: var(--soon-text) !important;
+    font-size: 16px !important;
+  }
+</style>

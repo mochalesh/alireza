@@ -1,0 +1,142 @@
+---
+/**
+ * Privacy.
+ *
+ * This is a draft, and it says so at the top rather than in a comment.
+ *
+ * A privacy policy has to describe what a company actually does with
+ * people's data, and only the company and its counsel can state that. What
+ * this page can do honestly is describe what the marketing site itself does
+ * today — which is verifiable, because it is this codebase — and mark
+ * clearly which sections still need real text.
+ */
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { CONTACT } from '../data/company.js';
+import { SITE_URL } from '../data/site.js';
+
+const updated = 'not yet published';
+---
+
+<Base
+  title="Privacy | Widgeta"
+  description="How widgeta.app handles the information people give it, and what the site collects today."
+  path="/privacy"
+  noindex={true}
+>
+  <div class="shell">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Privacy' }]} />
+  </div>
+
+  <article class="doc">
+    <p class="draft">
+      <strong>Draft — not yet in force.</strong> The final policy has to be
+      written and approved by Widgeta and its legal advisers before launch.
+      What follows describes the marketing site as it is built today, and
+      marks what still needs writing.
+    </p>
+
+    <h1>Privacy</h1>
+    <p class="doc__meta muted">Last updated: {updated}</p>
+
+    <h2>What this site collects today</h2>
+    <p>
+      widgeta.app is a set of static pages. It does not set cookies, it does
+      not run analytics, and it loads no fonts, scripts or images from another
+      company's servers — the typefaces are served from this site itself. If
+      you only read these pages, nothing about you is recorded here.
+    </p>
+    <p>
+      Two forms exist. The "notify me" boxes on the home page, the pricing
+      page and the call-answering page ask for an email address so we can tell
+      you when that capability launches. The search box on the 404 page hands
+      your words to Google, which is stated next to the box. Nothing else on
+      this site asks you for anything.
+    </p>
+    <p class="todo">
+      To write: where notify-me addresses are stored, who can read them, how
+      long they are kept, and how to have one deleted. That copy cannot be
+      accurate until the capture endpoint exists.
+    </p>
+
+    <h2>The application</h2>
+    <p class="todo">
+      To write: app.widgeta.app is a separate service that collects business
+      details, photos and payment information. Its handling of that data,
+      including processors, retention and international transfer, needs its
+      own section written against how the product actually works.
+    </p>
+
+    <h2>Sites Widgeta builds for customers</h2>
+    <p class="todo">
+      To write: a Widgeta-generated site carries the customer's own business
+      details and receives enquiries from the public. Who controls that data,
+      and what happens to it when a customer cancels, belongs here.
+    </p>
+
+    <h2>Your rights</h2>
+    <p class="todo">
+      To write: the rights available under GDPR, the UK GDPR, CCPA and Saudi
+      and UAE data protection law, and how to exercise each of them — written
+      against the markets Widgeta actually sells in.
+    </p>
+
+    <h2>Contacting us about privacy</h2>
+    <p>
+      Write to <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> and a
+      person answers within {CONTACT.responseWindow}.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .doc {
+    max-inline-size: var(--measure-narrow);
+    margin-inline: auto;
+    padding: var(--s-4) var(--gutter) var(--section-y);
+  }
+
+  .draft {
+    padding: var(--s-4);
+    border: 2px dashed var(--soon-line);
+    border-radius: var(--r-card);
+    background: var(--soon-bg);
+    color: var(--soon-text);
+    font-size: var(--fs-small);
+  }
+
+  .doc h1 { margin-block-start: var(--s-8); }
+
+  .doc__meta { margin-block-start: var(--s-3); font-size: 14px; }
+
+  .doc h2 {
+    margin-block-start: var(--s-12);
+    font-size: var(--fs-h3);
+  }
+
+  .doc p {
+    margin-block-start: var(--s-4);
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* An email address inside a sentence still gets tapped, so it gets a real
+     target: padding rather than a taller line, so the paragraph keeps its
+     rhythm. */
+  .doc a {
+    display: inline-block;
+    padding-block: 11px;
+    color: var(--amber-text);
+    font-weight: 600;
+  }
+
+  /* An unwritten section is visibly unwritten. */
+  .todo {
+    padding: var(--s-3) var(--s-4);
+    border-inline-start: 3px solid var(--soon-line);
+    background: var(--soon-bg);
+    color: var(--soon-text) !important;
+    font-size: 16px !important;
+  }
+</style>

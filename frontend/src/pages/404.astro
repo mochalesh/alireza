@@ -1,0 +1,137 @@
+---
+/**
+ * 404.
+ *
+ * The spec asks for search and links to the four hubs. Search is a real GET
+ * form pointed at Google's site: operator — the site has no search index of
+ * its own, and a box that pretends to search and returns nothing is worse
+ * than no box. It is honest about where it sends you.
+ */
+import Base from '../layouts/Base.astro';
+import { SITE_URL, TRADES, EXAMPLES_PAGE } from '../data/site.js';
+---
+
+<Base
+  title="Page not found | Widgeta"
+  description="That address doesn't exist. Search the site or jump to the trade you work in."
+  path="/404"
+  noindex={true}
+>
+  <section class="nf">
+    <div class="shell nf__in">
+      <span class="nf__code" aria-hidden="true">404</span>
+      <h1>This page is out on a job.</h1>
+      <p class="nf__sub muted">
+        The address doesn't exist — maybe an old link, maybe a typo. Search the
+        site or head somewhere useful:
+      </p>
+
+      <form class="nf__search" action="https://www.google.com/search" method="get" role="search">
+        <label class="sr-only" for="nf-q">Search widgeta.app</label>
+        <input class="nf__input" id="nf-q" name="q" type="search" placeholder="What were you looking for?" />
+        <input type="hidden" name="as_sitesearch" value="widgeta.app" />
+        <button class="btn btn--ink" type="submit">Search</button>
+      </form>
+      <p class="nf__note muted">Search runs on Google, limited to this site.</p>
+
+      <div class="nf__trades">
+        {TRADES.filter((t) => t.built).map((t) => (
+          <a class="chip nf__chip" href={`/for/${t.slug}`}>{t.name}</a>
+        ))}
+      </div>
+
+      <div class="nf__links">
+        <a class="nf__back" href="/">← Back to the homepage</a>
+        {EXAMPLES_PAGE.built && <a class="nf__back" href={EXAMPLES_PAGE.href}>See example sites →</a>}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding-block: clamp(48px, 8vw, 120px);
+  }
+
+  .nf__in {
+    max-inline-size: var(--measure);
+  }
+
+  .nf__code {
+    display: block;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(64px, 10vw, 120px);
+    line-height: 1;
+    color: var(--amber);
+  }
+
+  .nf h1 {
+    margin-block-start: var(--s-3);
+  }
+
+  .nf__sub {
+    margin-block-start: var(--s-4);
+    font-size: var(--fs-lead);
+  }
+
+  .nf__search {
+    display: flex;
+    gap: var(--s-2);
+    flex-wrap: wrap;
+    margin-block-start: var(--s-8);
+  }
+
+  .nf__input {
+    flex: 1 1 260px;
+    min-block-size: var(--tap);
+    padding-inline: var(--s-4);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-btn);
+    background: var(--card);
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  .nf__note {
+    margin-block-start: var(--s-2);
+    font-size: 13px;
+  }
+
+  .nf__trades {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-block-start: var(--s-8);
+  }
+
+  .nf__chip {
+    min-block-size: var(--tap);
+    color: var(--ink);
+  }
+
+  .nf__chip:hover {
+    border-color: var(--amber);
+    color: var(--ink);
+  }
+
+  .nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-6);
+    margin-block-start: var(--s-8);
+  }
+
+  .nf__back {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--tap);
+    font-weight: 700;
+    color: var(--amber-text);
+  }
+
+  .nf__back:hover {
+    color: var(--ink);
+  }
+</style>
